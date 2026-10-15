@@ -1,14 +1,26 @@
 import streamlit as st
 import pandas as pd
 
-# App Config
+# App Config & Custom Styling for Background
 st.set_page_config(
     page_title="HealthBridge - Unified SDG 3 Companion", 
     page_icon="🏥", 
     layout="wide"
 )
 
-# Initialize Session State for Medications & Questions
+# Custom CSS for styling the dashboard and background feel
+st.markdown("""
+    <style>
+    .main {
+        background-color: #f8f9fa;
+    }
+    .stSidebar {
+        background-color: #e9ecef;
+    }
+    </style>
+""", unsafe_allow_html=True)
+
+# Initialize Session State
 if "meds" not in st.session_state:
     st.session_state.meds = [
         {"name": "Metformin (500mg)", "time": "08:00 AM", "status": "Pending", "category": "Diabetes"},
@@ -19,10 +31,10 @@ if "meds" not in st.session_state:
 if "questions" not in st.session_state:
     st.session_state.questions = ["Are there any food restrictions with this dosage?"]
 
-# Sidebar Mode Switcher
-st.sidebar.title("🌟 HealthBridge Menu")
+# Sidebar Dashboard Menu
+st.sidebar.title("🌟 HealthBridge Dashboard")
 app_mode = st.sidebar.radio(
-    "Select View:", 
+    "Select Option:", 
     [
         "🏥 Unified Health & Hospital Hub", 
         "👁️ Caregiver Live Sync", 
@@ -31,87 +43,74 @@ app_mode = st.sidebar.radio(
 )
 
 st.sidebar.divider()
-st.sidebar.info("💡 **Demo Tip:** Type a disease (e.g., 'Heart', 'Eye', 'Bones') in the search bar on the main screen to see the map zoom directly to the recommended specialized hospital!")
+st.sidebar.info("💡 **Demo Tip:** Search 'Heart', 'Eye', or 'Bones' to find specialized hospitals, routes, and distance estimates!")
 
 # ----------------------------------------------------
-# 1. UNIFIED HEALTH & HOSPITAL HUB (Map + Reminders Combined)
+# 1. UNIFIED HEALTH & HOSPITAL HUB
 # ----------------------------------------------------
 if app_mode == "🏥 Unified Health & Hospital Hub":
     st.title("🌟 HealthBridge: Unified Patient Companion")
-    st.markdown("*Combining intelligent emergency hospital routing with daily medication adherence.*")
+    st.markdown("*Combining intelligent emergency hospital routing, live distance tracking, and daily medication adherence.*")
     st.divider()
 
-    # --- SECTION A: DISEASE SEARCH BAR & HOSPITAL RECOMMENDER WITH MAP PINS ---
-    st.subheader("🔍 Disease-to-Hospital Intelligent Map Finder")
-    st.markdown("Type a disease or symptom below to locate the best specialized hospital directly on the map:")
+    st.subheader("🔍 Disease-to-Hospital Intelligent Map & Route Finder")
     
     user_disease_input = st.text_input(
-        "Enter disease/symptom (e.g., Heart, Eye, Bones, Diabetes):",
-        placeholder="Type condition here... (e.g., Heart attack, Fracture, Vision loss)",
+        "Enter disease/symptom:",
+        placeholder="Type condition here... (e.g., Heart, Eye, Bones)",
         key="map_disease_search"
     )
 
-    # Default regional coordinates (Kolhapur / Ichalkaranji region)
-    # Default list of all key hospitals
+    # Default coordinates (Kolhapur region)
     lat_list = [16.7050, 16.6900, 16.7120, 16.7200]
     lon_list = [74.2433, 74.2200, 74.2500, 74.4600]
     name_list = [
         "Aster Aadhar Hospital (Cardiology)", 
-        "Alliance Multispeciality Hospital (General/Ortho)", 
-        "Nandadeep Eye Hospital (Ophthalmology)", 
-        "Dr. Lande Fracture Hospital (Trauma)"
+        "Alliance Multispeciality Hospital", 
+        "Nandadeep Eye Hospital", 
+        "Dr. Lande Fracture Hospital"
     ]
 
     if user_disease_input:
         query = user_disease_input.lower().strip()
-        st.markdown(f"### 🏥 Best Specialized Recommendations for: *'{user_disease_input}'*")
+        st.markdown(f"### 🏥 Best Specialized Recommendations & Routes for: *'{user_disease_input}'*")
         
-        if any(k in query for k in ["heart", "cardio", "chest", "bp", "blood pressure", "stroke"]):
+        if any(k in query for k in ["heart", "cardio", "chest", "bp", "stroke"]):
             st.error("⚠️ **Specialty Match: Cardiology & Emergency Cardiac Unit**")
-            st.write("1. **[Aster Aadhar Hospital](http://googleusercontent.com/map_location_reference/0)** (Kolhapur) - *Advanced Cardiac Cath Lab & 24/7 Emergency*")
-            # Pinpoint specifically to Aster Aadhar Hospital coordinates
-            lat_list = [16.7050]
-            lon_list = [74.2433]
-            name_list = ["Aster Aadhar Hospital (Cardiology Center)"]
+            st.write("1. **Aster Aadhar Hospital** (Kolhapur)")
+            st.info("🚗 **Route & Distance:** ~3.2 km away | Estimated Travel Time: **8 mins** via NH48 | 📍 *Building Type: Multi-story Modern Medical Center*")
+            lat_list, lon_list, name_list = [16.7050], [74.2433], ["Aster Aadhar Hospital (Cardiology Center)"]
             
-        elif any(k in query for k in ["eye", "vision", "cataract", "blind", "blur"]):
+        elif any(k in query for k in ["eye", "vision", "cataract", "blur"]):
             st.warning("👁️ **Specialty Match: Ophthalmology & Vision Care**")
-            st.write("1. **[Nandadeep Eye Hospital](http://googleusercontent.com/map_location_reference/1)** (Kolhapur) - *Advanced Laser & Retinal Care*")
-            # Pinpoint specifically to Nandadeep Eye Hospital coordinates
-            lat_list = [16.7120]
-            lon_list = [74.2500]
-            name_list = ["Nandadeep Eye Hospital (Vision Center)"]
+            st.write("1. **Nandadeep Eye Hospital** (Kolhapur)")
+            st.info("🚗 **Route & Distance:** ~4.5 km away | Estimated Travel Time: **12 mins** via Tarabai Park Road | 📍 *Building Type: Specialized Eye Care Clinic*")
+            lat_list, lon_list, name_list = [16.7120], [74.2500], ["Nandadeep Eye Hospital (Vision Center)"]
             
-        elif any(k in query for k in ["bone", "fracture", "ortho", "joint", "knee", "accident"]):
+        elif any(k in query for k in ["bone", "fracture", "ortho", "joint", "knee"]):
             st.info("🦴 **Specialty Match: Orthopedics & Trauma Center**")
-            st.write("1. **[ACCIDENT FRACTURE ORTHOPEDIC & REPLACEMENT HOSPITAL (DR' LANDE HOSPITAL )](http://googleusercontent.com/map_location_reference/2)** (Ichalkaranji)")
-            st.write("2. **[Alliance Multispeciality Hospital](http://googleusercontent.com/map_location_reference/3)** (Ichalkaranji)")
-            # Pinpoint to Orthopedic/Trauma centers
-            lat_list = [16.7200, 16.6900]
-            lon_list = [74.4600, 74.2200]
-            name_list = ["Dr. Lande Fracture Hospital", "Alliance Multispeciality Hospital"]
+            st.write("1. **Dr. Lande Fracture Hospital** (Ichalkaranji)")
+            st.info("🚗 **Route & Distance:** ~6.0 km away | Estimated Travel Time: **15 mins** via Main Road | 📍 *Building Type: Dedicated Trauma & Orthopedic Wing*")
+            lat_list, lon_list, name_list = [16.7200], [74.4600], ["Dr. Lande Fracture Hospital"]
             
         else:
             st.success("🏥 **General Multi-Specialty Care**")
-            st.write("1. **[Alliance Multispeciality Hospital](http://googleusercontent.com/map_location_reference/4)** (Ichalkaranji)")
-            st.write("2. **[Aster Aadhar Hospital](http://googleusercontent.com/map_location_reference/5)** (Kolhapur)")
+            st.write("1. **Alliance Multispeciality Hospital** (Ichalkaranji)")
+            st.info("🚗 **Route & Distance:** ~2.1 km away | Estimated Travel Time: **5 mins** | 📍 *Building Type: General Hospital Complex*")
     else:
-        st.caption("💡 *Tip: Try searching 'Heart', 'Eye', or 'Bones' above to filter and pinpoint specialized hospitals on the map.*")
+        st.caption("💡 *Type a condition above to view precise routes, distance, and specialized hospital pins on the map.*")
 
-    # Render Live Interactive Map with dynamic hospital pins
+    # Render Live Interactive Map
     df_map = pd.DataFrame({"lat": lat_list, "lon": lon_list, "Location": name_list})
     st.map(df_map, zoom=12, use_container_width=True)
-    st.caption("📍 Map dynamically updates markers based on the searched disease/condition.")
 
     st.divider()
 
-    # --- SECTION B: MEDICATION REMINDERS & DAILY CARE ---
+    # Medication & Questions Section
     col_left, col_right = st.columns(2)
 
     with col_left:
         st.subheader("💊 Today's Medication Reminders")
-        st.markdown("Tap when medication is taken to sync with your caregiver:")
-        
         for i, med in enumerate(st.session_state.meds):
             c1, c2 = st.columns([2, 1])
             with c1:
@@ -126,7 +125,7 @@ if app_mode == "🏥 Unified Health & Hospital Hub":
                     st.success("Taken ✅")
 
     with col_right:
-        st.subheader("🏥 Appointments & Question Builder")
+        st.subheader("🏥 Doctor Appointments & Question Builder")
         st.info("**Dr. Sharma (Cardiologist)**\n📅 Tomorrow at 10:30 AM\n📍 City General Hospital")
         
         new_q = st.text_input("Add a question for your doctor:", placeholder="e.g. Any side effects?")
@@ -140,24 +139,32 @@ if app_mode == "🏥 Unified Health & Hospital Hub":
             st.markdown(f"- 🔸 {q}")
 
 # ----------------------------------------------------
-# 2. CAREGIVER LIVE SYNC
+# 2. CAREGIVER LIVE SYNC (PASSWORD PROTECTED)
 # ----------------------------------------------------
 elif app_mode == "👁️ Caregiver Live Sync":
     st.title("👁️ Caregiver Real-Time Monitor Link")
-    st.markdown("Allows family members to monitor medication adherence and health status remotely.")
+    st.markdown("Secure portal for family members to monitor patient adherence and health status remotely.")
     st.divider()
 
-    st.warning("⚠️ **Active Live Sync:** Connected to Patient Profile #PAT-8821")
+    # Password protection check
+    password_input = st.text_input("🔒 Enter Caregiver Access Password:", type="password", placeholder="Enter PIN (Demo PIN: 1234)")
     
-    df_caregiver = pd.DataFrame(st.session_state.meds)
-    st.table(df_caregiver)
-    
-    st.metric(label="Patient Adherence Rate (Past 7 Days)", value="92%", delta="+4% improvement")
-    
-    with st.form("caregiver_alert"):
-        msg = st.text_area("Send an encouraging note or reminder to the patient:", placeholder="Dad, great job taking your medicine today!")
-        if st.form_submit_button("Send Push Notification"):
-            st.success("✅ Notification successfully sent to patient device!")
+    if password_input == "1234":
+        st.success("🔓 Access Granted! Connected to Patient Profile #PAT-8821")
+        
+        df_caregiver = pd.DataFrame(st.session_state.meds)
+        st.table(df_caregiver)
+        
+        st.metric(label="Patient Adherence Rate (Past 7 Days)", value="92%", delta="+4% improvement")
+        
+        with st.form("caregiver_alert"):
+            msg = st.text_area("Send an encouraging note or reminder to the patient:", placeholder="Dad, great job taking your medicine today!")
+            if st.form_submit_button("Send Push Notification"):
+                st.success("✅ Notification successfully sent to patient device!")
+    elif password_input:
+        st.error("❌ Incorrect password. Please check with the patient for the correct PIN.")
+    else:
+        st.info("ℹ️ Please enter the caregiver PIN to unlock live tracking data.")
 
 # ----------------------------------------------------
 # 3. SDG 3 IMPACT & METRICS
@@ -172,8 +179,8 @@ elif app_mode == "🌍 SDG 3 Impact & Metrics":
         st.metric(label="Projected Reduction in Missed Doses", value="38%", delta="High Adherence")
         st.write("Through intelligent automated reminders and family caregiver syncing.")
     with col2:
-        st.metric(label="Emergency Triage Time Saved", value="45%", delta="Fast Routing")
-        st.write("By linking disease searches instantly to specialized local hospitals on the map.")
+        st.metric(label="Emergency Triage Time Saved", value="45%", delta="Fast Routing & Distance Calc")
+        st.write("By linking disease searches instantly to specialized local hospitals and providing direct transit routes.")
 
     st.info("💡 **Low-Resource Scalability:** Designed to operate smoothly on low-bandwidth mobile networks in rural communities.")
 
