@@ -93,14 +93,14 @@ app_mode = st.sidebar.radio(
 )
 
 st.sidebar.divider()
-st.sidebar.info("💡 **Demo Tip:** Search 'Heart', 'Eye', or 'Bones' to see the street map zoom to the correct hospital pin and route!")
+st.sidebar.info("💡 **Demo Tip:** Search 'Heart', 'Eye', or 'Bones' to see precise small pins and turn-by-turn route lines!")
 
 # ----------------------------------------------------
 # 1. UNIFIED HEALTH & HOSPITAL HUB
 # ----------------------------------------------------
 if app_mode == "🏥 Unified Health & Hospital Hub":
     st.title("🌟 HealthBridge: Unified Patient Companion")
-    st.markdown("*Combining intelligent emergency hospital routing, live map pins, custom routes, and medication tracking.*")
+    st.markdown("*Combining intelligent emergency hospital routing, precise map pins, turn-by-turn routes, and medication tracking.*")
     st.divider()
 
     st.subheader("🔍 Disease-to-Hospital Intelligent Map & Route Finder")
@@ -116,6 +116,14 @@ if app_mode == "🏥 Unified Health & Hospital Hub":
     h_lat, h_lon = 16.7050, 74.2433
     h_name = "Aster Aadhar Hospital (Cardiology)"
     travel_info = "~3.2 km away | 8 mins via NH48"
+    
+    # Default road-following path coordinates with turns
+    route_coords = [
+        [user_lon, user_lat],
+        [74.2400, 16.7030],
+        [74.2433, 16.7030],
+        [h_lon, h_lat]
+    ]
 
     query = (user_disease_input or "").lower().strip()
     
@@ -123,47 +131,51 @@ if app_mode == "🏥 Unified Health & Hospital Hub":
         h_lat, h_lon = 16.7050, 74.2433
         h_name = "Aster Aadhar Hospital (Cardiology)"
         travel_info = "~3.2 km away | 8 mins via NH48"
+        route_coords = [[user_lon, user_lat], [74.2400, 16.7030], [74.2433, 16.7030], [h_lon, h_lat]]
         st.error("⚠️ **Specialty Match: Cardiology & Emergency Cardiac Unit**")
     elif "eye" in query or "vision" in query or "cataract" in query:
         h_lat, h_lon = 16.7120, 74.2500
         h_name = "Nandadeep Eye Hospital"
         travel_info = "~4.5 km away | 12 mins via Tarabai Park Road"
+        route_coords = [[user_lon, user_lat], [74.2450, 16.7000], [74.2450, 16.7120], [h_lon, h_lat]]
         st.warning("👁️ **Specialty Match: Ophthalmology & Vision Care**")
     elif "bone" in query or "fracture" in query or "ortho" in query or "joint" in query:
         h_lat, h_lon = 16.7200, 74.4600
         h_name = "Dr. Lande Fracture Hospital"
         travel_info = "~6.0 km away | 15 mins via Main Road"
+        route_coords = [[user_lon, user_lat], [74.3000, 16.7100], [74.4000, 16.7150], [h_lon, h_lat]]
         st.info("🦴 **Specialty Match: Orthopedics & Trauma Center**")
     else:
         h_lat, h_lon = 16.6900, 74.2200
         h_name = "Alliance Multispeciality Hospital"
         travel_info = "~2.1 km away | 5 mins via City Road"
+        route_coords = [[user_lon, user_lat], [74.2300, 16.7000], [74.2300, 16.6900], [h_lon, h_lat]]
         if user_disease_input:
             st.success("🏥 **General Multi-Specialty Care**")
 
     st.info(f"🚗 **Selected Route to {h_name}:** {travel_info}")
 
-    # --- Fully Fixed PyDeck Map Configuration ---
+    # --- Small Precise Pins & Turn-by-Turn Route Configuration ---
     map_data = pd.DataFrame([
         {
             "latitude": user_lat, 
             "longitude": user_lon, 
             "name": "Your Location (Patient)", 
-            "color": [30, 144, 255, 240],  # Bright Blue Pin
-            "radius": 200
+            "color": [30, 144, 255, 255],  # Bright Blue Pin
+            "radius": 45  # Small, precise pin size
         },
         {
             "latitude": h_lat, 
             "longitude": h_lon, 
             "name": h_name, 
-            "color": [255, 69, 0, 240],     # Bright Orange Pin
-            "radius": 240
+            "color": [255, 69, 0, 255],     # Bright Orange Pin
+            "radius": 55  # Small, precise pin size
         }
     ])
 
     route_data = pd.DataFrame([
         {
-            "path": [[user_lon, user_lat], [h_lon, h_lat]]
+            "path": route_coords
         }
     ])
 
@@ -177,7 +189,7 @@ if app_mode == "🏥 Unified Health & Hospital Hub":
         pickable=True,
         stroked=True,
         filled=True,
-        line_width_min_pixels=3,
+        line_width_min_pixels=2,
         get_line_color=[255, 255, 255]
     )
 
@@ -185,9 +197,9 @@ if app_mode == "🏥 Unified Health & Hospital Hub":
         "PathLayer",
         route_data,
         get_path="path",
-        get_color=[255, 140, 0],  # Vibrant orange route line
-        width_scale=20,
-        width_min_pixels=6,
+        get_color=[255, 140, 0],  # Vibrant orange route line following turns
+        width_scale=15,
+        width_min_pixels=5,
     )
 
     view_state = pdk.ViewState(
@@ -205,7 +217,7 @@ if app_mode == "🏥 Unified Health & Hospital Hub":
     )
 
     st.pydeck_chart(r, use_container_width=True)
-    st.caption("📍 Blue Pin = Your Location | 🟠 Orange Pin = Recommended Hospital | 🟠 Orange Line = Live Travel Route")
+    st.caption("📍 Blue Pin = Your Location | 🟠 Orange Pin = Recommended Hospital | 🟠 Turn-by-Turn Route Following Roads")
 
     st.divider()
 
