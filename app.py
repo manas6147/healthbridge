@@ -93,7 +93,7 @@ app_mode = st.sidebar.radio(
 )
 
 st.sidebar.divider()
-st.sidebar.info("💡 **Demo Tip:** Search 'Heart', 'Eye', or 'Bones' to see custom hospital pins and live route animations!")
+st.sidebar.info("💡 **Demo Tip:** Search 'Heart', 'Eye', or 'Bones' to see the street map zoom to the correct hospital pin and route!")
 
 # ----------------------------------------------------
 # 1. UNIFIED HEALTH & HOSPITAL HUB
@@ -143,22 +143,21 @@ if app_mode == "🏥 Unified Health & Hospital Hub":
 
     st.info(f"🚗 **Selected Route to {h_name}:** {travel_info}")
 
-    # --- Fixed PyDeck Map Layer Configuration ---
-    # User location pin (Blue) and Hospital pin (Orange-Red) with explicit sizes and RGB colors
+    # --- Fully Fixed PyDeck Map Configuration ---
     map_data = pd.DataFrame([
         {
             "latitude": user_lat, 
             "longitude": user_lon, 
             "name": "Your Location (Patient)", 
-            "color": [30, 144, 255, 220],  # Dodger Blue
-            "radius": 180
+            "color": [30, 144, 255, 240],  # Bright Blue Pin
+            "radius": 200
         },
         {
             "latitude": h_lat, 
             "longitude": h_lon, 
             "name": h_name, 
-            "color": [255, 69, 0, 220],     # Orange Red
-            "radius": 220
+            "color": [255, 69, 0, 240],     # Bright Orange Pin
+            "radius": 240
         }
     ])
 
@@ -195,14 +194,14 @@ if app_mode == "🏥 Unified Health & Hospital Hub":
         latitude=(user_lat + h_lat) / 2,
         longitude=(user_lon + h_lon) / 2,
         zoom=13.5,
-        pitch=25,
+        pitch=20,
     )
 
     r = pdk.Deck(
         layers=[path_layer, scatterplot_layer],
         initial_view_state=view_state,
         tooltip={"text": "{name}"},
-        map_style="mapbox://styles/mapbox/dark-v10"
+        map_style="https://basemaps.cartocdn.com/gl/dark-matter-gl-style/style.json"
     )
 
     st.pydeck_chart(r, use_container_width=True)
