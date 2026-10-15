@@ -143,48 +143,69 @@ if app_mode == "🏥 Unified Health & Hospital Hub":
 
     st.info(f"🚗 **Selected Route to {h_name}:** {travel_info}")
 
-    # --- PyDeck Interactive Map Configuration (Pins + Highlighted Route Line) ---
-    user_point = {"coordinates": [user_lon, user_lat], "name": "Your Location (Patient)", "color": [0, 150, 255]}
-    hospital_point = {"coordinates": [h_lon, h_lat], "name": h_name, "color": [255, 69, 0]}
-    
-    df_points = pd.DataFrame([user_point, hospital_point])
-    route_path = {"path": [[user_lon, user_lat], [h_lon, h_lat]]}
-    df_route = pd.DataFrame([route_path])
+    # --- Fixed PyDeck Map Layer Configuration ---
+    # User location pin (Blue) and Hospital pin (Orange-Red) with explicit sizes and RGB colors
+    map_data = pd.DataFrame([
+        {
+            "latitude": user_lat, 
+            "longitude": user_lon, 
+            "name": "Your Location (Patient)", 
+            "color": [30, 144, 255, 220],  # Dodger Blue
+            "radius": 180
+        },
+        {
+            "latitude": h_lat, 
+            "longitude": h_lon, 
+            "name": h_name, 
+            "color": [255, 69, 0, 220],     # Orange Red
+            "radius": 220
+        }
+    ])
 
-    point_layer = pdk.Layer(
+    route_data = pd.DataFrame([
+        {
+            "path": [[user_lon, user_lat], [h_lon, h_lat]]
+        }
+    ])
+
+    # Layers for PyDeck
+    scatterplot_layer = pdk.Layer(
         "ScatterplotLayer",
-        df_points,
-        get_position="coordinates",
-        get_color="color",
-        get_radius=200,
+        map_data,
+        get_position=["longitude", "latitude"],
+        get_fill_color="color",
+        get_radius="radius",
         pickable=True,
-        auto_highlight=True,
+        stroked=True,
+        filled=True,
+        line_width_min_pixels=3,
+        get_line_color=[255, 255, 255]
     )
 
-    route_layer = pdk.Layer(
+    path_layer = pdk.Layer(
         "PathLayer",
-        df_route,
+        route_data,
         get_path="path",
-        get_color=[255, 140, 0],  # Highlighted Orange Route Line
+        get_color=[255, 140, 0],  # Vibrant orange route line
         width_scale=20,
-        width_min_pixels=5,
+        width_min_pixels=6,
     )
 
     view_state = pdk.ViewState(
         latitude=(user_lat + h_lat) / 2,
         longitude=(user_lon + h_lon) / 2,
-        zoom=13,
-        pitch=30,
+        zoom=13.5,
+        pitch=25,
     )
 
     r = pdk.Deck(
-        layers=[route_layer, point_layer],
+        layers=[path_layer, scatterplot_layer],
         initial_view_state=view_state,
         tooltip={"text": "{name}"},
         map_style="mapbox://styles/mapbox/dark-v10"
     )
 
-    st.pydeck_chart(r)
+    st.pydeck_chart(r, use_container_width=True)
     st.caption("📍 Blue Pin = Your Location | 🟠 Orange Pin = Recommended Hospital | 🟠 Orange Line = Live Travel Route")
 
     st.divider()
