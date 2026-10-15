@@ -29,16 +29,12 @@ st.markdown("""
     }
 
     /* Glowing Text Input Fields */
-    .stTextInput input, .stTextArea textarea {
+    .stTextInput input, .stTextArea textarea, .stSelectbox select {
         background-color: rgba(30, 41, 59, 0.7);
         color: #ffffff;
         border: 1px solid #38bdf8;
         border-radius: 10px;
-        padding: 12px;
-    }
-    .stTextInput input:focus {
-        border-color: #38bdf8;
-        box-shadow: 0 0 15px rgba(56, 189, 248, 0.4);
+        padding: 10px;
     }
 
     /* Sleek Modern Buttons */
@@ -58,25 +54,41 @@ st.markdown("""
         transform: translateY(-2px);
     }
 
-    /* Glassmorphism Metric Cards */
-    div[data-testid="metric-container"] {
+    /* Glassmorphism Cards */
+    div[data-testid="metric-container"], div.stTabs {
         background: rgba(30, 41, 59, 0.6);
         border: 1px solid rgba(56, 189, 248, 0.25);
-        padding: 18px;
+        padding: 15px;
         border-radius: 14px;
         backdrop-filter: blur(10px);
-        box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.3);
     }
     </style>
 """, unsafe_allow_html=True)
 
-# Initialize Session State
-if "meds" not in st.session_state:
-    st.session_state.meds = [
-        {"name": "Metformin (500mg)", "time": "08:00 AM", "status": "Pending", "category": "Diabetes"},
-        {"name": "Amlodipine (5mg)", "time": "01:00 PM", "status": "Pending", "category": "Blood Pressure"},
-        {"name": "Vitamin D3 Supplement", "time": "08:00 PM", "status": "Pending", "category": "Wellness"}
-    ]
+# --- Auto-Categorization Helper Function ---
+def auto_categorize_medicine(med_name):
+    name = med_name.lower()
+    if any(k in name for k in ["metformin", "insulin", "sugar", "diab"]):
+        return "Diabetes"
+    elif any(k in name for k in ["amlodipine", "bp", "pressure", "atenolol", "losartan", "telmisartan"]):
+        return "Blood Pressure"
+    elif any(k in name for k in ["vitamin", "d3", "c", "supplement", "multivitamin", "calcium", "iron"]):
+        return "Wellness"
+    elif any(k in name for k in ["pain", "paracetamol", "ibuprofen", "aspirin", "diclofenac"]):
+        return "Pain Relief"
+    else:
+        return "General Medication"
+
+# Initialize Session State for Weekly Medications
+if "meds_by_day" not in st.session_state:
+    days = ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday"]
+    st.session_state.meds_by_day = {
+        day: [
+            {"name": "Metformin (500mg)", "time": "08:00 AM", "status": "Pending", "category": "Diabetes"},
+            {"name": "Amlodipine (5mg)", "time": "01:00 PM", "status": "Pending", "category": "Blood Pressure"},
+            {"name": "Vitamin D3 Supplement", "time": "08:00 PM", "status": "Pending", "category": "Wellness"}
+        ] for day in days
+    }
 
 if "questions" not in st.session_state:
     st.session_state.questions = ["Are there any food restrictions with this dosage?"]
@@ -100,7 +112,7 @@ st.sidebar.info("💡 **Demo Tip:** Search 'Heart', 'Eye', or 'Bones' to instant
 # ----------------------------------------------------
 if app_mode == "🏥 Unified Health & Hospital Hub":
     st.title("🌟 HealthBridge: Unified Patient Companion")
-    st.markdown("*Combining intelligent emergency hospital routing, precise map pins, and daily medication tracking.*")
+    st.markdown("*Combining intelligent emergency hospital routing, precise map pins, and weekly medication adherence.*")
     st.divider()
 
     st.subheader("🔍 Disease-to-Hospital Intelligent Map Finder")
@@ -111,7 +123,7 @@ if app_mode == "🏥 Unified Health & Hospital Hub":
         key="map_disease_search"
     )
 
-    # Fixed User Simulated Location (Kolhapur Region)
+    # Fixed User Simulated Location (Kolhapur Region) - Strictly Blue Pin
     user_lon, user_lat = 74.2400, 16.7000  
 
     # Default Fallback Hospital (General)
@@ -144,20 +156,20 @@ if app_mode == "🏥 Unified Health & Hospital Hub":
 
     st.markdown(f"📍 **Recommended Facility:** **{h_name}** — *{travel_info}*")
 
-    # --- Clean Map Data Frame with Distinct Coordinates ---
+    # --- Corrected Map Data Frame: User = Blue, Hospital = Orange ---
     map_data = pd.DataFrame([
         {
             "latitude": user_lat, 
             "longitude": user_lon, 
             "name": "Your Location (Patient)", 
-            "color": [30, 144, 255, 255],  # Bright Blue Pin
+            "color": [30, 144, 255, 255],  # Strict Blue Pin for User
             "radius": 50
         },
         {
             "latitude": h_lat, 
             "longitude": h_lon, 
             "name": h_name, 
-            "color": [255, 69, 0, 255],     # Bright Orange Pin
+            "color": [255, 69, 0, 255],     # Strict Orange-Red Pin for Hospital
             "radius": 60
         }
     ])
@@ -175,7 +187,6 @@ if app_mode == "🏥 Unified Health & Hospital Hub":
         get_line_color=[255, 255, 255]
     )
 
-    # Center view dynamically between user and hospital so both pins are guaranteed visible
     view_state = pdk.ViewState(
         latitude=(user_lat + h_lat) / 2,
         longitude=(user_lon + h_lon) / 2,
@@ -191,27 +202,40 @@ if app_mode == "🏥 Unified Health & Hospital Hub":
     )
 
     st.pydeck_chart(r, use_container_width=True)
-    st.caption("📍 Blue Pin = Your Location | 🟠 Orange Pin = Recommended Specialized Hospital")
+    st.caption("🔵 Blue Pin = Your Location | 🟠 Orange Pin = Recommended Specialized Hospital")
 
     st.divider()
 
-    # Medication & Questions Section
+    # --- Weekly Medication Layout & Question Builder ---
     col_left, col_right = st.columns(2)
 
     with col_left:
-        st.subheader("💊 Today's Medication Reminders")
-        for i, med in enumerate(st.session_state.meds):
-            c1, c2 = st.columns([2, 1])
-            with c1:
-                st.write(f"**{med['name']}**")
-                st.caption(f"Time: {med['time']} | {med['status']}")
-            with c2:
-                if med['status'] == "Pending":
-                    if st.button("Mark Taken", key=f"med_taken_{i}"):
-                        st.session_state.meds[i]['status'] = "Taken ✅"
-                        st.rerun()
-                else:
-                    st.success("Taken ✅")
+        st.subheader("💊 Weekly Medication Schedule")
+        st.markdown("Select a day of the week to view and track daily adherence:")
+        
+        selected_day = st.selectbox(
+            "Choose Day:", 
+            ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday"],
+            key="day_selector"
+        )
+        
+        day_meds = st.session_state.meds_by_day[selected_day]
+        
+        if not day_meds:
+            st.info(f"No medications scheduled for {selected_day}.")
+        else:
+            for i, med in enumerate(day_meds):
+                c1, c2 = st.columns([2, 1])
+                with c1:
+                    st.write(f"**{med['name']}**")
+                    st.caption(f"Time: {med['time']} | Category: *{med['category']}* | Status: {med['status']}")
+                with c2:
+                    if med['status'] == "Pending":
+                        if st.button("Mark Taken", key=f"taken_{selected_day}_{i}"):
+                            st.session_state.meds_by_day[selected_day][i]['status'] = "Taken ✅"
+                            st.rerun()
+                    else:
+                        st.success("Taken ✅")
 
     with col_right:
         st.subheader("🏥 Doctor Appointments & Question Builder")
@@ -231,8 +255,8 @@ if app_mode == "🏥 Unified Health & Hospital Hub":
 # 2. CAREGIVER LIVE SYNC (PASSWORD PROTECTED)
 # ----------------------------------------------------
 elif app_mode == "👁️ Caregiver Live Sync":
-    st.title("👁️ Caregiver Real-Time Monitor Link")
-    st.markdown("Secure portal for family members to monitor patient adherence and health status remotely.")
+    st.title("👁️ Caregiver Real-Time Monitor & Prescription Manager")
+    st.markdown("Secure portal for family members to manage patient medications and monitor adherence remotely.")
     st.divider()
 
     password_input = st.text_input("🔒 Enter Caregiver Access Password:", type="password", placeholder="Enter PIN (Demo PIN: 1234)")
@@ -240,19 +264,52 @@ elif app_mode == "👁️ Caregiver Live Sync":
     if password_input == "1234":
         st.success("🔓 Access Granted! Connected to Patient Profile #PAT-8821")
         
-        df_caregiver = pd.DataFrame(st.session_state.meds)
-        st.table(df_caregiver)
+        # --- Add New Prescription Form ---
+        with st.expander("➕ Add New Medication to Schedule", expanded=True):
+            with st.form("add_med_form"):
+                new_med_name = st.text_input("Medicine Name & Dosage:", placeholder="e.g., Paracetamol (650mg)")
+                new_med_time = st.text_input("Scheduled Time:", placeholder="e.g., 02:00 PM")
+                target_day = st.selectbox("Assign to Day of Week:", ["All Days", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday"])
+                
+                submitted = st.form_submit_button("Add Medication")
+                if submitted:
+                    if new_med_name and new_med_time:
+                        detected_category = auto_categorize_medicine(new_med_name)
+                        new_item = {"name": new_med_name, "time": new_med_time, "status": "Pending", "category": detected_category}
+                        
+                        if target_day == "All Days":
+                            for d in st.session_state.meds_by_day:
+                                st.session_state.meds_by_day[d].append(new_item)
+                        else:
+                            st.session_state.meds_by_day[target_day].append(new_item)
+                            
+                        st.success(f"Successfully added {new_med_name} (Category: {detected_category})!")
+                        st.rerun()
+                    else:
+                        st.warning("Please fill in both the medicine name and time.")
+
+        st.divider()
+        st.subheader("📋 Current Weekly Prescriptions Overview")
         
-        st.metric(label="Patient Adherence Rate (Past 7 Days)", value="92%", delta="+4% improvement")
+        # Display table overview of all days
+        all_meds_flat = []
+        for day, m_list in st.session_state.meds_by_day.items():
+            for m in m_list:
+                all_meds_flat.append({"Day": day, "Medicine": m["name"], "Time": m["time"], "Category": m["category"], "Status": m["status"]})
+        
+        st.dataframe(pd.DataFrame(all_meds_flat), use_container_width=True)
+        
+        st.metric(label="Overall Patient Adherence Rate", value="92%", delta="+4% improvement")
         
         with st.form("caregiver_alert"):
             msg = st.text_area("Send an encouraging note or reminder to the patient:", placeholder="Dad, great job taking your medicine today!")
             if st.form_submit_button("Send Push Notification"):
                 st.success("✅ Notification successfully sent to patient device!")
+                
     elif password_input:
         st.error("❌ Incorrect password. Please check with the patient for the correct PIN.")
     else:
-        st.info("ℹ️ Please enter the caregiver PIN to unlock live tracking data.")
+        st.info("ℹ️ Please enter the caregiver PIN to unlock prescription management tools.")
 
 # ----------------------------------------------------
 # 3. SDG 3 IMPACT & METRICS
@@ -265,10 +322,10 @@ elif app_mode == "🌍 SDG 3 Impact & Metrics":
     col1, col2 = st.columns(2)
     with col1:
         st.metric(label="Projected Reduction in Missed Doses", value="38%", delta="High Adherence")
-        st.write("Through intelligent automated reminders and family caregiver syncing.")
+        st.write("Through intelligent automated weekly reminders and family caregiver prescription syncing.")
     with col2:
-        st.metric(label="Emergency Triage Time Saved", value="45%", delta="Fast Routing & Distance Calc")
-        st.write("By linking disease searches instantly to specialized local hospitals and providing direct transit routes.")
+        st.metric(label="Emergency Triage Time Saved", value="45%", delta="Fast Routing")
+        st.write("By linking disease searches instantly to specialized local hospitals and providing precise coordinates.")
 
     st.info("💡 **Low-Resource Scalability:** Designed to operate smoothly on low-bandwidth mobile networks in rural communities.")
 
