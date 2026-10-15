@@ -1,21 +1,71 @@
 import streamlit as st
 import pandas as pd
+import pydeck as pdk
 
-# App Config & Custom Styling for Background
+# App Config & Vibrant UI Styling
 st.set_page_config(
     page_title="HealthBridge - Unified SDG 3 Companion", 
     page_icon="🏥", 
     layout="wide"
 )
 
-# Custom CSS for styling the dashboard and background feel
+# Custom CSS for Vibrant Glassmorphism & Modern Dashboard Look
 st.markdown("""
     <style>
-    .main {
-        background-color: #f8f9fa;
+    /* Main Background Gradient */
+    .stApp {
+        background: linear-gradient(135deg, #0f172a 0%, #1e1b4b 100%);
+        color: #f8fafc;
+        font-family: 'Inter', sans-serif;
     }
-    .stSidebar {
-        background-color: #e9ecef;
+    
+    /* Sidebar Gradient & Styling */
+    section[data-testid="stSidebar"] {
+        background: linear-gradient(180deg, #1e293b 0%, #0f172a 100%);
+        border-right: 1px solid #334155;
+    }
+    section[data-testid="stSidebar"] .block-container {
+        color: #f8fafc;
+    }
+
+    /* Glowing Text Input Fields */
+    .stTextInput input, .stTextArea textarea {
+        background-color: rgba(30, 41, 59, 0.7);
+        color: #ffffff;
+        border: 1px solid #38bdf8;
+        border-radius: 10px;
+        padding: 12px;
+    }
+    .stTextInput input:focus {
+        border-color: #38bdf8;
+        box-shadow: 0 0 15px rgba(56, 189, 248, 0.4);
+    }
+
+    /* Sleek Modern Buttons */
+    .stButton button {
+        background: linear-gradient(135deg, #0ea5e9 0%, #2563eb 100%);
+        color: white;
+        border-radius: 10px;
+        border: none;
+        padding: 10px 20px;
+        font-weight: 600;
+        letter-spacing: 0.5px;
+        transition: all 0.3s ease;
+    }
+    .stButton button:hover {
+        background: linear-gradient(135deg, #38bdf8 0%, #1d4ed8 100%);
+        box-shadow: 0 6px 20px rgba(14, 165, 233, 0.5);
+        transform: translateY(-2px);
+    }
+
+    /* Glassmorphism Metric Cards */
+    div[data-testid="metric-container"] {
+        background: rgba(30, 41, 59, 0.6);
+        border: 1px solid rgba(56, 189, 248, 0.25);
+        padding: 18px;
+        border-radius: 14px;
+        backdrop-filter: blur(10px);
+        box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.3);
     }
     </style>
 """, unsafe_allow_html=True)
@@ -43,14 +93,14 @@ app_mode = st.sidebar.radio(
 )
 
 st.sidebar.divider()
-st.sidebar.info("💡 **Demo Tip:** Search 'Heart', 'Eye', or 'Bones' to find specialized hospitals, routes, and distance estimates!")
+st.sidebar.info("💡 **Demo Tip:** Search 'Heart', 'Eye', or 'Bones' to see custom hospital pins and live route animations!")
 
 # ----------------------------------------------------
 # 1. UNIFIED HEALTH & HOSPITAL HUB
 # ----------------------------------------------------
 if app_mode == "🏥 Unified Health & Hospital Hub":
     st.title("🌟 HealthBridge: Unified Patient Companion")
-    st.markdown("*Combining intelligent emergency hospital routing, live distance tracking, and daily medication adherence.*")
+    st.markdown("*Combining intelligent emergency hospital routing, live map pins, custom routes, and medication tracking.*")
     st.divider()
 
     st.subheader("🔍 Disease-to-Hospital Intelligent Map & Route Finder")
@@ -61,48 +111,81 @@ if app_mode == "🏥 Unified Health & Hospital Hub":
         key="map_disease_search"
     )
 
-    # Default coordinates (Kolhapur region)
-    lat_list = [16.7050, 16.6900, 16.7120, 16.7200]
-    lon_list = [74.2433, 74.2200, 74.2500, 74.4600]
-    name_list = [
-        "Aster Aadhar Hospital (Cardiology)", 
-        "Alliance Multispeciality Hospital", 
-        "Nandadeep Eye Hospital", 
-        "Dr. Lande Fracture Hospital"
-    ]
+    # Default coordinates (Kolhapur Region)
+    user_lon, user_lat = 74.2400, 16.7000  # User simulated location
+    h_lat, h_lon = 16.7050, 74.2433
+    h_name = "Aster Aadhar Hospital (Cardiology)"
+    travel_info = "~3.2 km away | 8 mins via NH48"
 
-    if user_disease_input:
-        query = user_disease_input.lower().strip()
-        st.markdown(f"### 🏥 Best Specialized Recommendations & Routes for: *'{user_disease_input}'*")
-        
-        if any(k in query for k in ["heart", "cardio", "chest", "bp", "stroke"]):
-            st.error("⚠️ **Specialty Match: Cardiology & Emergency Cardiac Unit**")
-            st.write("1. **Aster Aadhar Hospital** (Kolhapur)")
-            st.info("🚗 **Route & Distance:** ~3.2 km away | Estimated Travel Time: **8 mins** via NH48 | 📍 *Building Type: Multi-story Modern Medical Center*")
-            lat_list, lon_list, name_list = [16.7050], [74.2433], ["Aster Aadhar Hospital (Cardiology Center)"]
-            
-        elif any(k in query for k in ["eye", "vision", "cataract", "blur"]):
-            st.warning("👁️ **Specialty Match: Ophthalmology & Vision Care**")
-            st.write("1. **Nandadeep Eye Hospital** (Kolhapur)")
-            st.info("🚗 **Route & Distance:** ~4.5 km away | Estimated Travel Time: **12 mins** via Tarabai Park Road | 📍 *Building Type: Specialized Eye Care Clinic*")
-            lat_list, lon_list, name_list = [16.7120], [74.2500], ["Nandadeep Eye Hospital (Vision Center)"]
-            
-        elif any(k in query for k in ["bone", "fracture", "ortho", "joint", "knee"]):
-            st.info("🦴 **Specialty Match: Orthopedics & Trauma Center**")
-            st.write("1. **Dr. Lande Fracture Hospital** (Ichalkaranji)")
-            st.info("🚗 **Route & Distance:** ~6.0 km away | Estimated Travel Time: **15 mins** via Main Road | 📍 *Building Type: Dedicated Trauma & Orthopedic Wing*")
-            lat_list, lon_list, name_list = [16.7200], [74.4600], ["Dr. Lande Fracture Hospital"]
-            
-        else:
-            st.success("🏥 **General Multi-Specialty Care**")
-            st.write("1. **Alliance Multispeciality Hospital** (Ichalkaranji)")
-            st.info("🚗 **Route & Distance:** ~2.1 km away | Estimated Travel Time: **5 mins** | 📍 *Building Type: General Hospital Complex*")
+    query = (user_disease_input or "").lower().strip()
+    
+    if "heart" in query or "cardio" in query or "chest" in query or "stroke" in query:
+        h_lat, h_lon = 16.7050, 74.2433
+        h_name = "Aster Aadhar Hospital (Cardiology)"
+        travel_info = "~3.2 km away | 8 mins via NH48"
+        st.error("⚠️ **Specialty Match: Cardiology & Emergency Cardiac Unit**")
+    elif "eye" in query or "vision" in query or "cataract" in query:
+        h_lat, h_lon = 16.7120, 74.2500
+        h_name = "Nandadeep Eye Hospital"
+        travel_info = "~4.5 km away | 12 mins via Tarabai Park Road"
+        st.warning("👁️ **Specialty Match: Ophthalmology & Vision Care**")
+    elif "bone" in query or "fracture" in query or "ortho" in query or "joint" in query:
+        h_lat, h_lon = 16.7200, 74.4600
+        h_name = "Dr. Lande Fracture Hospital"
+        travel_info = "~6.0 km away | 15 mins via Main Road"
+        st.info("🦴 **Specialty Match: Orthopedics & Trauma Center**")
     else:
-        st.caption("💡 *Type a condition above to view precise routes, distance, and specialized hospital pins on the map.*")
+        h_lat, h_lon = 16.6900, 74.2200
+        h_name = "Alliance Multispeciality Hospital"
+        travel_info = "~2.1 km away | 5 mins via City Road"
+        if user_disease_input:
+            st.success("🏥 **General Multi-Specialty Care**")
 
-    # Render Live Interactive Map
-    df_map = pd.DataFrame({"lat": lat_list, "lon": lon_list, "Location": name_list})
-    st.map(df_map, zoom=12, use_container_width=True)
+    st.info(f"🚗 **Selected Route to {h_name}:** {travel_info}")
+
+    # --- PyDeck Interactive Map Configuration (Pins + Highlighted Route Line) ---
+    user_point = {"coordinates": [user_lon, user_lat], "name": "Your Location (Patient)", "color": [0, 150, 255]}
+    hospital_point = {"coordinates": [h_lon, h_lat], "name": h_name, "color": [255, 69, 0]}
+    
+    df_points = pd.DataFrame([user_point, hospital_point])
+    route_path = {"path": [[user_lon, user_lat], [h_lon, h_lat]]}
+    df_route = pd.DataFrame([route_path])
+
+    point_layer = pdk.Layer(
+        "ScatterplotLayer",
+        df_points,
+        get_position="coordinates",
+        get_color="color",
+        get_radius=200,
+        pickable=True,
+        auto_highlight=True,
+    )
+
+    route_layer = pdk.Layer(
+        "PathLayer",
+        df_route,
+        get_path="path",
+        get_color=[255, 140, 0],  # Highlighted Orange Route Line
+        width_scale=20,
+        width_min_pixels=5,
+    )
+
+    view_state = pdk.ViewState(
+        latitude=(user_lat + h_lat) / 2,
+        longitude=(user_lon + h_lon) / 2,
+        zoom=13,
+        pitch=30,
+    )
+
+    r = pdk.Deck(
+        layers=[route_layer, point_layer],
+        initial_view_state=view_state,
+        tooltip={"text": "{name}"},
+        map_style="mapbox://styles/mapbox/dark-v10"
+    )
+
+    st.pydeck_chart(r)
+    st.caption("📍 Blue Pin = Your Location | 🟠 Orange Pin = Recommended Hospital | 🟠 Orange Line = Live Travel Route")
 
     st.divider()
 
@@ -146,7 +229,6 @@ elif app_mode == "👁️ Caregiver Live Sync":
     st.markdown("Secure portal for family members to monitor patient adherence and health status remotely.")
     st.divider()
 
-    # Password protection check
     password_input = st.text_input("🔒 Enter Caregiver Access Password:", type="password", placeholder="Enter PIN (Demo PIN: 1234)")
     
     if password_input == "1234":
