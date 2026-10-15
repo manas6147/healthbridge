@@ -79,15 +79,16 @@ def auto_categorize_medicine(med_name):
     else:
         return "General Medication"
 
-# Initialize Session State for Weekly Medications
+# Initialize Session State for Weekly Medications (1 clean med per day)
 if "meds_by_day" not in st.session_state:
-    days = ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday"]
     st.session_state.meds_by_day = {
-        day: [
-            {"name": "Metformin (500mg)", "time": "08:00 AM", "status": "Pending", "category": "Diabetes"},
-            {"name": "Amlodipine (5mg)", "time": "01:00 PM", "status": "Pending", "category": "Blood Pressure"},
-            {"name": "Vitamin D3 Supplement", "time": "08:00 PM", "status": "Pending", "category": "Wellness"}
-        ] for day in days
+        "Monday": [{"name": "Metformin (500mg)", "time": "08:00 AM", "status": "Pending", "category": "Diabetes"}],
+        "Tuesday": [{"name": "Amlodipine (5mg)", "time": "01:00 PM", "status": "Pending", "category": "Blood Pressure"}],
+        "Wednesday": [{"name": "Vitamin D3 Supplement", "time": "08:00 PM", "status": "Pending", "category": "Wellness"}],
+        "Thursday": [{"name": "Metformin (500mg)", "time": "08:00 AM", "status": "Pending", "category": "Diabetes"}],
+        "Friday": [{"name": "Amlodipine (5mg)", "time": "01:00 PM", "status": "Pending", "category": "Blood Pressure"}],
+        "Saturday": [{"name": "Vitamin D3 Supplement", "time": "08:00 PM", "status": "Pending", "category": "Wellness"}],
+        "Sunday": [{"name": "Multivitamin Tablet", "time": "09:00 AM", "status": "Pending", "category": "Wellness"}]
     }
 
 if "questions" not in st.session_state:
@@ -123,10 +124,11 @@ if app_mode == "🏥 Unified Health & Hospital Hub":
         key="map_disease_search"
     )
 
-    # Fixed User Simulated Location (Kolhapur Region) - Strictly Blue Pin
-    user_lon, user_lat = 74.2400, 16.7000  
+    # --- Fixed Coordinates ---
+    # User Location (Fixed Point)
+    user_lat, user_lon = 16.7000, 74.2400  
 
-    # Default Fallback Hospital (General)
+    # Default Hospital Location (General)
     h_lat, h_lon = 16.6900, 74.2200
     h_name = "Alliance Multispeciality Hospital"
     travel_info = "~2.1 km away | 5 mins via City Road"
@@ -156,28 +158,28 @@ if app_mode == "🏥 Unified Health & Hospital Hub":
 
     st.markdown(f"📍 **Recommended Facility:** **{h_name}** — *{travel_info}*")
 
-    # --- Corrected Map Data Frame: User = Blue, Hospital = Orange ---
+    # --- Unambiguous Map Data Frame (User = Blue, Hospital = Orange) ---
     map_data = pd.DataFrame([
         {
-            "latitude": user_lat, 
-            "longitude": user_lon, 
+            "lat": user_lat, 
+            "lon": user_lon, 
             "name": "Your Location (Patient)", 
             "color": [30, 144, 255, 255],  # Strict Blue Pin for User
-            "radius": 50
+            "radius": 60
         },
         {
-            "latitude": h_lat, 
-            "longitude": h_lon, 
+            "lat": h_lat, 
+            "lon": h_lon, 
             "name": h_name, 
             "color": [255, 69, 0, 255],     # Strict Orange-Red Pin for Hospital
-            "radius": 60
+            "radius": 70
         }
     ])
 
     scatterplot_layer = pdk.Layer(
         "ScatterplotLayer",
         map_data,
-        get_position=["longitude", "latitude"],
+        get_position=["lon", "lat"],
         get_fill_color="color",
         get_radius="radius",
         pickable=True,
@@ -291,7 +293,7 @@ elif app_mode == "👁️ Caregiver Live Sync":
         st.divider()
         st.subheader("📋 Current Weekly Prescriptions Overview")
         
-        # Display table overview of all days
+        # Display clean table overview of all days
         all_meds_flat = []
         for day, m_list in st.session_state.meds_by_day.items():
             for m in m_list:
