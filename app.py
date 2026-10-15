@@ -111,57 +111,57 @@ if app_mode == "🏥 Unified Health & Hospital Hub":
         key="map_disease_search"
     )
 
-    # Default coordinates (Kolhapur Region)
-    user_lon, user_lat = 74.2400, 16.7000  # User simulated location
-    h_lat, h_lon = 16.7050, 74.2433
-    h_name = "Aster Aadhar Hospital (Cardiology)"
-    travel_info = "~3.2 km away | 8 mins via NH48"
+    # Fixed User Simulated Location (Kolhapur Region)
+    user_lon, user_lat = 74.2400, 16.7000  
+
+    # Default Fallback Hospital (General)
+    h_lat, h_lon = 16.6900, 74.2200
+    h_name = "Alliance Multispeciality Hospital"
+    travel_info = "~2.1 km away | 5 mins via City Road"
 
     query = (user_disease_input or "").lower().strip()
     
-    if "heart" in query or "cardio" in query or "chest" in query or "stroke" in query:
+    # Accurate Condition-to-Hospital Matching Logic
+    if any(k in query for k in ["heart", "cardio", "chest", "bp", "stroke", "blood pressure"]):
         h_lat, h_lon = 16.7050, 74.2433
-        h_name = "Aster Aadhar Hospital (Cardiology)"
+        h_name = "Aster Aadhar Hospital (Cardiology Center)"
         travel_info = "~3.2 km away | 8 mins via NH48"
         st.error("⚠️ **Specialty Match: Cardiology & Emergency Cardiac Unit**")
-    elif "eye" in query or "vision" in query or "cataract" in query:
+    elif any(k in query for k in ["eye", "vision", "cataract", "blind", "blur"]):
         h_lat, h_lon = 16.7120, 74.2500
-        h_name = "Nandadeep Eye Hospital"
+        h_name = "Nandadeep Eye Hospital (Ophthalmology)"
         travel_info = "~4.5 km away | 12 mins via Tarabai Park Road"
         st.warning("👁️ **Specialty Match: Ophthalmology & Vision Care**")
-    elif "bone" in query or "fracture" in query or "ortho" in query or "joint" in query:
+    elif any(k in query for k in ["bone", "fracture", "ortho", "joint", "knee", "accident"]):
         h_lat, h_lon = 16.7200, 74.4600
-        h_name = "Dr. Lande Fracture Hospital"
+        h_name = "Dr. Lande Fracture Hospital (Trauma & Ortho)"
         travel_info = "~6.0 km away | 15 mins via Main Road"
         st.info("🦴 **Specialty Match: Orthopedics & Trauma Center**")
+    elif user_disease_input:
+        st.success("🏥 **General Multi-Specialty Care**")
     else:
-        h_lat, h_lon = 16.6900, 74.2200
-        h_name = "Alliance Multispeciality Hospital"
-        travel_info = "~2.1 km away | 5 mins via City Road"
-        if user_disease_input:
-            st.success("🏥 **General Multi-Specialty Care**")
+        st.info("💡 *Type a condition above (e.g., 'Heart', 'Eye', 'Bones') to pinpoint the matching hospital.*")
 
-    st.info(f"📍 **Recommended Facility:** {h_name} — {travel_info}")
+    st.markdown(f"📍 **Recommended Facility:** **{h_name}** — *{travel_info}*")
 
-    # --- Clean Map with Precise Pins (No Route Lines) ---
+    # --- Clean Map Data Frame with Distinct Coordinates ---
     map_data = pd.DataFrame([
         {
             "latitude": user_lat, 
             "longitude": user_lon, 
             "name": "Your Location (Patient)", 
             "color": [30, 144, 255, 255],  # Bright Blue Pin
-            "radius": 45  # Small, precise pin size
+            "radius": 50
         },
         {
             "latitude": h_lat, 
             "longitude": h_lon, 
             "name": h_name, 
             "color": [255, 69, 0, 255],     # Bright Orange Pin
-            "radius": 55  # Small, precise pin size
+            "radius": 60
         }
     ])
 
-    # Single Scatterplot Layer for clean pins
     scatterplot_layer = pdk.Layer(
         "ScatterplotLayer",
         map_data,
@@ -175,10 +175,11 @@ if app_mode == "🏥 Unified Health & Hospital Hub":
         get_line_color=[255, 255, 255]
     )
 
+    # Center view dynamically between user and hospital so both pins are guaranteed visible
     view_state = pdk.ViewState(
         latitude=(user_lat + h_lat) / 2,
         longitude=(user_lon + h_lon) / 2,
-        zoom=13.5,
+        zoom=13,
         pitch=20,
     )
 
