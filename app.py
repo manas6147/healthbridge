@@ -12,7 +12,7 @@ try:
 except Exception:
     pass
 
-# Custom CSS: Atmospheric Cloud Shader Background & Floating Dock Container (Standard string to prevent syntax errors)
+# Custom CSS: Atmospheric Cloud Shader Background & Floating Dock Container
 st.markdown("""
     <style>
     /* Completely Hide Streamlit Sidebar */
@@ -100,7 +100,7 @@ st.markdown("""
         box-shadow: 0 15px 35px rgba(0, 0, 0, 0.6);
     }
 
-    /* Floating Navigation Dock Wrapper */
+    /* Floating Navigation Dock Wrapper (Centered Pill) */
     .floating-dock-wrapper {
         position: fixed;
         bottom: 25px;
@@ -113,10 +113,28 @@ st.markdown("""
         padding: 8px 16px;
         box-shadow: 0 25px 50px rgba(0, 0, 0, 0.8), 0 0 25px rgba(56, 189, 248, 0.2);
         z-index: 999999;
-        display: flex;
-        gap: 8px;
+        display: flex !important;
+        align-items: center;
+        justify-content: center;
+        width: max-content !important;
     }
 
+    /* Force Streamlit internal blocks inside dock to pack tightly together */
+    .floating-dock-wrapper [data-testid="stHorizontalBlock"] {
+        display: flex !important;
+        gap: 12px !important;
+        align-items: center !important;
+        width: auto !important;
+    }
+
+    .floating-dock-wrapper [data-testid="column"] {
+        width: auto !important;
+        flex: 0 0 auto !important;
+        min-width: unset !important;
+        padding: 0 !important;
+    }
+
+    /* Style Streamlit dock buttons into compact circles */
     .floating-dock-wrapper div.stButton > button {
         width: 48px;
         height: 48px;
@@ -553,7 +571,7 @@ elif current_tab == "Impact":
     except Exception as impact_err:
         st.error(f"Error loading metrics: {impact_err}")
 
-# --- 4. FLOATING DOCK NAVIGATION BAR (SOCKET-BASED, INSTANT SWITCH) ---
+# --- 4. FLOATING DOCK NAVIGATION BAR (SOCKET-BASED, TIGHTLY PACKED) ---
 st.markdown('<div class="floating-dock-wrapper">', unsafe_allow_html=True)
 dock_cols = st.columns(5)
 
