@@ -165,7 +165,7 @@ try:
             "🏠 Home & Welcome Dashboard",
             "🏥 Unified Health & Hospital Hub", 
             "👁️ Caregiver Live Sync", 
-            "🪪 Digital Medical Passport & SOS",
+            "🆘 Digital Medical Passport & SOS",
             "🌍 SDG 3 Impact & Metrics"
         ]
     )
