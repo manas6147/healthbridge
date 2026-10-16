@@ -2,45 +2,59 @@ import streamlit as st
 import pandas as pd
 import pydeck as pdk
 
-# --- 1. APP CONFIG & ELEGANT TYPOGRAPHY STYLING ---
+# --- 1. APP CONFIG & ACETERNITY UI MASTER STYLING ---
 try:
     st.set_page_config(
-        page_title="HealthBridge - Unified SDG 3 Companion", 
+        page_title="HealthBridge - Aceternity Master Edition", 
         page_icon="🏥", 
         layout="wide"
     )
 except Exception:
     pass
 
-# Custom CSS for Elegant Fonts, Mobile Visibility, and Glassmorphism
+# Custom CSS Injecting Cloud Shader Atmosphere, Gooey Inputs, Magnetic Buttons, & Floating Dock
 st.markdown("""
     @import url('https://fonts.googleapis.com/css2?family=Playfair+Display:wght@600;700&family=Plus+Jakarta+Sans:wght@300;400;500;600;700&display=swap');
 
     <style>
-    /* Global Font Styling - Elegant SaaS Aesthetic */
-    html, body, [class*="css"] {
+    /* Animated Cloud Shader & Atmospheric Mesh Background */
+    .stApp {
+        background-color: #020617 !important;
+        background-image: 
+            radial-gradient(circle at 15% 20%, rgba(56, 189, 248, 0.18) 0%, transparent 40%),
+            radial-gradient(circle at 85% 80%, rgba(129, 140, 248, 0.15) 0%, transparent 45%),
+            radial-gradient(circle at 50% 50%, rgba(14, 165, 233, 0.1) 0%, transparent 60%),
+            linear-gradient(rgba(255, 255, 255, 0.02) 1px, transparent 1px),
+            linear-gradient(90deg, rgba(255, 255, 255, 0.02) 1px, transparent 1px);
+        background-size: 100% 100%, 100% 100%, 100% 100%, 50px 50px, 50px 50px;
+        animation: cloudShaderPulse 15s ease-in-out infinite alternate;
+        color: #f8fafc;
         font-family: 'Plus Jakarta Sans', sans-serif !important;
     }
 
-    h1, h2, h3, h4, h5, h6 {
+    @keyframes cloudShaderPulse {
+        0% { background-position: 0% 0%, 0% 0%, 0% 0%, 0 0, 0 0; }
+        100% { background-position: 10% 10%, -10% -10%, 5% 5%, 50px 50px, 50px 50px; }
+    }
+
+    /* Gradient Headings with Cloud Glow */
+    h1, h2, h3 {
         font-family: 'Playfair Display', serif !important;
         font-weight: 700 !important;
-        color: #f8fafc !important;
+        background: linear-gradient(135deg, #ffffff 0%, #38bdf8 40%, #818cf8 100%);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        text-shadow: 0 0 40px rgba(56, 189, 248, 0.3);
         letter-spacing: -0.5px;
     }
 
-    /* Main Background Gradient */
-    .stApp {
-        background: linear-gradient(135deg, #090d16 0%, #171b38 100%);
-        color: #f8fafc;
-    }
-    
-    /* Sidebar Styling & Mobile Visibility */
+    /* Sidebar Styling */
     section[data-testid="stSidebar"] {
-        background: linear-gradient(180deg, #111827 0%, #090d16 100%) !important;
-        border-right: 1px solid #1f2937;
+        background: rgba(2, 6, 23, 0.92) !important;
+        backdrop-filter: blur(25px);
+        border-right: 1px solid rgba(255, 255, 255, 0.08);
     }
-    
+
     section[data-testid="stSidebar"] .block-container {
         color: #ffffff !important;
     }
@@ -50,19 +64,23 @@ st.markdown("""
         font-weight: 500 !important;
         font-size: 15px !important;
     }
-    
-    section[data-testid="stSidebar"] div[data-testid="stMarkdownContainer"] p,
-    section[data-testid="stSidebar"] span {
-        color: #94a3b8 !important;
+
+    /* Aceternity Gooey Input Effect (Liquid Glow & Fluid Focus) */
+    .stTextInput input, .stTextArea textarea, .stSelectbox select, div[data-baseweb="select"] div {
+        background-color: rgba(15, 23, 42, 0.9) !important;
+        color: #ffffff !important;
+        border: 2px solid rgba(56, 189, 248, 0.3) !important;
+        border-radius: 16px !important;
+        padding: 10px 18px !important;
+        font-family: 'Plus Jakarta Sans', sans-serif !important;
+        box-shadow: 0 0 20px rgba(56, 189, 248, 0.12), inset 0 0 10px rgba(56, 189, 248, 0.04);
+        transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
     }
 
-    /* High-Contrast Mobile Input Field Text Visibility */
-    .stTextInput input, .stTextArea textarea, .stSelectbox select, div[data-baseweb="select"] div {
-        background-color: #111827 !important;
-        color: #ffffff !important;
-        border: 1px solid #38bdf8 !important;
-        border-radius: 12px;
-        font-family: 'Plus Jakarta Sans', sans-serif !important;
+    .stTextInput input:focus, .stTextArea textarea:focus {
+        border-color: #38bdf8 !important;
+        box-shadow: 0 0 35px rgba(56, 189, 248, 0.5), 0 0 70px rgba(99, 102, 241, 0.3), inset 0 0 15px rgba(56, 189, 248, 0.2) !important;
+        transform: scale(1.01);
     }
 
     input::placeholder, textarea::placeholder {
@@ -70,36 +88,88 @@ st.markdown("""
         opacity: 1 !important;
     }
 
-    /* Sleek Modern Buttons */
+    /* Magnetic & Stateful Button Styling with Hover Glow */
     .stButton button {
-        background: linear-gradient(135deg, #0ea5e9 0%, #2563eb 100%) !important;
+        background: linear-gradient(135deg, #0ea5e9 0%, #6366f1 100%) !important;
         color: white !important;
-        border-radius: 12px;
-        border: none;
-        padding: 10px 22px;
+        border-radius: 14px;
+        border: 1px solid rgba(255, 255, 255, 0.25);
+        padding: 10px 24px;
         font-weight: 600 !important;
         font-family: 'Plus Jakarta Sans', sans-serif !important;
         letter-spacing: 0.5px;
-        transition: all 0.3s ease;
-    }
-    .stButton button:hover {
-        background: linear-gradient(135deg, #38bdf8 0%, #1d4ed8 100%) !important;
-        box-shadow: 0 8px 25px rgba(14, 165, 233, 0.4);
-        transform: translateY(-2px);
+        transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        box-shadow: 0 4px 20px rgba(14, 165, 233, 0.4);
     }
 
-    /* Glassmorphism Cards */
+    .stButton button:hover {
+        background: linear-gradient(135deg, #38bdf8 0%, #4f46e5 100%) !important;
+        box-shadow: 0 0 35px rgba(56, 189, 248, 0.8);
+        transform: translateY(-3px) scale(1.02);
+    }
+
+    /* Bento Grid Glass Cards */
     div[data-testid="metric-container"], div.stTabs {
-        background: rgba(17, 24, 39, 0.7);
-        border: 1px solid rgba(56, 189, 248, 0.2);
-        padding: 18px;
-        border-radius: 16px;
-        backdrop-filter: blur(12px);
+        background: rgba(15, 23, 42, 0.65) !important;
+        border: 1px solid rgba(56, 189, 248, 0.2) !important;
+        padding: 20px;
+        border-radius: 20px;
+        backdrop-filter: blur(20px);
+        box-shadow: 0 15px 35px rgba(0, 0, 0, 0.6);
+    }
+
+    /* Aceternity Floating Dock Simulation */
+    .floating-dock-container {
+        position: fixed;
+        bottom: 20px;
+        left: 50%;
+        transform: translateX(-50%);
+        display: flex;
+        gap: 15px;
+        padding: 10px 22px;
+        background: rgba(15, 23, 42, 0.85);
+        backdrop-filter: blur(25px);
+        border: 1px solid rgba(56, 189, 248, 0.35);
+        border-radius: 9999px;
+        box-shadow: 0 20px 50px rgba(0, 0, 0, 0.7), 0 0 20px rgba(56, 189, 248, 0.2);
+        z-index: 99999;
+    }
+
+    .dock-icon {
+        width: 42px;
+        height: 42px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        border-radius: 50%;
+        background: rgba(30, 41, 59, 0.9);
+        border: 1px solid rgba(255, 255, 255, 0.12);
+        color: #38bdf8;
+        font-size: 18px;
+        text-decoration: none;
+        transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+
+    .dock-icon:hover {
+        transform: scale(1.35) translateY(-8px);
+        background: linear-gradient(135deg, #0ea5e9 0%, #6366f1 100%);
+        color: white;
+        border-color: rgba(255, 255, 255, 0.5);
+        box-shadow: 0 10px 30px rgba(56, 189, 248, 0.7);
     }
     </style>
+
+    <!-- Floating Dock HTML -->
+    <div class="floating-dock-container">
+        <a href="#" class="dock-icon" title="Home">🏠</a>
+        <a href="#" class="dock-icon" title="Hospital Hub">🏥</a>
+        <a href="#" class="dock-icon" title="Caregiver Portal">👁️</a>
+        <a href="#" class="dock-icon" title="Medical Passport">🪪</a>
+        <a href="#" class="dock-icon" title="SDG 3 Impact">🌍</a>
+    </div>
 """, unsafe_allow_html=True)
 
-# --- 2. ROBUST HELPER FUNCTIONS & SESSION STATE INITIALIZATION ---
+# --- 2. SESSION STATE & HELPER FUNCTIONS ---
 try:
     def auto_categorize_medicine(med_name):
         try:
@@ -117,21 +187,18 @@ try:
         except Exception:
             return "General Medication"
 
-    # Initialize Dynamic User Location on App Load
     if "user_location" not in st.session_state:
         st.session_state.user_location = {
             "lat": 16.7010,
             "lon": 74.2390,
-            "status": "GPS Synced (Kolhapur Central)"
+            "status": "GPS Active (Kolhapur Central)"
         }
 
-    # Initialize Notifications State for the Bell Icon
     if "notifications" not in st.session_state:
         st.session_state.notifications = [
-            {"msg": "Welcome to HealthBridge! Your caregiver and emergency link are active.", "time": "System Init"}
+            {"msg": "✨ HealthBridge Aceternity Master Edition initialized successfully.", "time": "System Init"}
         ]
 
-    # Initialize Multi-Week & Multi-Day Medication State
     if "meds_by_week" not in st.session_state:
         weeks = ["Week 1", "Week 2", "Week 3", "Week 4"]
         days = ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday"]
@@ -153,77 +220,59 @@ try:
         st.session_state.questions = ["Are there any food restrictions with this dosage?"]
 
 except Exception as init_error:
-    st.error(f"Initialization Warning: {init_error}")
+    st.error(f"Initialization Notice: {init_error}")
 
-# --- 3. SIDEBAR NAVIGATION DASHBOARD ---
+# --- 3. SIDEBAR NAVIGATION MENU ---
 try:
-    st.sidebar.title("🌟 HealthBridge")
-    st.sidebar.markdown("### Unified Patient Companion")
+    st.sidebar.title("✨ HealthBridge")
+    st.sidebar.markdown("##### *Aceternity Master Suite*")
     app_mode = st.sidebar.radio(
-        "Select Navigation Option:", 
+        "Navigation:", 
         [
-            "🏠 Home & Welcome Dashboard",
+            "🏠 Home & Bento Overview",
             "🏥 Unified Health & Hospital Hub", 
             "👁️ Caregiver Live Sync", 
-            "🆘 Digital Medical Passport & SOS",
+            "🪪 Digital Medical Passport & SOS",
             "🌍 SDG 3 Impact & Metrics"
         ]
     )
-
     st.sidebar.divider()
-    st.sidebar.info("💡 **Demo Tip:** Search 'Heart', 'Eye', or 'Bones' to instantly pinpoint specialized hospitals on the map!")
+    st.sidebar.info("💡 **Pitch Tip:** Type 'Heart', 'Eye', or 'Bones' in the Hospital Hub to test intelligent routing!")
 except Exception:
-    app_mode = "🏠 Home & Welcome Dashboard"
+    app_mode = "🏠 Home & Bento Overview"
 
 # ----------------------------------------------------
-# 4. MODULE 0: HOME & WELCOME DASHBOARD
+# 4. MODULE 0: HOME & BENTO OVERVIEW
 # ----------------------------------------------------
-if app_mode == "🏠 Home & Welcome Dashboard":
+if app_mode == "🏠 Home & Bento Overview":
     try:
-        st.title("🌟 Welcome to HealthBridge")
-        st.markdown("### *Your Unified SDG 3 Companion for Patient Adherence & Emergency Care*")
+        st.title("🌟 HealthBridge: Next-Gen Patient Companion")
+        st.markdown("##### *Precision Healthcare, Gooey UI Triage & Family Caregiving for SDG 3*")
         st.divider()
 
-        # Hero Banner Metrics
         col1, col2, col3 = st.columns(3)
         with col1:
             st.metric(label="Active Treatment Plan", value="Week 1 Active", delta="92% Adherence")
         with col2:
-            st.metric(label="Emergency Readiness", value="GPS Active", delta="Kolhapur Region")
+            st.metric(label="Emergency Readiness", value="GPS Online", delta="Kolhapur Region")
         with col3:
             st.metric(label="Caregiver Link", value="Connected 🔒", delta="PIN Protected")
 
         st.divider()
 
-        # Quick Access Feature Cards
-        st.subheader("🚀 Quick Actions & Core Modules")
-        
+        st.subheader("⚡ Quick Access Bento Modules")
         col_a, col_b, col_c = st.columns(3)
         
         with col_a:
-            st.markdown("""
-                #### 🏥 Hospital Hub
-                Instant disease-to-hospital intelligent routing and live GPS location mapping.
-            """)
-            st.info("👈 Select 'Unified Health & Hospital Hub' in sidebar.")
-
+            st.markdown("### 🏥 Hospital Hub\nIntelligent disease-to-hospital routing with dynamic dark-mode maps.")
+            st.info("👈 Select **Hospital Hub** in sidebar.")
         with col_b:
-            st.markdown("""
-                #### 💊 Medication Suite
-                Multi-week day-by-day tracking, independent resets, and auto-categorization.
-            """)
-            st.info("👈 Access via Hospital Hub.")
-
+            st.markdown("### 💊 Medication Suite\nMulti-week medication schedules, independent daily resets, and smart categorization.")
+            st.info("👈 Access via **Hospital Hub**.")
         with col_c:
-            st.markdown("""
-                #### 🚑 Medical Passport & SOS
-                Digital medical ID cards and one-tap emergency SOS broadcast.
-            """)
-            st.info("👈 Select 'Digital Medical Passport & SOS' in sidebar.")
+            st.markdown("### 🪪 Passport & SOS\nDigital Medical Passport ID with single-tap emergency SOS broadcasting.")
+            st.info("👈 Select **Medical Passport & SOS** in sidebar.")
 
-        st.divider()
-        st.markdown("### 🏆 SDG 3 Hackathon Alignment")
-        st.write("HealthBridge bridges the critical gap between daily preventive care and emergency hospital triage in a single, mobile-responsive web platform designed for low-bandwidth rural and urban communities.")
     except Exception as home_err:
         st.error(f"Error loading Home Dashboard: {home_err}")
 
@@ -232,44 +281,38 @@ if app_mode == "🏠 Home & Welcome Dashboard":
 # ----------------------------------------------------
 elif app_mode == "🏥 Unified Health & Hospital Hub":
     try:
-        # Top Header Bar with Notification Bell Icon
         col_title, col_bell = st.columns([4, 1])
         with col_title:
-            st.title("🌟 HealthBridge: Unified Patient Companion")
+            st.title("🏥 Intelligent Hospital Finder & Schedule")
         with col_bell:
             notif_count = len(st.session_state.notifications)
             with st.popover(f"🔔 Notifications ({notif_count})"):
-                st.markdown("### **Patient Alert Center**")
+                st.markdown("### **Patient Alert Feed**")
                 if not notif_count:
-                    st.info("No notifications at this time.")
+                    st.info("No notifications.")
                 else:
                     for n in reversed(st.session_state.notifications):
                         st.markdown(f"🕒 *{n.get('time', 'Recent')}*<br>**{n.get('msg', '')}**", unsafe_allow_html=True)
                         st.divider()
 
-        st.markdown("*Combining intelligent emergency hospital routing, live GPS geolocation, and multi-week medication adherence.*")
         st.divider()
 
-        st.subheader("🔍 Disease-to-Hospital Intelligent Map Finder")
-        
+        st.subheader("🔍 Gooey Disease-to-Hospital Search")
         user_disease_input = st.text_input(
-            "Enter disease/symptom:",
+            "Type condition / symptom:",
             placeholder="Type condition here... (e.g., Heart, Eye, Bones)",
             key="map_disease_search"
         )
 
-        # Retrieve Dynamic User Location from Session State
         user_lat = st.session_state.user_location["lat"]
         user_lon = st.session_state.user_location["lon"]
 
-        # Default Hospital Location (General)
         h_lat, h_lon = 16.6900, 74.2200
         h_name = "Alliance Multispeciality Hospital"
         travel_info = "~2.1 km away | 5 mins via City Road"
 
         query = (user_disease_input or "").lower().strip()
         
-        # Accurate Condition-to-Hospital Matching Logic
         if any(k in query for k in ["heart", "cardio", "chest", "bp", "stroke", "blood pressure"]):
             h_lat, h_lon = 16.7050, 74.2433
             h_name = "Aster Aadhar Hospital (Cardiology Center)"
@@ -288,25 +331,24 @@ elif app_mode == "🏥 Unified Health & Hospital Hub":
         elif user_disease_input:
             st.success("🏥 **General Multi-Specialty Care**")
         else:
-            st.info("💡 *Type a condition above (e.g., 'Heart', 'Eye', 'Bones') to pinpoint the matching hospital.*")
+            st.info("💡 *Type a condition above (e.g., 'Heart', 'Eye', 'Bones') to locate the specialized facility.*")
 
         st.markdown(f"📍 **Recommended Facility:** **{h_name}** — *{travel_info}*")
 
-        # --- Strict Map Data Frame & Rendering with Try/Catch ---
         try:
             map_data = pd.DataFrame([
                 {
                     "latitude": user_lat, 
                     "longitude": user_lon, 
                     "name": "Your Location (Patient - GPS Active)", 
-                    "color": [30, 144, 255, 255],  # Strict Blue Pin for User
+                    "color": [56, 189, 248, 255],
                     "radius": 75
                 },
                 {
                     "latitude": h_lat, 
                     "longitude": h_lon, 
                     "name": h_name, 
-                    "color": [255, 69, 0, 255],     # Strict Orange-Red Pin for Hospital
+                    "color": [244, 63, 94, 255],
                     "radius": 85
                 }
             ])
@@ -339,19 +381,17 @@ elif app_mode == "🏥 Unified Health & Hospital Hub":
             )
 
             st.pydeck_chart(r, use_container_width=True)
-            st.caption("🔵 Blue Pin = Your Live GPS Location | 🟠 Orange Pin = Recommended Specialized Hospital")
+            st.caption("🔵 Cyan Pin = Live GPS Location | 🔴 Rose Pin = Recommended Specialized Hospital")
         except Exception as map_err:
             st.error(f"Map rendering error: {map_err}")
 
         st.divider()
 
-        # --- Multi-Week Medication Schedule & Question Builder ---
         col_left, col_right = st.columns(2)
 
         with col_left:
             try:
                 st.subheader("💊 Multi-Week Medication Schedule")
-                st.markdown("Select the treatment week and day to track adherence:")
                 
                 selected_week = st.selectbox(
                     "Choose Treatment Week:", 
@@ -384,14 +424,14 @@ elif app_mode == "🏥 Unified Health & Hospital Hub":
                             else:
                                 st.success("Taken ✅")
             except Exception as med_err:
-                st.error(f"Error loading medication schedule: {med_err}")
+                st.error(f"Error loading schedule: {med_err}")
 
         with col_right:
             try:
-                st.subheader("🏥 Doctor Appointments & Question Builder")
+                st.subheader("🏥 Doctor Appointments & Questions")
                 st.info("**Dr. Sharma (Cardiologist)**\n📅 Tomorrow at 10:30 AM\n📍 City General Hospital")
                 
-                new_q = st.text_input("Add a question for your doctor:", placeholder="e.g. Any side effects?")
+                new_q = st.text_input("Add a question for your doctor:", placeholder="e.g. Any food restrictions?")
                 if st.button("Save Question"):
                     if new_q:
                         st.session_state.questions.append(new_q)
@@ -404,23 +444,22 @@ elif app_mode == "🏥 Unified Health & Hospital Hub":
                 st.error(f"Error in doctor section: {doc_err}")
 
     except Exception as hub_err:
-        st.error(f"Critical error in Hospital Hub: {hub_err}")
+        st.error(f"Error in Hospital Hub: {hub_err}")
 
 # ----------------------------------------------------
-# 6. MODULE 2: CAREGIVER LIVE SYNC (PASSWORD PROTECTED)
+# 6. MODULE 2: CAREGIVER LIVE SYNC
 # ----------------------------------------------------
 elif app_mode == "👁️ Caregiver Live Sync":
     try:
-        st.title("👁️ Caregiver Real-Time Monitor & Prescription Manager")
-        st.markdown("Secure portal for family members to manage multi-week patient medications and monitor adherence remotely.")
+        st.title("👁️ Caregiver Prescription Manager")
+        st.markdown("Secure portal for remote family monitoring and prescription assignment.")
         st.divider()
 
-        password_input = st.text_input("🔒 Enter Caregiver Access Password:", type="password", placeholder="Enter PIN (Demo PIN: 1234)")
+        password_input = st.text_input("🔒 Enter Caregiver Access PIN:", type="password", placeholder="Enter PIN (Demo PIN: 1234)")
         
         if password_input == "1234":
             st.success("🔓 Access Granted! Connected to Patient Profile #PAT-8821")
             
-            # --- Add New Prescription Form with Multi-Week Selection & Try/Except ---
             with st.expander("➕ Add New Medication to Schedule", expanded=True):
                 try:
                     with st.form("add_med_form", clear_on_submit=True):
@@ -442,17 +481,16 @@ elif app_mode == "👁️ Caregiver Live Sync":
                                     for d in days_to_update:
                                         st.session_state.meds_by_week[w][d].append(new_item)
                                         
-                                st.success(f"Successfully added {new_med_name} to {target_week} ({target_day})!")
+                                st.success(f"Successfully added {new_med_name}!")
                                 st.rerun()
                             else:
-                                st.warning("Please fill in both the medicine name and scheduled time.")
+                                st.warning("Please fill in medicine name and time.")
                 except Exception as form_err:
                     st.error(f"Form submission error: {form_err}")
 
             st.divider()
-            st.subheader("📋 Comprehensive Multi-Week Prescriptions Overview")
+            st.subheader("📋 Multi-Week Prescriptions Overview")
             
-            # Display clean structured table overview across all weeks
             try:
                 all_meds_flat = []
                 for week, d_dict in st.session_state.meds_by_week.items():
@@ -469,32 +507,32 @@ elif app_mode == "👁️ Caregiver Live Sync":
                 
                 st.dataframe(pd.DataFrame(all_meds_flat), use_container_width=True)
             except Exception as table_err:
-                st.error(f"Error generating overview table: {table_err}")
+                st.error(f"Table rendering error: {table_err}")
             
             st.metric(label="Overall Patient Adherence Rate", value="92%", delta="+4% improvement")
             
             try:
                 with st.form("caregiver_alert", clear_on_submit=True):
-                    msg = st.text_area("Send an encouraging note or reminder to the patient:", placeholder="Dad, great job taking your medicine today!")
+                    msg = st.text_area("Send an encouraging note or reminder to patient:", placeholder="Dad, great job taking your medicine today!")
                     if st.form_submit_button("Send Push Notification"):
                         if msg.strip():
                             st.session_state.notifications.append({
                                 "msg": f"Caregiver Note: {msg}",
                                 "time": "Just now"
                             })
-                            st.success("✅ Notification successfully sent and logged in Patient Bell Feed!")
+                            st.success("✅ Notification sent to Patient Bell Feed!")
                         else:
-                            st.warning("Please enter a message before sending.")
+                            st.warning("Please enter a message.")
             except Exception as alert_err:
-                st.error(f"Error sending notification: {alert_err}")
+                st.error(f"Notification error: {alert_err}")
                     
         elif password_input:
-            st.error("❌ Incorrect password. Please check with the patient for the correct PIN.")
+            st.error("❌ Incorrect PIN. Please try again.")
         else:
-            st.info("ℹ️ Please enter the caregiver PIN to unlock prescription management tools.")
+            st.info("ℹ️ Enter PIN `1234` to unlock prescription controls.")
 
     except Exception as caregiver_err:
-        st.error(f"Critical error in Caregiver Portal: {caregiver_err}")
+        st.error(f"Error in Caregiver Portal: {caregiver_err}")
 
 # ----------------------------------------------------
 # 7. MODULE 3: DIGITAL MEDICAL PASSPORT & SOS
@@ -502,7 +540,7 @@ elif app_mode == "👁️ Caregiver Live Sync":
 elif app_mode == "🪪 Digital Medical Passport & SOS":
     try:
         st.title("🪪 Digital Medical Passport & Emergency SOS")
-        st.markdown("*Instant offline/online access to critical medical data and emergency broadcasting.*")
+        st.markdown("Critical offline/online patient medical passport and live broadcast portal.")
         st.divider()
 
         col_id_left, col_id_right = st.columns(2)
@@ -512,29 +550,29 @@ elif app_mode == "🪪 Digital Medical Passport & SOS":
             st.markdown("""
                 * **Full Legal Name:** Manas S. Abitkar
                 * **Blood Group:** O+ Positive
-                * **Emergency Contact:** +91 98765 43210 (Father / Caregiver)
+                * **Emergency Contact:** +91 98765 43210 (Caregiver)
                 * **Known Allergies:** Penicillin, Peanuts
                 * **Chronic Conditions:** Type 2 Diabetes, Hypertension
                 * **Primary Physician:** Dr. Sharma (City General Hospital)
             """)
             if st.button("📥 Download Medical ID (PDF/QR)"):
-                st.success("Emergency QR Passport generated successfully!")
+                st.success("Emergency QR Passport generated!")
 
         with col_id_right:
             st.subheader("🚨 One-Tap Emergency SOS Broadcast")
-            st.warning("⚠️ Pressing this button will instantly broadcast your live GPS coordinates and medical ID to your emergency contacts and caregiver portal.")
+            st.warning("⚠️ Pressing this button instantly broadcasts your live GPS coordinates to emergency contacts.")
             
-            sos_message = st.text_area("Optional Emergency Note:", placeholder="e.g., Experiencing severe chest pain, need immediate transport.")
+            sos_message = st.text_area("Optional Emergency Note:", placeholder="e.g., Experiencing chest pain, need immediate assistance.")
             
             if st.button("🚨 TRIGGER EMERGENCY SOS"):
                 st.session_state.notifications.append({
                     "msg": f"🚨 EMERGENCY SOS TRIGGERED! Note: {sos_message or 'Immediate assistance requested.'}",
                     "time": "Just now (CRITICAL)"
                 })
-                st.error("🚨 SOS Alert Broadcasted! Caregiver notified via push notification.")
+                st.error("🚨 SOS Alert Broadcasted!")
 
     except Exception as passport_err:
-        st.error(f"Error loading Medical Passport: {passport_err}")
+        st.error(f"Error in Passport Portal: {passport_err}")
 
 # ----------------------------------------------------
 # 8. MODULE 4: SDG 3 IMPACT & METRICS
@@ -555,11 +593,11 @@ elif app_mode == "🌍 SDG 3 Impact & Metrics":
 
         st.info("💡 **Low-Resource Scalability:** Designed to operate smoothly on low-bandwidth mobile networks in rural communities.")
     except Exception as impact_err:
-        st.error(f"Error loading impact metrics: {impact_err}")
+        st.error(f"Error loading metrics: {impact_err}")
 
 # Footer
 try:
     st.markdown("---")
-    st.caption("HealthBridge Unified Prototype • Built with Python, Streamlit & PyDeck 🚀")
+    st.caption("HealthBridge Aceternity Master Edition • Built with Python, Streamlit & PyDeck 🚀")
 except Exception:
     pass
