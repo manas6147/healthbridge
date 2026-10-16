@@ -5,17 +5,24 @@ import pydeck as pdk
 # --- 1. APP CONFIG & ACETERNITY UI MASTER STYLING ---
 try:
     st.set_page_config(
-        page_title="HealthBridge - Aceternity Cloud Edition", 
+        page_title="HealthBridge - Aceternity Edition", 
         page_icon="🏥", 
         layout="wide"
     )
 except Exception:
     pass
 
-# Custom CSS Injecting Cloud Shader, Gooey Inputs, Magnetic Buttons, & Floating Dock
+# Initialize Active Tab Navigation
+if "active_tab" not in st.session_state:
+    st.session_state.active_tab = "Home"
+
+def set_tab(tab_name):
+    st.session_state.active_tab = tab_name
+
+# Inject Master CSS (Cloud Shader, Gooey Inputs, Fixed Floating Dock)
 st.markdown("""
     <style>
-    /* Completely Hide Streamlit Sidebar & Default Header */
+    /* Completely Hide Sidebar and Header */
     section[data-testid="stSidebar"] {
         display: none !important;
     }
@@ -23,7 +30,7 @@ st.markdown("""
         background: transparent !important;
     }
 
-    /* 1. INTERACTIVE ATMOSPHERIC CLOUD SHADER BACKGROUND */
+    /* 1. CLOUD SHADER ATMOSPHERIC BACKGROUND */
     .stApp {
         background-color: #030712 !important;
         background-image: 
@@ -34,8 +41,8 @@ st.markdown("""
         background-size: 160% 160%;
         animation: cloudDrift 18s ease-in-out infinite alternate;
         color: #f8fafc;
-        font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif !important;
-        padding-bottom: 130px; /* Space for floating dock */
+        font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif !important;
+        padding-bottom: 140px; /* Clearance for floating dock */
     }
 
     @keyframes cloudDrift {
@@ -44,7 +51,7 @@ st.markdown("""
         100% { background-position: 50% 100%; }
     }
 
-    /* Clean Gradient Typography */
+    /* Clean Gradient Headings */
     h1, h2, h3 {
         font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif !important;
         font-weight: 800 !important;
@@ -54,7 +61,7 @@ st.markdown("""
         letter-spacing: -0.8px;
     }
 
-    /* 2. INTERACTIVE GOOEY INPUT FIELDS */
+    /* 2. GOOEY INPUT FIELDS */
     .stTextInput input, .stTextArea textarea, .stSelectbox select, div[data-baseweb="select"] div {
         background-color: rgba(15, 23, 42, 0.85) !important;
         color: #ffffff !important;
@@ -76,7 +83,17 @@ st.markdown("""
         opacity: 1 !important;
     }
 
-    /* 3. STATEFUL / MAGNETIC ACTION BUTTONS */
+    /* 3. BENTO GLASS CARDS */
+    div[data-testid="metric-container"], div.stTabs, .stExpander {
+        background: rgba(15, 23, 42, 0.75) !important;
+        border: 1px solid rgba(56, 189, 248, 0.25) !important;
+        padding: 22px;
+        border-radius: 22px;
+        backdrop-filter: blur(20px);
+        box-shadow: 0 20px 40px rgba(0, 0, 0, 0.6);
+    }
+
+    /* 4. GENERAL BUTTONS */
     .stButton button {
         background: linear-gradient(135deg, #0ea5e9 0%, #6366f1 100%) !important;
         color: #ffffff !important;
@@ -97,87 +114,48 @@ st.markdown("""
         transform: translateY(-3px) scale(1.02);
     }
 
-    .stButton button:active {
-        transform: translateY(1px) scale(0.98);
+    /* 5. FLOATING DOCK WRAPPER FIX */
+    .floating-dock-container {
+        position: fixed;
+        bottom: 20px;
+        left: 50%;
+        transform: translateX(-50%);
+        width: min(90vw, 520px);
+        background: rgba(15, 23, 42, 0.92);
+        backdrop-filter: blur(25px);
+        border: 1.5px solid rgba(56, 189, 248, 0.45);
+        border-radius: 9999px;
+        padding: 8px 16px;
+        box-shadow: 0 25px 60px rgba(0, 0, 0, 0.85), 0 0 30px rgba(56, 189, 248, 0.3);
+        z-index: 999999;
     }
 
-    /* Bento Grid Glass Cards */
-    div[data-testid="metric-container"], div.stTabs, .stExpander {
-        background: rgba(15, 23, 42, 0.75) !important;
-        border: 1px solid rgba(56, 189, 248, 0.25) !important;
-        padding: 22px;
-        border-radius: 22px;
-        backdrop-filter: blur(20px);
-        box-shadow: 0 20px 40px rgba(0, 0, 0, 0.6);
-    }
-
-    /* 4. HIGHLY INTERACTIVE FLOATING DOCK (ST.RADIO INTEGRATION) */
-    div[data-testid="stRadio"] {
-        position: fixed !important;
-        bottom: 25px !important;
-        left: 50% !important;
-        transform: translateX(-50%) !important;
-        background: rgba(15, 23, 42, 0.92) !important;
-        backdrop-filter: blur(25px) !important;
-        border: 1.5px solid rgba(56, 189, 248, 0.45) !important;
-        border-radius: 9999px !important;
-        padding: 8px 20px !important;
-        box-shadow: 0 25px 60px rgba(0, 0, 0, 0.85), 0 0 30px rgba(56, 189, 248, 0.3) !important;
-        z-index: 999999 !important;
-        width: auto !important;
-    }
-
-    div[data-testid="stRadio"] label[data-baseweb="radio"] {
-        display: none !important;
-    }
-
-    div[data-testid="stRadio"] > div {
-        flex-direction: row !important;
-        gap: 14px !important;
-        align-items: center !important;
-        justify-content: center !important;
-    }
-
-    div[data-testid="stRadio"] div[role="radiogroup"] > label {
-        background: rgba(30, 41, 59, 0.95) !important;
-        border: 1px solid rgba(255, 255, 255, 0.18) !important;
+    .floating-dock-container div.stButton > button {
+        background: rgba(30, 41, 59, 0.9) !important;
+        border: 1px solid rgba(255, 255, 255, 0.15) !important;
         border-radius: 50% !important;
-        width: 52px !important;
         height: 52px !important;
+        width: 52px !important;
+        padding: 0 !important;
+        font-size: 22px !important;
         display: flex !important;
         align-items: center !important;
         justify-content: center !important;
-        cursor: pointer !important;
-        transition: all 0.3s cubic-bezier(0.34, 1.56, 0.64, 1) !important;
+        margin: 0 auto !important;
         box-shadow: 0 4px 15px rgba(0, 0, 0, 0.4) !important;
-        padding: 0 !important;
-        margin: 0 !important;
     }
 
-    div[data-testid="stRadio"] div[role="radiogroup"] > label:hover {
-        transform: scale(1.35) translateY(-8px) !important;
+    .floating-dock-container div.stButton > button:hover {
+        transform: scale(1.3) translateY(-6px) !important;
         background: linear-gradient(135deg, #0ea5e9 0%, #6366f1 100%) !important;
         border-color: rgba(255, 255, 255, 0.6) !important;
         box-shadow: 0 12px 35px rgba(56, 189, 248, 0.85) !important;
-    }
-
-    div[data-testid="stRadio"] input[type="radio"] {
-        display: none !important;
-    }
-
-    div[data-testid="stRadio"] div[role="radiogroup"] > label div p {
-        font-size: 22px !important;
-        margin: 0 !important;
-        line-height: 1 !important;
     }
     </style>
 """, unsafe_allow_html=True)
 
 # --- 2. SESSION STATE & HELPER FUNCTIONS ---
 try:
-    if "active_tab" not in st.session_state:
-        st.session_state.active_tab = "Home"
-
     def auto_categorize_medicine(med_name):
         try:
             name = med_name.lower()
@@ -203,10 +181,9 @@ try:
 
     if "notifications" not in st.session_state:
         st.session_state.notifications = [
-            {"msg": "✨ HealthBridge Aceternity Master Edition initialized.", "time": "System Init"}
+            {"msg": "HealthBridge Master Platform initialized successfully.", "time": "System Init"}
         ]
 
-    # Initialize 4-Week, 7-Day Medication Adherence Schedule
     if "meds_by_week" not in st.session_state:
         weeks = ["Week 1", "Week 2", "Week 3", "Week 4"]
         days = ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday"]
@@ -237,7 +214,7 @@ current_tab = st.session_state.active_tab
 # ----------------------------------------------------
 if current_tab == "Home":
     try:
-        st.title("🌟 Next-Gen Patient Companion")
+        st.title("Next-Gen Patient Companion")
         st.markdown("##### *Precision Healthcare, Atmospheric Cloud Triage & Family Caregiving for SDG 3*")
         st.divider()
 
@@ -251,24 +228,20 @@ if current_tab == "Home":
 
         st.divider()
 
-        st.subheader("⚡ Quick Access Bento Modules")
+        st.subheader("Quick Access Bento Modules")
         col_a, col_b, col_c = st.columns(3)
         
         with col_a:
-            st.markdown("### 🏥 Hospital Hub\nIntelligent disease-to-hospital routing with dynamic dark-mode PyDeck maps.")
-            if st.button("Open Hospital Hub", key="btn_home_hosp"):
-                st.session_state.active_tab = "Hospital"
-                st.rerun()
+            st.markdown("### Hospital Hub\nIntelligent disease-to-hospital routing with dynamic dark-mode PyDeck maps.")
+            st.button("Open Hospital Hub", key="home_btn_hosp", on_click=set_tab, args=("Hospital",))
+
         with col_b:
-            st.markdown("### 💊 Medication Suite\nMulti-week medication schedules, independent daily resets, and smart categorization.")
-            if st.button("Open Medication Hub", key="btn_home_med"):
-                st.session_state.active_tab = "Hospital"
-                st.rerun()
+            st.markdown("### Medication Suite\nMulti-week medication schedules, independent daily resets, and smart categorization.")
+            st.button("Open Medication Hub", key="home_btn_med", on_click=set_tab, args=("Hospital",))
+
         with col_c:
-            st.markdown("### 🛡️ Secure Passport\nDigital Medical ID with single-tap emergency SOS broadcasting.")
-            if st.button("Open Medical Passport", key="btn_home_pass"):
-                st.session_state.active_tab = "Passport"
-                st.rerun()
+            st.markdown("### Secure Passport\nDigital Medical ID with single-tap emergency SOS broadcasting.")
+            st.button("Open Medical Passport", key="home_btn_pass", on_click=set_tab, args=("Passport",))
 
     except Exception as home_err:
         st.error(f"Error loading Home Dashboard: {home_err}")
@@ -280,7 +253,7 @@ elif current_tab == "Hospital":
     try:
         col_title, col_bell = st.columns([4, 1])
         with col_title:
-            st.title("🏥 Intelligent Hospital Finder & Schedule")
+            st.title("Intelligent Hospital Finder & Schedule")
         with col_bell:
             notif_count = len(st.session_state.notifications)
             with st.popover(f"🔔 Alerts ({notif_count})"):
@@ -294,7 +267,7 @@ elif current_tab == "Hospital":
 
         st.divider()
 
-        st.subheader("🔍 Gooey Disease-to-Hospital Search")
+        st.subheader("Gooey Disease-to-Hospital Search")
         user_disease_input = st.text_input(
             "Type condition / symptom:",
             placeholder="Type condition here... (e.g., Heart, Eye, Bones)",
@@ -314,25 +287,24 @@ elif current_tab == "Hospital":
             h_lat, h_lon = 16.7050, 74.2433
             h_name = "Aster Aadhar Hospital (Cardiology Center)"
             travel_info = "~3.2 km away | 8 mins via NH48"
-            st.error("⚠️ Specialty Match: Cardiology & Emergency Cardiac Unit")
+            st.error("Specialty Match: Cardiology & Emergency Cardiac Unit")
         elif any(k in query for k in ["eye", "vision", "cataract", "blind", "blur"]):
             h_lat, h_lon = 16.7120, 74.2500
             h_name = "Nandadeep Eye Hospital (Ophthalmology)"
             travel_info = "~4.5 km away | 12 mins via Tarabai Park Road"
-            st.warning("👁️ Specialty Match: Ophthalmology & Vision Care")
+            st.warning("Specialty Match: Ophthalmology & Vision Care")
         elif any(k in query for k in ["bone", "fracture", "ortho", "joint", "knee", "accident"]):
             h_lat, h_lon = 16.7200, 74.4600
             h_name = "Dr. Lande Fracture Hospital (Trauma & Ortho)"
             travel_info = "~6.0 km away | 15 mins via Main Road"
-            st.info("🦴 Specialty Match: Orthopedics & Trauma Center")
+            st.info("Specialty Match: Orthopedics & Trauma Center")
         elif user_disease_input:
-            st.success("🏥 General Multi-Specialty Care")
+            st.success("General Multi-Specialty Care")
         else:
-            st.info("💡 Type a condition above (e.g., 'Heart', 'Eye', 'Bones') to locate the specialized facility.")
+            st.info("Type a condition above (e.g., 'Heart', 'Eye', 'Bones') to locate the specialized facility.")
 
         st.markdown(f"📍 **Recommended Facility:** **{h_name}** — *{travel_info}*")
 
-        # PyDeck Interactive Dark Map
         try:
             map_data = pd.DataFrame([
                 {
@@ -387,10 +359,9 @@ elif current_tab == "Hospital":
 
         col_left, col_right = st.columns(2)
 
-        # MULTI-WEEK MEDICATION SCHEDULE
         with col_left:
             try:
-                st.subheader("💊 Multi-Week Medication Schedule")
+                st.subheader("Multi-Week Medication Schedule")
                 
                 selected_week = st.selectbox(
                     "Choose Treatment Week:", 
@@ -427,7 +398,7 @@ elif current_tab == "Hospital":
 
         with col_right:
             try:
-                st.subheader("🏥 Doctor Appointments & Questions")
+                st.subheader("Doctor Appointments & Questions")
                 st.info("**Dr. Sharma (Cardiologist)**\n📅 Tomorrow at 10:30 AM\n📍 City General Hospital")
                 
                 new_q = st.text_input("Add a question for your doctor:", placeholder="e.g. Any food restrictions?")
@@ -450,7 +421,7 @@ elif current_tab == "Hospital":
 # ----------------------------------------------------
 elif current_tab == "Caregiver":
     try:
-        st.title("👁️ Caregiver Prescription Manager")
+        st.title("Caregiver Prescription Manager")
         st.markdown("Secure portal for remote family monitoring and prescription assignment.")
         st.divider()
 
@@ -492,7 +463,7 @@ elif current_tab == "Caregiver":
                     st.error(f"Form submission error: {form_err}")
 
             st.divider()
-            st.subheader("📋 Multi-Week Prescriptions Overview")
+            st.subheader("Multi-Week Prescriptions Overview")
             
             try:
                 all_meds_flat = []
@@ -523,16 +494,16 @@ elif current_tab == "Caregiver":
                                 "msg": f"Caregiver Note: {msg}",
                                 "time": "Just now"
                             })
-                            st.success("✅ Notification sent to Patient Bell Feed!")
+                            st.success("Notification sent to Patient Bell Feed!")
                         else:
                             st.warning("Please enter a message.")
             except Exception as alert_err:
                 st.error(f"Notification error: {alert_err}")
                     
         elif password_input:
-            st.error("❌ Incorrect PIN. Please try again.")
+            st.error("Incorrect PIN. Please try again.")
         else:
-            st.info("ℹ️ Enter PIN `1234` to unlock prescription controls.")
+            st.info("Enter PIN `1234` to unlock prescription controls.")
 
     except Exception as caregiver_err:
         st.error(f"Error in Caregiver Portal: {caregiver_err}")
@@ -542,14 +513,14 @@ elif current_tab == "Caregiver":
 # ----------------------------------------------------
 elif current_tab == "Passport":
     try:
-        st.title("🛡️ Secure Medical Passport & Emergency SOS")
+        st.title("Secure Medical Passport & Emergency SOS")
         st.markdown("Critical offline/online patient medical passport and live broadcast portal.")
         st.divider()
 
         col_id_left, col_id_right = st.columns(2)
 
         with col_id_left:
-            st.subheader("📋 Patient Medical ID")
+            st.subheader("Patient Medical ID")
             st.markdown("""
                 * **Full Legal Name:** Manas S. Abitkar
                 * **Blood Group:** O+ Positive
@@ -558,21 +529,21 @@ elif current_tab == "Passport":
                 * **Chronic Conditions:** Type 2 Diabetes, Hypertension
                 * **Primary Physician:** Dr. Sharma (City General Hospital)
             """)
-            if st.button("📥 Download Secure Medical ID (PDF/QR)"):
+            if st.button("Download Secure Medical ID (PDF/QR)"):
                 st.success("Emergency QR Passport generated securely!")
 
         with col_id_right:
-            st.subheader("🚨 One-Tap Emergency SOS Broadcast")
-            st.warning("⚠️ Pressing this button instantly broadcasts your live GPS coordinates to emergency contacts.")
+            st.subheader("One-Tap Emergency SOS Broadcast")
+            st.warning("Pressing this button instantly broadcasts your live GPS coordinates to emergency contacts.")
             
             sos_message = st.text_area("Optional Emergency Note:", placeholder="e.g., Experiencing chest pain, need immediate assistance.")
             
-            if st.button("🚨 TRIGGER EMERGENCY SOS"):
+            if st.button("TRIGGER EMERGENCY SOS"):
                 st.session_state.notifications.append({
-                    "msg": f"🚨 EMERGENCY SOS TRIGGERED! Note: {sos_message or 'Immediate assistance requested.'}",
+                    "msg": f"EMERGENCY SOS TRIGGERED! Note: {sos_message or 'Immediate assistance requested.'}",
                     "time": "Just now (CRITICAL)"
                 })
-                st.error("🚨 SOS Alert Broadcasted Successfully!")
+                st.error("SOS Alert Broadcasted Successfully!")
 
     except Exception as passport_err:
         st.error(f"Error in Passport Portal: {passport_err}")
@@ -582,7 +553,7 @@ elif current_tab == "Passport":
 # ----------------------------------------------------
 elif current_tab == "Impact":
     try:
-        st.title("🌍 UN Sustainable Development Goal 3 Alignment")
+        st.title("UN Sustainable Development Goal 3 Alignment")
         st.markdown("### *Ensure healthy lives and promote well-being for all at all ages.*")
         st.divider()
 
@@ -594,32 +565,23 @@ elif current_tab == "Impact":
             st.metric(label="Emergency Triage Time Saved", value="45%", delta="Fast GPS Routing")
             st.write("By linking disease searches instantly to specialized local hospitals and utilizing real-time GPS coordinates.")
 
-        st.info("💡 Low-Resource Scalability: Designed to operate smoothly on low-bandwidth mobile networks in rural communities.")
+        st.info("Low-Resource Scalability: Designed to operate smoothly on low-bandwidth mobile networks in rural communities.")
     except Exception as impact_err:
         st.error(f"Error loading metrics: {impact_err}")
 
 # ----------------------------------------------------
-# 8. INTERACTIVE FLOATING DOCK NAVIGATION BAR
+# 8. HARDENED FLOATING DOCK (NATIVE COLUMNS + CALLBACKS)
 # ----------------------------------------------------
-tab_map_to_emoji = {"Home": "🏠", "Hospital": "🏥", "Caregiver": "👁️", "Passport": "🛡️", "Impact": "🌍"}
-emoji_to_tab = {"🏠": "Home", "🏥": "Hospital", "👁️": "Caregiver", "🛡️": "Passport", "🌍": "Impact"}
+st.markdown('<div class="floating-dock-container">', unsafe_allow_html=True)
+d1, d2, d3, d4, d5 = st.columns(5)
 
-current_emoji = st.radio(
-    "Navigation Dock",
-    list(emoji_to_tab.keys()),
-    horizontal=True,
-    label_visibility="collapsed",
-    index=list(emoji_to_tab.keys()).index(tab_map_to_emoji.get(st.session_state.active_tab, "🏠")),
-    key="nav_dock_radio"
-)
-
-if emoji_to_tab.get(current_emoji) != st.session_state.active_tab:
-    st.session_state.active_tab = emoji_to_tab[current_emoji]
-    st.rerun()
-
-# Footer
-try:
-    st.markdown("---")
-    st.caption("HealthBridge Aceternity Cloud Edition • Built with Python, Streamlit & PyDeck 🚀")
-except Exception:
-    pass
+with d1:
+    st.button("🏠", key="dock_h", on_click=set_tab, args=("Home",))
+with d2:
+    st.button("🏥", key="dock_hosp", on_click=set_tab, args=("Hospital",))
+with d3:
+    st.button("👁️", key="dock_c", on_click=set_tab, args=("Caregiver",))
+with d4:
+    st.button("🛡️", key="dock_p", on_click=set_tab, args=("Passport",))
+with d5:
+    st.button("🌍", key="dock_i", on_click=set_tab, args=("Impact",))
