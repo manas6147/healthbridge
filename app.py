@@ -9,7 +9,7 @@ try:
         page_icon="🏥", 
         layout="wide"
     )
-except Exception as e:
+except Exception:
     pass
 
 # Custom CSS for Elegant Fonts, Mobile Visibility, and Glassmorphism
@@ -119,12 +119,17 @@ try:
 
     # Initialize Dynamic User Location on App Load
     if "user_location" not in st.session_state:
-        # Simulated live geolocation fetch upon opening the application
         st.session_state.user_location = {
             "lat": 16.7010,
             "lon": 74.2390,
-            "status": "Successfully synced via GPS sensor (Kolhapur Central)"
+            "status": "GPS Synced (Kolhapur Central)"
         }
+
+    # Initialize Notifications State for the Bell Icon
+    if "notifications" not in st.session_state:
+        st.session_state.notifications = [
+            {"msg": "Welcome to HealthBridge! Your caregiver is linked successfully.", "time": "System Init"}
+        ]
 
     # Initialize Multi-Week & Multi-Day Medication State
     if "meds_by_week" not in st.session_state:
@@ -165,8 +170,7 @@ try:
 
     st.sidebar.divider()
     st.sidebar.info("💡 **Demo Tip:** Search 'Heart', 'Eye', or 'Bones' to instantly pinpoint specialized hospitals on the map!")
-except Exception as side_err:
-    st.sidebar.error("Navigation loaded with default fallback.")
+except Exception:
     app_mode = "🏥 Unified Health & Hospital Hub"
 
 # ----------------------------------------------------
@@ -174,7 +178,21 @@ except Exception as side_err:
 # ----------------------------------------------------
 if app_mode == "🏥 Unified Health & Hospital Hub":
     try:
-        st.title("🌟 HealthBridge: Unified Patient Companion")
+        # Top Header Bar with Notification Bell Icon
+        col_title, col_bell = st.columns([4, 1])
+        with col_title:
+            st.title("🌟 HealthBridge: Unified Patient Companion")
+        with col_bell:
+            notif_count = len(st.session_state.notifications)
+            with st.popover(f"🔔 Notifications ({notif_count})"):
+                st.markdown("### **Patient Alert Center**")
+                if not notif_count:
+                    st.info("No notifications at this time.")
+                else:
+                    for n in reversed(st.session_state.notifications):
+                        st.markdown(f"🕒 *{n.get('time', 'Recent')}*<br>**{n.get('msg', '')}**", unsafe_allow_html=True)
+                        st.divider()
+
         st.markdown("*Combining intelligent emergency hospital routing, live GPS geolocation, and multi-week medication adherence.*")
         st.divider()
 
@@ -197,7 +215,7 @@ if app_mode == "🏥 Unified Health & Hospital Hub":
 
         query = (user_disease_input or "").lower().strip()
         
-        # Accurate Condition-to-Hospital Matching Logic with Exception Safety
+        # Accurate Condition-to-Hospital Matching Logic
         if any(k in query for k in ["heart", "cardio", "chest", "bp", "stroke", "blood pressure"]):
             h_lat, h_lon = 16.7050, 74.2433
             h_name = "Aster Aadhar Hospital (Cardiology Center)"
@@ -218,7 +236,7 @@ if app_mode == "🏥 Unified Health & Hospital Hub":
         else:
             st.info("💡 *Type a condition above (e.g., 'Heart', 'Eye', 'Bones') to pinpoint the matching hospital.*")
 
-        st.markdown(f"📍 **Recommended Facility:** **{h_name}** — *{travel_info}* (GPS Status: {st.session_state.user_location['status']})")
+        st.markdown(f"📍 **Recommended Facility:** **{h_name}** — *{travel_info}*")
 
         # --- Strict Map Data Frame & Rendering with Try/Catch ---
         try:
@@ -402,10 +420,17 @@ elif app_mode == "👁️ Caregiver Live Sync":
             st.metric(label="Overall Patient Adherence Rate", value="92%", delta="+4% improvement")
             
             try:
-                with st.form("caregiver_alert"):
+                with st.form("caregiver_alert", clear_on_submit=True):
                     msg = st.text_area("Send an encouraging note or reminder to the patient:", placeholder="Dad, great job taking your medicine today!")
                     if st.form_submit_button("Send Push Notification"):
-                        st.success("✅ Notification successfully sent to patient device!")
+                        if msg.strip():
+                            st.session_state.notifications.append({
+                                "msg": f"Caregiver Note: {msg}",
+                                "time": "Just now"
+                            })
+                            st.success("✅ Notification successfully sent and logged in Patient Bell Feed!")
+                        else:
+                            st.warning("Please enter a message before sending.")
             except Exception as alert_err:
                 st.error(f"Error sending notification: {alert_err}")
                     
