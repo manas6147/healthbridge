@@ -2,73 +2,68 @@ import streamlit as st
 import pandas as pd
 import pydeck as pdk
 
-# --- 1. APP CONFIG & ACETERNITY CLOUD SHADER STYLING ---
+# --- 1. APP CONFIG & ACETERNITY CLOUD SHADER MASTER STYLING ---
 try:
     st.set_page_config(
-        page_title="HealthBridge - Aceternity Master Edition", 
+        page_title="HealthBridge - Aceternity Cloud Edition", 
         page_icon="medical", 
         layout="wide"
     )
 except Exception:
     pass
 
-# Custom CSS Injecting Cloud Shader Atmosphere, Gooey Inputs, & Master Theme
+# Custom CSS: Atmospheric Cloud Shader Background, Floating Dock, Clean Headings (No @import url)
 st.markdown("""
-    @import url('https://fonts.googleapis.com/css2?family=Playfair+Display:wght@600;700&family=Plus+Jakarta+Sans:wght@300;400;500;600;700&display=swap');
-
     <style>
     /* Completely Hide Streamlit Sidebar */
     section[data-testid="stSidebar"] {
         display: none !important;
     }
 
-    /* Animated Cloud Shader & Atmospheric Mesh Background */
+    /* Rich Atmospheric Cloud Shader / Nebula Mesh Background */
     .stApp {
-        background-color: #020617 !important;
+        background-color: #030712 !important;
         background-image: 
-            radial-gradient(circle at 20% 30%, rgba(56, 189, 248, 0.22) 0%, transparent 45%),
-            radial-gradient(circle at 80% 70%, rgba(99, 102, 241, 0.2) 0%, transparent 50%),
-            radial-gradient(circle at 50% 50%, rgba(14, 165, 233, 0.15) 0%, transparent 65%),
-            linear-gradient(rgba(255, 255, 255, 0.02) 1px, transparent 1px),
-            linear-gradient(90deg, rgba(255, 255, 255, 0.02) 1px, transparent 1px);
-        background-size: 100% 100%, 100% 100%, 100% 100%, 40px 40px, 40px 40px;
-        animation: cloudShaderPulse 12s ease-in-out infinite alternate;
+            radial-gradient(circle at 20% 20%, rgba(56, 189, 248, 0.25) 0%, transparent 50%),
+            radial-gradient(circle at 80% 80%, rgba(99, 102, 241, 0.22) 0%, transparent 55%),
+            radial-gradient(circle at 50% 50%, rgba(14, 165, 233, 0.18) 0%, transparent 70%),
+            radial-gradient(circle at 30% 70%, rgba(168, 85, 247, 0.15) 0%, transparent 60%);
+        background-size: 150% 150%;
+        animation: cloudDrift 20s ease-in-out infinite alternate;
         color: #f8fafc;
-        font-family: 'Plus Jakarta Sans', sans-serif !important;
+        font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif !important;
+        padding-bottom: 110px; /* Space for floating dock */
     }
 
-    @keyframes cloudShaderPulse {
-        0% { background-position: 0% 0%, 0% 0%, 0% 0%, 0 0, 0 0; }
-        100% { background-position: 15% 15%, -15% -15%, 8% 8%, 40px 40px, 40px 40px; }
+    @keyframes cloudDrift {
+        0% { background-position: 0% 0%; }
+        100% { background-position: 100% 100%; }
     }
 
-    /* Gradient Headings with Cloud Glow */
+    /* Clean Modern Gradient Headings */
     h1, h2, h3 {
-        font-family: 'Playfair Display', serif !important;
-        font-weight: 700 !important;
-        background: linear-gradient(135deg, #ffffff 0%, #38bdf8 40%, #818cf8 100%);
+        font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif !important;
+        font-weight: 800 !important;
+        background: linear-gradient(135deg, #ffffff 0%, #38bdf8 50%, #818cf8 100%);
         -webkit-background-clip: text;
         -webkit-text-fill-color: transparent;
-        text-shadow: 0 0 40px rgba(56, 189, 248, 0.3);
-        letter-spacing: -0.5px;
+        letter-spacing: -0.8px;
     }
 
-    /* Aceternity Gooey Input Effect (Liquid Glow & Fluid Focus) */
+    /* Gooey Input Fields */
     .stTextInput input, .stTextArea textarea, .stSelectbox select, div[data-baseweb="select"] div {
         background-color: rgba(15, 23, 42, 0.9) !important;
         color: #ffffff !important;
         border: 2px solid rgba(56, 189, 248, 0.3) !important;
         border-radius: 16px !important;
         padding: 10px 18px !important;
-        font-family: 'Plus Jakarta Sans', sans-serif !important;
-        box-shadow: 0 0 20px rgba(56, 189, 248, 0.12), inset 0 0 10px rgba(56, 189, 248, 0.04);
-        transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        box-shadow: 0 0 20px rgba(56, 189, 248, 0.12);
+        transition: all 0.4s ease;
     }
 
     .stTextInput input:focus, .stTextArea textarea:focus {
         border-color: #38bdf8 !important;
-        box-shadow: 0 0 35px rgba(56, 189, 248, 0.5), 0 0 70px rgba(99, 102, 241, 0.3), inset 0 0 15px rgba(56, 189, 248, 0.2) !important;
-        transform: scale(1.01);
+        box-shadow: 0 0 35px rgba(56, 189, 248, 0.5), 0 0 70px rgba(99, 102, 241, 0.3) !important;
     }
 
     input::placeholder, textarea::placeholder {
@@ -76,7 +71,7 @@ st.markdown("""
         opacity: 1 !important;
     }
 
-    /* Magnetic & Stateful Button Styling with Hover Glow */
+    /* Glow Buttons */
     .stButton button {
         background: linear-gradient(135deg, #0ea5e9 0%, #6366f1 100%) !important;
         color: white !important;
@@ -84,9 +79,8 @@ st.markdown("""
         border: 1px solid rgba(255, 255, 255, 0.25);
         padding: 10px 24px;
         font-weight: 600 !important;
-        font-family: 'Plus Jakarta Sans', sans-serif !important;
         letter-spacing: 0.5px;
-        transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        transition: all 0.3s ease;
         box-shadow: 0 4px 20px rgba(14, 165, 233, 0.4);
         width: 100%;
     }
@@ -98,22 +92,69 @@ st.markdown("""
     }
 
     /* Bento Grid Glass Cards */
-    div[data-testid="metric-container"], div.stTabs {
-        background: rgba(15, 23, 42, 0.65) !important;
+    div[data-testid="metric-container"], div.stTabs, .stExpander {
+        background: rgba(15, 23, 42, 0.7) !important;
         border: 1px solid rgba(56, 189, 248, 0.2) !important;
         padding: 20px;
         border-radius: 20px;
-        backdrop-filter: blur(20px);
+        backdrop-filter: blur(16px);
         box-shadow: 0 15px 35px rgba(0, 0, 0, 0.6);
     }
+
+    /* Working Floating Navigation Dock (Stays inside same app via target="_self") */
+    .floating-dock-container {
+        position: fixed;
+        bottom: 25px;
+        left: 50%;
+        transform: translateX(-50%);
+        display: flex;
+        gap: 16px;
+        padding: 12px 28px;
+        background: rgba(15, 23, 42, 0.85);
+        backdrop-filter: blur(20px);
+        border: 1px solid rgba(56, 189, 248, 0.3);
+        border-radius: 9999px;
+        box-shadow: 0 25px 50px rgba(0, 0, 0, 0.8), 0 0 25px rgba(56, 189, 248, 0.2);
+        z-index: 999999;
+    }
+
+    .dock-icon {
+        width: 48px;
+        height: 48px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        border-radius: 50%;
+        background: rgba(30, 41, 59, 0.9);
+        border: 1px solid rgba(255, 255, 255, 0.1);
+        color: #38bdf8;
+        font-size: 20px;
+        text-decoration: none;
+        transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        box-shadow: 0 4px 15px rgba(0, 0, 0, 0.4);
+    }
+
+    .dock-icon:hover {
+        transform: scale(1.3) translateY(-8px);
+        background: linear-gradient(135deg, #0ea5e9 0%, #6366f1 100%);
+        color: #ffffff;
+        border-color: rgba(255, 255, 255, 0.4);
+        box-shadow: 0 10px 30px rgba(56, 189, 248, 0.6);
+    }
     </style>
+
+    <!-- Floating Navigation Dock -->
+    <div class="floating-dock-container">
+        <a href="?tab=Home" target="_self" class="dock-icon" title="Home Overview">🏠</a>
+        <a href="?tab=Hospital" target="_self" class="dock-icon" title="Hospital Hub & Medications">🏥</a>
+        <a href="?tab=Caregiver" target="_self" class="dock-icon" title="Caregiver Portal">👁️</a>
+        <a href="?tab=Passport" target="_self" class="dock-icon" title="Secure Medical Passport & SOS">🛡️</a>
+        <a href="?tab=Impact" target="_self" class="dock-icon" title="SDG 3 Impact">🌍</a>
+    </div>
 """, unsafe_allow_html=True)
 
 # --- 2. SESSION STATE & HELPER FUNCTIONS ---
 try:
-    if "active_tab" not in st.session_state:
-        st.session_state.active_tab = "Home"
-
     def auto_categorize_medicine(med_name):
         try:
             name = med_name.lower()
@@ -165,34 +206,13 @@ try:
 except Exception as init_error:
     st.error(f"Initialization Notice: {init_error}")
 
-# --- 3. SEAMLESS NATIVE NAVIGATION BAR ---
-st.markdown("### HealthBridge // SDG 3 Clinical Platform")
-nav_col1, nav_col2, nav_col3, nav_col4, nav_col5 = st.columns(5)
-
-with nav_col1:
-    if st.button("Home Overview"):
-        st.session_state.active_tab = "Home"
-        st.rerun()
-with nav_col2:
-    if st.button("Hospital & Triage"):
-        st.session_state.active_tab = "Hospital"
-        st.rerun()
-with nav_col3:
-    if st.button("Caregiver Portal"):
-        st.session_state.active_tab = "Caregiver"
-        st.rerun()
-with nav_col4:
-    if st.button("Secure Passport"):
-        st.session_state.active_tab = "Passport"
-        st.rerun()
-with nav_col5:
-    if st.button("SDG 3 Impact"):
-        st.session_state.active_tab = "Impact"
-        st.rerun()
-
-st.divider()
-
-current_tab = st.session_state.active_tab
+# --- 3. TAB ROUTING VIA FLOATING DOCK QUERY PARAMS ---
+try:
+    current_tab = st.query_params.get("tab", "Home")
+    if isinstance(current_tab, list):
+        current_tab = current_tab[0]
+except Exception:
+    current_tab = "Home"
 
 # ----------------------------------------------------
 # 4. MODULE 0: HOME & BENTO OVERVIEW
@@ -200,7 +220,7 @@ current_tab = st.session_state.active_tab
 if current_tab == "Home":
     try:
         st.title("Next-Gen Patient Companion")
-        st.markdown("##### *Precision Healthcare, Atmospheric UI Triage & Family Caregiving for SDG 3*")
+        st.markdown("##### *Precision Healthcare, Atmospheric Cloud Triage & Family Caregiving for SDG 3*")
         st.divider()
 
         col1, col2, col3 = st.columns(3)
@@ -217,19 +237,19 @@ if current_tab == "Home":
         col_a, col_b, col_c = st.columns(3)
         
         with col_a:
-            st.markdown("### Hospital Hub\nIntelligent disease-to-hospital routing with dynamic dark-mode PyDeck maps.")
+            st.markdown("### Hospital Hub\nIntelligent disease-to-hospital routing with dynamic dark-mode maps.")
             if st.button("Open Hospital Hub"):
-                st.session_state.active_tab = "Hospital"
+                st.query_params["tab"] = "Hospital"
                 st.rerun()
         with col_b:
             st.markdown("### Medication Suite\nMulti-week medication schedules, independent daily resets, and smart categorization.")
             if st.button("Open Medication Hub"):
-                st.session_state.active_tab = "Hospital"
+                st.query_params["tab"] = "Hospital"
                 st.rerun()
         with col_c:
-            st.markdown("### Medical Passport\nDigital Secure Medical ID with single-tap emergency SOS broadcasting.")
+            st.markdown("### Secure Passport\nDigital Medical ID with single-tap emergency SOS broadcasting.")
             if st.button("Open Medical Passport"):
-                st.session_state.active_tab = "Passport"
+                st.query_params["tab"] = "Passport"
                 st.rerun()
 
     except Exception as home_err:
@@ -557,6 +577,6 @@ elif current_tab == "Impact":
 # Footer
 try:
     st.markdown("---")
-    st.caption("HealthBridge Aceternity Master Edition • Built with Python, Streamlit & PyDeck")
+    st.caption("HealthBridge Aceternity Cloud Edition • Built with Python, Streamlit & PyDeck")
 except Exception:
     pass
