@@ -12,12 +12,14 @@ try:
 except Exception:
     pass
 
-# Initialize Active Tab Navigation
+# Initialize Active Tab & Radio State Synchronization
 if "active_tab" not in st.session_state:
     st.session_state.active_tab = "Home"
 
 def set_tab(tab_name):
     st.session_state.active_tab = tab_name
+    tab_map = {"Home": "🏠", "Hospital": "🏥", "Caregiver": "👁️", "Passport": "🛡️", "Impact": "🌍"}
+    st.session_state["nav_dock_radio"] = tab_map.get(tab_name, "🏠")
 
 # Inject Master CSS (Cloud Shader, Gooey Inputs, Bulletproof Centered Floating Dock)
 st.markdown("""
@@ -620,8 +622,9 @@ current_emoji = st.radio(
     key="nav_dock_radio"
 )
 
-if emoji_to_tab.get(current_emoji) != st.session_state.active_tab:
-    st.session_state.active_tab = emoji_to_tab[current_emoji]
+new_tab = emoji_to_tab.get(current_emoji)
+if new_tab != st.session_state.active_tab:
+    st.session_state.active_tab = new_tab
     st.rerun()
 
 # Footer
