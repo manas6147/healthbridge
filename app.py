@@ -12,7 +12,7 @@ try:
 except Exception:
     pass
 
-# Custom CSS: Atmospheric Cloud Shader Background & Floating Dock Container
+# Custom CSS: Atmospheric Cloud Shader Background & Bulletproof Floating Dock Container
 st.markdown("""
     <style>
     /* Completely Hide Streamlit Sidebar */
@@ -32,7 +32,7 @@ st.markdown("""
         animation: cloudDrift 20s ease-in-out infinite alternate;
         color: #f8fafc;
         font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif !important;
-        padding-bottom: 120px; /* Space for floating dock */
+        padding-bottom: 130px; /* Space for floating dock */
     }
 
     @keyframes cloudDrift {
@@ -100,63 +100,71 @@ st.markdown("""
         box-shadow: 0 15px 35px rgba(0, 0, 0, 0.6);
     }
 
-    /* Floating Navigation Dock Wrapper (Centered Pill) */
-    .floating-dock-wrapper {
-        position: fixed;
-        bottom: 25px;
-        left: 50%;
-        transform: translateX(-50%);
-        background: rgba(15, 23, 42, 0.85);
-        backdrop-filter: blur(20px);
-        border: 1px solid rgba(56, 189, 248, 0.35);
-        border-radius: 9999px;
-        padding: 8px 16px;
-        box-shadow: 0 25px 50px rgba(0, 0, 0, 0.8), 0 0 25px rgba(56, 189, 248, 0.2);
-        z-index: 999999;
-        display: flex !important;
-        align-items: center;
-        justify-content: center;
-        width: max-content !important;
+    /* ==========================================
+       BULLETPROOF FLOATING DOCK (ST.RADIO STYLING)
+       ========================================== */
+    div[data-testid="stRadio"] {
+        position: fixed !important;
+        bottom: 25px !important;
+        left: 50% !important;
+        transform: translateX(-50%) !important;
+        background: rgba(15, 23, 42, 0.9) !important;
+        backdrop-filter: blur(25px) !important;
+        border: 1px solid rgba(56, 189, 248, 0.4) !important;
+        border-radius: 9999px !important;
+        padding: 8px 18px !important;
+        box-shadow: 0 25px 60px rgba(0, 0, 0, 0.85), 0 0 30px rgba(56, 189, 248, 0.25) !important;
+        z-index: 999999 !important;
+        width: auto !important;
     }
 
-    /* Force Streamlit internal blocks inside dock to pack tightly together */
-    .floating-dock-wrapper [data-testid="stHorizontalBlock"] {
-        display: flex !important;
+    /* Hide the radio label */
+    div[data-testid="stRadio"] label[data-baseweb="radio"] {
+        display: none !important;
+    }
+
+    /* Pack options horizontally into a tight row */
+    div[data-testid="stRadio"] > div {
+        flex-direction: row !important;
         gap: 12px !important;
         align-items: center !important;
-        width: auto !important;
+        justify-content: center !important;
     }
 
-    .floating-dock-wrapper [data-testid="column"] {
-        width: auto !important;
-        flex: 0 0 auto !important;
-        min-width: unset !important;
-        padding: 0 !important;
-    }
-
-    /* Style Streamlit dock buttons into compact circles */
-    .floating-dock-wrapper div.stButton > button {
-        width: 48px;
-        height: 48px;
-        border-radius: 50% !important;
-        background: rgba(30, 41, 59, 0.9) !important;
+    /* Turn each radio label into a floating dock icon button */
+    div[data-testid="stRadio"] div[role="radiogroup"] > label {
+        background: rgba(30, 41, 59, 0.95) !important;
         border: 1px solid rgba(255, 255, 255, 0.15) !important;
-        color: #38bdf8 !important;
-        font-size: 18px !important;
+        border-radius: 50% !important;
+        width: 48px !important;
+        height: 48px !important;
+        display: flex !important;
+        align-items: center !important;
+        justify-content: center !important;
+        cursor: pointer !important;
+        transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1) !important;
+        box-shadow: 0 4px 15px rgba(0, 0, 0, 0.4) !important;
         padding: 0 !important;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        box-shadow: 0 4px 15px rgba(0, 0, 0, 0.4);
-        transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        margin: 0 !important;
     }
 
-    .floating-dock-wrapper div.stButton > button:hover {
-        transform: scale(1.3) translateY(-6px);
+    div[data-testid="stRadio"] div[role="radiogroup"] > label:hover {
+        transform: scale(1.3) translateY(-6px) !important;
         background: linear-gradient(135deg, #0ea5e9 0%, #6366f1 100%) !important;
-        color: #ffffff !important;
-        border-color: rgba(255, 255, 255, 0.5) !important;
-        box-shadow: 0 10px 30px rgba(56, 189, 248, 0.7);
+        border-color: rgba(255, 255, 255, 0.6) !important;
+        box-shadow: 0 10px 30px rgba(56, 189, 248, 0.8) !important;
+    }
+
+    /* Hide internal radio input circles */
+    div[data-testid="stRadio"] input[type="radio"] {
+        display: none !important;
+    }
+
+    /* Style the emoji text inside radio items */
+    div[data-testid="stRadio"] div[role="radiogroup"] > label div p {
+        font-size: 20px !important;
+        margin: 0 !important;
+        line-height: 1 !important;
     }
     </style>
 """, unsafe_allow_html=True)
@@ -571,32 +579,22 @@ elif current_tab == "Impact":
     except Exception as impact_err:
         st.error(f"Error loading metrics: {impact_err}")
 
-# --- 4. FLOATING DOCK NAVIGATION BAR (SOCKET-BASED, TIGHTLY PACKED) ---
-st.markdown('<div class="floating-dock-wrapper">', unsafe_allow_html=True)
-dock_cols = st.columns(5)
+# --- 4. BULLETPROOF FLOATING DOCK NAVIGATION BAR ---
+tab_map_to_emoji = {"Home": "🏠", "Hospital": "🏥", "Caregiver": "👁️", "Passport": "🛡️", "Impact": "🌍"}
+emoji_to_tab = {"🏠": "Home", "🏥": "Hospital", "👁️": "Caregiver", "🛡️": "Passport", "🌍": "Impact"}
 
-with dock_cols[0]:
-    if st.button("🏠", key="dock_home"):
-        st.session_state.active_tab = "Home"
-        st.rerun()
-with dock_cols[1]:
-    if st.button("🏥", key="dock_hosp"):
-        st.session_state.active_tab = "Hospital"
-        st.rerun()
-with dock_cols[2]:
-    if st.button("👁️", key="dock_care"):
-        st.session_state.active_tab = "Caregiver"
-        st.rerun()
-with dock_cols[3]:
-    if st.button("🛡️", key="dock_pass"):
-        st.session_state.active_tab = "Passport"
-        st.rerun()
-with dock_cols[4]:
-    if st.button("🌍", key="dock_imp"):
-        st.session_state.active_tab = "Impact"
-        st.rerun()
+current_emoji = st.radio(
+    "Navigation Dock",
+    list(emoji_to_tab.keys()),
+    horizontal=True,
+    label_visibility="collapsed",
+    index=list(emoji_to_tab.keys()).index(tab_map_to_emoji.get(st.session_state.active_tab, "🏠")),
+    key="nav_dock_radio"
+)
 
-st.markdown('</div>', unsafe_allow_html=True)
+if emoji_to_tab.get(current_emoji) != st.session_state.active_tab:
+    st.session_state.active_tab = emoji_to_tab[current_emoji]
+    st.rerun()
 
 # Footer
 try:
