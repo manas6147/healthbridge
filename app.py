@@ -12,7 +12,7 @@ try:
 except Exception:
     pass
 
-# Custom CSS: Atmospheric Cloud Shader Background, Floating Dock, Clean Headings (No @import url)
+# Custom CSS: Atmospheric Cloud Shader Background & Floating Dock Container
 st.markdown("""
     <style>
     /* Completely Hide Streamlit Sidebar */
@@ -32,7 +32,7 @@ st.markdown("""
         animation: cloudDrift 20s ease-in-out infinite alternate;
         color: #f8fafc;
         font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif !important;
-        padding-bottom: 110px; /* Space for floating dock */
+        padding-bottom: 120px; /* Space for floating dock */
     }
 
     @keyframes cloudDrift {
@@ -71,7 +71,7 @@ st.markdown("""
         opacity: 1 !important;
     }
 
-    /* Glow Buttons */
+    /* General Glow Buttons */
     .stButton button {
         background: linear-gradient(135deg, #0ea5e9 0%, #6366f1 100%) !important;
         color: white !important;
@@ -82,7 +82,6 @@ st.markdown("""
         letter-spacing: 0.5px;
         transition: all 0.3s ease;
         box-shadow: 0 4px 20px rgba(14, 165, 233, 0.4);
-        width: 100%;
     }
 
     .stButton button:hover {
@@ -101,60 +100,55 @@ st.markdown("""
         box-shadow: 0 15px 35px rgba(0, 0, 0, 0.6);
     }
 
-    /* Working Floating Navigation Dock (Stays inside same app via target="_self") */
-    .floating-dock-container {
+    /* Floating Navigation Dock Wrapper */
+    .floating-dock-wrapper {
         position: fixed;
         bottom: 25px;
         left: 50%;
         transform: translateX(-50%);
-        display: flex;
-        gap: 16px;
-        padding: 12px 28px;
         background: rgba(15, 23, 42, 0.85);
         backdrop-filter: blur(20px);
-        border: 1px solid rgba(56, 189, 248, 0.3);
+        border: 1px solid rgba(56, 189, 248, 0.35);
         border-radius: 9999px;
+        padding: 8px 16px;
         box-shadow: 0 25px 50px rgba(0, 0, 0, 0.8), 0 0 25px rgba(56, 189, 248, 0.2);
         z-index: 999999;
+        display: flex;
+        gap: 8px;
     }
 
-    .dock-icon {
+    /* Style Streamlit dock buttons to look like magnifying icons */
+    .floating-dock-wrapper div.stButton > button {
         width: 48px;
         height: 48px;
+        border-radius: 50% !important;
+        background: rgba(30, 41, 59, 0.9) !important;
+        border: 1px solid rgba(255, 255, 255, 0.15) !important;
+        color: #38bdf8 !important;
+        font-size: 18px !important;
+        padding: 0 !important;
         display: flex;
         align-items: center;
         justify-content: center;
-        border-radius: 50%;
-        background: rgba(30, 41, 59, 0.9);
-        border: 1px solid rgba(255, 255, 255, 0.1);
-        color: #38bdf8;
-        font-size: 20px;
-        text-decoration: none;
-        transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
         box-shadow: 0 4px 15px rgba(0, 0, 0, 0.4);
+        transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
     }
 
-    .dock-icon:hover {
-        transform: scale(1.3) translateY(-8px);
-        background: linear-gradient(135deg, #0ea5e9 0%, #6366f1 100%);
-        color: #ffffff;
-        border-color: rgba(255, 255, 255, 0.4);
-        box-shadow: 0 10px 30px rgba(56, 189, 248, 0.6);
+    .floating-dock-wrapper div.stButton > button:hover {
+        transform: scale(1.3) translateY(-6px);
+        background: linear-gradient(135deg, #0ea5e9 0%, #6366f1 100%) !important;
+        color: #ffffff !important;
+        border-color: rgba(255, 255, 255, 0.5) !important;
+        box-shadow: 0 10px 30px rgba(56, 189, 248, 0.7);
     }
     </style>
-
-    <!-- Floating Navigation Dock -->
-    <div class="floating-dock-container">
-        <a href="?tab=Home" target="_self" class="dock-icon" title="Home Overview">🏠</a>
-        <a href="?tab=Hospital" target="_self" class="dock-icon" title="Hospital Hub & Medications">🏥</a>
-        <a href="?tab=Caregiver" target="_self" class="dock-icon" title="Caregiver Portal">👁️</a>
-        <a href="?tab=Passport" target="_self" class="dock-icon" title="Secure Medical Passport & SOS">🛡️</a>
-        <a href="?tab=Impact" target="_self" class="dock-icon" title="SDG 3 Impact">🌍</a>
-    </div>
 """, unsafe_allow_html=True)
 
 # --- 2. SESSION STATE & HELPER FUNCTIONS ---
 try:
+    if "active_tab" not in st.session_state:
+        st.session_state.active_tab = "Home"
+
     def auto_categorize_medicine(med_name):
         try:
             name = med_name.lower()
@@ -206,16 +200,10 @@ try:
 except Exception as init_error:
     st.error(f"Initialization Notice: {init_error}")
 
-# --- 3. TAB ROUTING VIA FLOATING DOCK QUERY PARAMS ---
-try:
-    current_tab = st.query_params.get("tab", "Home")
-    if isinstance(current_tab, list):
-        current_tab = current_tab[0]
-except Exception:
-    current_tab = "Home"
+current_tab = st.session_state.active_tab
 
 # ----------------------------------------------------
-# 4. MODULE 0: HOME & BENTO OVERVIEW
+# 3. RENDER ACTIVE PAGE CONTENT
 # ----------------------------------------------------
 if current_tab == "Home":
     try:
@@ -238,26 +226,23 @@ if current_tab == "Home":
         
         with col_a:
             st.markdown("### Hospital Hub\nIntelligent disease-to-hospital routing with dynamic dark-mode maps.")
-            if st.button("Open Hospital Hub"):
-                st.query_params["tab"] = "Hospital"
+            if st.button("Open Hospital Hub", key="btn_home_hosp"):
+                st.session_state.active_tab = "Hospital"
                 st.rerun()
         with col_b:
             st.markdown("### Medication Suite\nMulti-week medication schedules, independent daily resets, and smart categorization.")
-            if st.button("Open Medication Hub"):
-                st.query_params["tab"] = "Hospital"
+            if st.button("Open Medication Hub", key="btn_home_med"):
+                st.session_state.active_tab = "Hospital"
                 st.rerun()
         with col_c:
             st.markdown("### Secure Passport\nDigital Medical ID with single-tap emergency SOS broadcasting.")
-            if st.button("Open Medical Passport"):
-                st.query_params["tab"] = "Passport"
+            if st.button("Open Medical Passport", key="btn_home_pass"):
+                st.session_state.active_tab = "Passport"
                 st.rerun()
 
     except Exception as home_err:
         st.error(f"Error loading Home Dashboard: {home_err}")
 
-# ----------------------------------------------------
-# 5. MODULE 1: UNIFIED HEALTH & HOSPITAL HUB
-# ----------------------------------------------------
 elif current_tab == "Hospital":
     try:
         col_title, col_bell = st.columns([4, 1])
@@ -425,9 +410,6 @@ elif current_tab == "Hospital":
     except Exception as hub_err:
         st.error(f"Error in Hospital Hub: {hub_err}")
 
-# ----------------------------------------------------
-# 6. MODULE 2: CAREGIVER LIVE SYNC
-# ----------------------------------------------------
 elif current_tab == "Caregiver":
     try:
         st.title("Caregiver Prescription Manager")
@@ -513,9 +495,6 @@ elif current_tab == "Caregiver":
     except Exception as caregiver_err:
         st.error(f"Error in Caregiver Portal: {caregiver_err}")
 
-# ----------------------------------------------------
-# 7. MODULE 3: DIGITAL MEDICAL PASSPORT & SOS
-# ----------------------------------------------------
 elif current_tab == "Passport":
     try:
         st.title("Secure Medical Passport & Emergency SOS")
@@ -553,9 +532,6 @@ elif current_tab == "Passport":
     except Exception as passport_err:
         st.error(f"Error in Passport Portal: {passport_err}")
 
-# ----------------------------------------------------
-# 8. MODULE 4: SDG 3 IMPACT & METRICS
-# ----------------------------------------------------
 elif current_tab == "Impact":
     try:
         st.title("UN Sustainable Development Goal 3 Alignment")
@@ -573,6 +549,33 @@ elif current_tab == "Impact":
         st.info("Low-Resource Scalability: Designed to operate smoothly on low-bandwidth mobile networks in rural communities.")
     except Exception as impact_err:
         st.error(f"Error loading metrics: {impact_err}")
+
+# --- 4. FLOATING DOCK NAVIGATION BAR (SOCKET-BASED, INSTANT SWITCH) ---
+st.markdown('<div class="floating-dock-wrapper">', unsafe_allow_html=True)
+dock_cols = st.columns(5)
+
+with dock_cols[0]:
+    if st.button("🏠", key="dock_home"):
+        st.session_state.active_tab = "Home"
+        st.rerun()
+with dock_cols[1]:
+    if st.button("🏥", key="dock_hosp"):
+        st.session_state.active_tab = "Hospital"
+        st.rerun()
+with dock_cols[2]:
+    if st.button("👁️", key="dock_care"):
+        st.session_state.active_tab = "Caregiver"
+        st.rerun()
+with dock_cols[3]:
+    if st.button("🛡️", key="dock_pass"):
+        st.session_state.active_tab = "Passport"
+        st.rerun()
+with dock_cols[4]:
+    if st.button("🌍", key="dock_imp"):
+        st.session_state.active_tab = "Impact"
+        st.rerun()
+
+st.markdown('</div>', unsafe_allow_html=True)
 
 # Footer
 try:
