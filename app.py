@@ -216,7 +216,7 @@ if app_mode == "🏠 Home & Welcome Dashboard":
 
         with col_c:
             st.markdown("""
-                #### 🪪 Medical Passport & SOS
+                #### 🚑 Medical Passport & SOS
                 Digital medical ID cards and one-tap emergency SOS broadcast.
             """)
             st.info("👈 Select 'Digital Medical Passport & SOS' in sidebar.")
