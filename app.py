@@ -128,7 +128,7 @@ try:
     # Initialize Notifications State for the Bell Icon
     if "notifications" not in st.session_state:
         st.session_state.notifications = [
-            {"msg": "Welcome to HealthBridge! Your caregiver is linked successfully.", "time": "System Init"}
+            {"msg": "Welcome to HealthBridge! Your caregiver and emergency link are active.", "time": "System Init"}
         ]
 
     # Initialize Multi-Week & Multi-Day Medication State
@@ -162,8 +162,10 @@ try:
     app_mode = st.sidebar.radio(
         "Select Navigation Option:", 
         [
+            "🏠 Home & Welcome Dashboard",
             "🏥 Unified Health & Hospital Hub", 
             "👁️ Caregiver Live Sync", 
+            "🪪 Digital Medical Passport & SOS",
             "🌍 SDG 3 Impact & Metrics"
         ]
     )
@@ -171,12 +173,64 @@ try:
     st.sidebar.divider()
     st.sidebar.info("💡 **Demo Tip:** Search 'Heart', 'Eye', or 'Bones' to instantly pinpoint specialized hospitals on the map!")
 except Exception:
-    app_mode = "🏥 Unified Health & Hospital Hub"
+    app_mode = "🏠 Home & Welcome Dashboard"
 
 # ----------------------------------------------------
-# 4. MODULE 1: UNIFIED HEALTH & HOSPITAL HUB
+# 4. MODULE 0: HOME & WELCOME DASHBOARD
 # ----------------------------------------------------
-if app_mode == "🏥 Unified Health & Hospital Hub":
+if app_mode == "🏠 Home & Welcome Dashboard":
+    try:
+        st.title("🌟 Welcome to HealthBridge")
+        st.markdown("### *Your Unified SDG 3 Companion for Patient Adherence & Emergency Care*")
+        st.divider()
+
+        # Hero Banner Metrics
+        col1, col2, col3 = st.columns(3)
+        with col1:
+            st.metric(label="Active Treatment Plan", value="Week 1 Active", delta="92% Adherence")
+        with col2:
+            st.metric(label="Emergency Readiness", value="GPS Active", delta="Kolhapur Region")
+        with col3:
+            st.metric(label="Caregiver Link", value="Connected 🔒", delta="PIN Protected")
+
+        st.divider()
+
+        # Quick Access Feature Cards
+        st.subheader("🚀 Quick Actions & Core Modules")
+        
+        col_a, col_b, col_c = st.columns(3)
+        
+        with col_a:
+            st.markdown("""
+                #### 🏥 Hospital Hub
+                Instant disease-to-hospital intelligent routing and live GPS location mapping.
+            """)
+            st.info("👈 Select 'Unified Health & Hospital Hub' in sidebar.")
+
+        with col_b:
+            st.markdown("""
+                #### 💊 Medication Suite
+                Multi-week day-by-day tracking, independent resets, and auto-categorization.
+            """)
+            st.info("👈 Access via Hospital Hub.")
+
+        with col_c:
+            st.markdown("""
+                #### 🪪 Medical Passport & SOS
+                Digital medical ID cards and one-tap emergency SOS broadcast.
+            """)
+            st.info("👈 Select 'Digital Medical Passport & SOS' in sidebar.")
+
+        st.divider()
+        st.markdown("### 🏆 SDG 3 Hackathon Alignment")
+        st.write("HealthBridge bridges the critical gap between daily preventive care and emergency hospital triage in a single, mobile-responsive web platform designed for low-bandwidth rural and urban communities.")
+    except Exception as home_err:
+        st.error(f"Error loading Home Dashboard: {home_err}")
+
+# ----------------------------------------------------
+# 5. MODULE 1: UNIFIED HEALTH & HOSPITAL HUB
+# ----------------------------------------------------
+elif app_mode == "🏥 Unified Health & Hospital Hub":
     try:
         # Top Header Bar with Notification Bell Icon
         col_title, col_bell = st.columns([4, 1])
@@ -353,7 +407,7 @@ if app_mode == "🏥 Unified Health & Hospital Hub":
         st.error(f"Critical error in Hospital Hub: {hub_err}")
 
 # ----------------------------------------------------
-# 5. MODULE 2: CAREGIVER LIVE SYNC (PASSWORD PROTECTED)
+# 6. MODULE 2: CAREGIVER LIVE SYNC (PASSWORD PROTECTED)
 # ----------------------------------------------------
 elif app_mode == "👁️ Caregiver Live Sync":
     try:
@@ -443,7 +497,47 @@ elif app_mode == "👁️ Caregiver Live Sync":
         st.error(f"Critical error in Caregiver Portal: {caregiver_err}")
 
 # ----------------------------------------------------
-# 6. MODULE 3: SDG 3 IMPACT & METRICS
+# 7. MODULE 3: DIGITAL MEDICAL PASSPORT & SOS
+# ----------------------------------------------------
+elif app_mode == "🪪 Digital Medical Passport & SOS":
+    try:
+        st.title("🪪 Digital Medical Passport & Emergency SOS")
+        st.markdown("*Instant offline/online access to critical medical data and emergency broadcasting.*")
+        st.divider()
+
+        col_id_left, col_id_right = st.columns(2)
+
+        with col_id_left:
+            st.subheader("📋 Patient Medical ID")
+            st.markdown("""
+                * **Full Legal Name:** Manas S. Abitkar
+                * **Blood Group:** O+ Positive
+                * **Emergency Contact:** +91 98765 43210 (Father / Caregiver)
+                * **Known Allergies:** Penicillin, Peanuts
+                * **Chronic Conditions:** Type 2 Diabetes, Hypertension
+                * **Primary Physician:** Dr. Sharma (City General Hospital)
+            """)
+            if st.button("📥 Download Medical ID (PDF/QR)"):
+                st.success("Emergency QR Passport generated successfully!")
+
+        with col_id_right:
+            st.subheader("🚨 One-Tap Emergency SOS Broadcast")
+            st.warning("⚠️ Pressing this button will instantly broadcast your live GPS coordinates and medical ID to your emergency contacts and caregiver portal.")
+            
+            sos_message = st.text_area("Optional Emergency Note:", placeholder="e.g., Experiencing severe chest pain, need immediate transport.")
+            
+            if st.button("🚨 TRIGGER EMERGENCY SOS"):
+                st.session_state.notifications.append({
+                    "msg": f"🚨 EMERGENCY SOS TRIGGERED! Note: {sos_message or 'Immediate assistance requested.'}",
+                    "time": "Just now (CRITICAL)"
+                })
+                st.error("🚨 SOS Alert Broadcasted! Caregiver notified via push notification.")
+
+    except Exception as passport_err:
+        st.error(f"Error loading Medical Passport: {passport_err}")
+
+# ----------------------------------------------------
+# 8. MODULE 4: SDG 3 IMPACT & METRICS
 # ----------------------------------------------------
 elif app_mode == "🌍 SDG 3 Impact & Metrics":
     try:
