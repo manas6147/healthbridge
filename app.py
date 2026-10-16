@@ -5,7 +5,7 @@ import pydeck as pdk
 # --- 1. APP CONFIG & ACETERNITY UI MASTER STYLING ---
 try:
     st.set_page_config(
-        page_title="HealthBridge - Aceternity Edition", 
+        page_title="HealthBridge - Aceternity Cloud Edition", 
         page_icon="🏥", 
         layout="wide"
     )
@@ -19,7 +19,7 @@ if "active_tab" not in st.session_state:
 def set_tab(tab_name):
     st.session_state.active_tab = tab_name
 
-# Inject Master CSS (Cloud Shader, Gooey Inputs, Fixed Floating Dock)
+# Inject Master CSS (Cloud Shader, Gooey Inputs, Bulletproof Centered Floating Dock)
 st.markdown("""
     <style>
     /* Completely Hide Sidebar and Header */
@@ -114,42 +114,78 @@ st.markdown("""
         transform: translateY(-3px) scale(1.02);
     }
 
-    /* 5. FLOATING DOCK WRAPPER FIX */
-    .floating-dock-container {
-        position: fixed;
-        bottom: 20px;
-        left: 50%;
-        transform: translateX(-50%);
-        width: min(90vw, 520px);
-        background: rgba(15, 23, 42, 0.92);
-        backdrop-filter: blur(25px);
-        border: 1.5px solid rgba(56, 189, 248, 0.45);
-        border-radius: 9999px;
-        padding: 8px 16px;
-        box-shadow: 0 25px 60px rgba(0, 0, 0, 0.85), 0 0 30px rgba(56, 189, 248, 0.3);
-        z-index: 999999;
+    /* ========================================================
+       5. BULLETPROOF UNIFIED FLOATING DOCK (ST.RADIO DOCK)
+       ======================================================== */
+    div[data-testid="stRadio"] {
+        position: fixed !important;
+        bottom: 25px !important;
+        left: 50% !important;
+        transform: translateX(-50%) !important;
+        background: rgba(15, 23, 42, 0.92) !important;
+        backdrop-filter: blur(25px) !important;
+        border: 1.5px solid rgba(56, 189, 248, 0.45) !important;
+        border-radius: 9999px !important;
+        padding: 8px 20px !important;
+        box-shadow: 0 25px 60px rgba(0, 0, 0, 0.85), 0 0 30px rgba(56, 189, 248, 0.3) !important;
+        z-index: 999999 !important;
+        width: auto !important;
     }
 
-    .floating-dock-container div.stButton > button {
-        background: rgba(30, 41, 59, 0.9) !important;
-        border: 1px solid rgba(255, 255, 255, 0.15) !important;
+    div[data-testid="stRadio"] label[data-baseweb="radio"] {
+        display: none !important;
+    }
+
+    div[data-testid="stRadio"] > div {
+        flex-direction: row !important;
+        gap: 14px !important;
+        align-items: center !important;
+        justify-content: center !important;
+    }
+
+    div[data-testid="stRadio"] div[role="radiogroup"] > label {
+        background: rgba(30, 41, 59, 0.95) !important;
+        border: 1px solid rgba(255, 255, 255, 0.18) !important;
         border-radius: 50% !important;
-        height: 52px !important;
-        width: 52px !important;
-        padding: 0 !important;
-        font-size: 22px !important;
+        width: 50px !important;
+        height: 50px !important;
         display: flex !important;
         align-items: center !important;
         justify-content: center !important;
-        margin: 0 auto !important;
+        cursor: pointer !important;
+        transition: all 0.3s cubic-bezier(0.34, 1.56, 0.64, 1) !important;
         box-shadow: 0 4px 15px rgba(0, 0, 0, 0.4) !important;
+        padding: 0 !important;
+        margin: 0 !important;
     }
 
-    .floating-dock-container div.stButton > button:hover {
-        transform: scale(1.3) translateY(-6px) !important;
+    div[data-testid="stRadio"] div[role="radiogroup"] > label:hover {
+        transform: scale(1.35) translateY(-6px) !important;
         background: linear-gradient(135deg, #0ea5e9 0%, #6366f1 100%) !important;
         border-color: rgba(255, 255, 255, 0.6) !important;
         box-shadow: 0 12px 35px rgba(56, 189, 248, 0.85) !important;
+    }
+
+    div[data-testid="stRadio"] input[type="radio"] {
+        display: none !important;
+    }
+
+    div[data-testid="stRadio"] div[role="radiogroup"] > label div p {
+        font-size: 20px !important;
+        margin: 0 !important;
+        line-height: 1 !important;
+        color: #38bdf8 !important;
+    }
+
+    /* Highlight Active Dock Item */
+    div[data-testid="stRadio"] div[role="radiogroup"] > label:has(input:checked) {
+        background: linear-gradient(135deg, #0ea5e9 0%, #6366f1 100%) !important;
+        border-color: #38bdf8 !important;
+        box-shadow: 0 0 25px rgba(56, 189, 248, 0.8) !important;
+    }
+
+    div[data-testid="stRadio"] div[role="radiogroup"] > label:has(input:checked) div p {
+        color: #ffffff !important;
     }
     </style>
 """, unsafe_allow_html=True)
@@ -570,18 +606,27 @@ elif current_tab == "Impact":
         st.error(f"Error loading metrics: {impact_err}")
 
 # ----------------------------------------------------
-# 8. HARDENED FLOATING DOCK (NATIVE COLUMNS + CALLBACKS)
+# 8. BULLETPROOF FLOATING DOCK (ST.RADIO UNIFIED WIDGET)
 # ----------------------------------------------------
-st.markdown('<div class="floating-dock-container">', unsafe_allow_html=True)
-d1, d2, d3, d4, d5 = st.columns(5)
+tab_map_to_emoji = {"Home": "🏠", "Hospital": "🏥", "Caregiver": "👁️", "Passport": "🛡️", "Impact": "🌍"}
+emoji_to_tab = {"🏠": "Home", "🏥": "Hospital", "👁️": "Caregiver", "🛡️": "Passport", "🌍": "Impact"}
 
-with d1:
-    st.button("🏠", key="dock_h", on_click=set_tab, args=("Home",))
-with d2:
-    st.button("🏥", key="dock_hosp", on_click=set_tab, args=("Hospital",))
-with d3:
-    st.button("👁️", key="dock_c", on_click=set_tab, args=("Caregiver",))
-with d4:
-    st.button("🛡️", key="dock_p", on_click=set_tab, args=("Passport",))
-with d5:
-    st.button("🌍", key="dock_i", on_click=set_tab, args=("Impact",))
+current_emoji = st.radio(
+    "Navigation Dock",
+    list(emoji_to_tab.keys()),
+    horizontal=True,
+    label_visibility="collapsed",
+    index=list(emoji_to_tab.keys()).index(tab_map_to_emoji.get(st.session_state.active_tab, "🏠")),
+    key="nav_dock_radio"
+)
+
+if emoji_to_tab.get(current_emoji) != st.session_state.active_tab:
+    st.session_state.active_tab = emoji_to_tab[current_emoji]
+    st.rerun()
+
+# Footer
+try:
+    st.markdown("---")
+    st.caption("HealthBridge Aceternity Master Edition • Built with Python, Streamlit & PyDeck 🚀")
+except Exception:
+    pass
