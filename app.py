@@ -2,54 +2,82 @@ import streamlit as st
 import pandas as pd
 import pydeck as pdk
 
-# App Config & Vibrant UI Styling
+# App Config & Premium UI Styling
 st.set_page_config(
     page_title="HealthBridge - Unified SDG 3 Companion", 
     page_icon="🏥", 
     layout="wide"
 )
 
-# Custom CSS for Vibrant Glassmorphism & Modern Dashboard Look
+# Custom CSS for Premium Typography, Mobile Sidebar Visibility, and Glassmorphism
 st.markdown("""
+    @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap');
+
     <style>
+    /* Global Font Styling */
+    html, body, [class*="css"] {
+        font-family: 'Poppins', sans-serif !important;
+    }
+
+    h1, h2, h3, h4, h5, h6 {
+        font-family: 'Poppins', sans-serif !important;
+        font-weight: 600 !important;
+        color: #f8fafc !important;
+        letter-spacing: -0.5px;
+    }
+
     /* Main Background Gradient */
     .stApp {
         background: linear-gradient(135deg, #0f172a 0%, #1e1b4b 100%);
         color: #f8fafc;
-        font-family: 'Inter', sans-serif;
     }
     
-    /* Sidebar Gradient & Styling */
+    /* Sidebar Styling & Mobile Visibility Fix */
     section[data-testid="stSidebar"] {
-        background: linear-gradient(180deg, #1e293b 0%, #0f172a 100%);
+        background: linear-gradient(180deg, #1e293b 0%, #0f172a 100%) !important;
         border-right: 1px solid #334155;
     }
+    
     section[data-testid="stSidebar"] .block-container {
-        color: #f8fafc;
+        color: #ffffff !important;
+    }
+
+    /* Ensure Sidebar Radio Options & Text are Always Bright and Visible */
+    .stRadio label p {
+        color: #f1f5f9 !important;
+        font-weight: 500 !important;
+        font-size: 15px !important;
+    }
+    
+    section[data-testid="stSidebar"] div[data-testid="stMarkdownContainer"] p,
+    section[data-testid="stSidebar"] span {
+        color: #cbd5e1 !important;
     }
 
     /* Glowing Text Input Fields */
     .stTextInput input, .stTextArea textarea, .stSelectbox select {
-        background-color: rgba(30, 41, 59, 0.7);
-        color: #ffffff;
-        border: 1px solid #38bdf8;
+        background-color: rgba(30, 41, 59, 0.8) !important;
+        color: #ffffff !important;
+        border: 1px solid #38bdf8 !important;
         border-radius: 10px;
         padding: 10px;
+        font-family: 'Poppins', sans-serif !important;
     }
 
     /* Sleek Modern Buttons */
     .stButton button {
-        background: linear-gradient(135deg, #0ea5e9 0%, #2563eb 100%);
-        color: white;
+        background: linear-gradient(135deg, #0ea5e9 0%, #2563eb 100%) !important;
+        color: white !important;
         border-radius: 10px;
         border: none;
         padding: 10px 20px;
-        font-weight: 600;
+        font-weight: 600 !important;
+        font-family: 'Poppins', sans-serif !important;
         letter-spacing: 0.5px;
         transition: all 0.3s ease;
     }
     .stButton button:hover {
-        background: linear-gradient(135deg, #38bdf8 0%, #1d4ed8 100%);
+        background: linear-gradient(135deg, #38bdf8 0%, #1d4ed8 100%) !important;
         box-shadow: 0 6px 20px rgba(14, 165, 233, 0.5);
         transform: translateY(-2px);
     }
@@ -79,7 +107,7 @@ def auto_categorize_medicine(med_name):
     else:
         return "General Medication"
 
-# Initialize Session State for Weekly Medications (1 clean med per day)
+# Initialize Session State for Weekly Medications
 if "meds_by_day" not in st.session_state:
     st.session_state.meds_by_day = {
         "Monday": [{"name": "Metformin (500mg)", "time": "08:00 AM", "status": "Pending", "category": "Diabetes"}],
@@ -95,9 +123,10 @@ if "questions" not in st.session_state:
     st.session_state.questions = ["Are there any food restrictions with this dosage?"]
 
 # Sidebar Dashboard Menu
-st.sidebar.title("🌟 HealthBridge Dashboard")
+st.sidebar.title("🌟 HealthBridge")
+st.sidebar.markdown("### Unified Patient Companion")
 app_mode = st.sidebar.radio(
-    "Select Option:", 
+    "Select Navigation Option:", 
     [
         "🏥 Unified Health & Hospital Hub", 
         "👁️ Caregiver Live Sync", 
@@ -158,7 +187,7 @@ if app_mode == "🏥 Unified Health & Hospital Hub":
 
     st.markdown(f"📍 **Recommended Facility:** **{h_name}** — *{travel_info}*")
 
-    # --- Unambiguous Map Data Frame with Explicit Longitude/Latitude Mapping ---
+    # --- Airtight Map Data Frame (User = Blue, Hospital = Orange-Red) ---
     map_data = pd.DataFrame([
         {
             "latitude": user_lat, 
@@ -185,7 +214,7 @@ if app_mode == "🏥 Unified Health & Hospital Hub":
         pickable=True,
         stroked=True,
         filled=True,
-        line_width_min_pixels=2,
+        line_width_min_pixels=3,
         get_line_color=[255, 255, 255]
     )
 
