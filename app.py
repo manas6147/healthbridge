@@ -12,11 +12,16 @@ try:
 except Exception:
     pass
 
-# Custom CSS Injecting Cloud Shader Atmosphere, Gooey Inputs, Magnetic Buttons, & Floating Dock
+# Custom CSS Injecting Cloud Shader Atmosphere, Gooey Inputs, & Floating Dock (Sidebar Hidden)
 st.markdown("""
     @import url('https://fonts.googleapis.com/css2?family=Playfair+Display:wght@600;700&family=Plus+Jakarta+Sans:wght@300;400;500;600;700&display=swap');
 
     <style>
+    /* Completely Hide Streamlit Sidebar */
+    section[data-testid="stSidebar"] {
+        display: none !important;
+    }
+
     /* Animated Cloud Shader & Atmospheric Mesh Background */
     .stApp {
         background-color: #020617 !important;
@@ -30,6 +35,7 @@ st.markdown("""
         animation: cloudShaderPulse 15s ease-in-out infinite alternate;
         color: #f8fafc;
         font-family: 'Plus Jakarta Sans', sans-serif !important;
+        padding-bottom: 90px; /* Space for floating dock */
     }
 
     @keyframes cloudShaderPulse {
@@ -46,23 +52,6 @@ st.markdown("""
         -webkit-text-fill-color: transparent;
         text-shadow: 0 0 40px rgba(56, 189, 248, 0.3);
         letter-spacing: -0.5px;
-    }
-
-    /* Sidebar Styling */
-    section[data-testid="stSidebar"] {
-        background: rgba(2, 6, 23, 0.92) !important;
-        backdrop-filter: blur(25px);
-        border-right: 1px solid rgba(255, 255, 255, 0.08);
-    }
-
-    section[data-testid="stSidebar"] .block-container {
-        color: #ffffff !important;
-    }
-
-    .stRadio label p {
-        color: #f1f5f9 !important;
-        font-weight: 500 !important;
-        font-size: 15px !important;
     }
 
     /* Aceternity Gooey Input Effect (Liquid Glow & Fluid Focus) */
@@ -118,55 +107,47 @@ st.markdown("""
         box-shadow: 0 15px 35px rgba(0, 0, 0, 0.6);
     }
 
-    /* Aceternity Floating Dock Simulation */
+    /* Working Aceternity Floating Navigation Dock */
     .floating-dock-container {
         position: fixed;
-        bottom: 20px;
+        bottom: 25px;
         left: 50%;
         transform: translateX(-50%);
         display: flex;
         gap: 15px;
-        padding: 10px 22px;
-        background: rgba(15, 23, 42, 0.85);
+        padding: 12px 25px;
+        background: rgba(15, 23, 42, 0.9);
         backdrop-filter: blur(25px);
-        border: 1px solid rgba(56, 189, 248, 0.35);
+        border: 1px solid rgba(56, 189, 248, 0.4);
         border-radius: 9999px;
-        box-shadow: 0 20px 50px rgba(0, 0, 0, 0.7), 0 0 20px rgba(56, 189, 248, 0.2);
-        z-index: 99999;
+        box-shadow: 0 25px 60px rgba(0, 0, 0, 0.8), 0 0 25px rgba(56, 189, 248, 0.25);
+        z-index: 999999;
     }
 
     .dock-icon {
-        width: 42px;
-        height: 42px;
+        width: 45px;
+        height: 45px;
         display: flex;
         align-items: center;
         justify-content: center;
         border-radius: 50%;
-        background: rgba(30, 41, 59, 0.9);
-        border: 1px solid rgba(255, 255, 255, 0.12);
+        background: rgba(30, 41, 59, 0.95);
+        border: 1px solid rgba(255, 255, 255, 0.15);
         color: #38bdf8;
-        font-size: 18px;
+        font-size: 20px;
         text-decoration: none;
         transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        box-shadow: 0 4px 15px rgba(0, 0, 0, 0.4);
     }
 
     .dock-icon:hover {
         transform: scale(1.35) translateY(-8px);
         background: linear-gradient(135deg, #0ea5e9 0%, #6366f1 100%);
         color: white;
-        border-color: rgba(255, 255, 255, 0.5);
-        box-shadow: 0 10px 30px rgba(56, 189, 248, 0.7);
+        border-color: rgba(255, 255, 255, 0.6);
+        box-shadow: 0 12px 35px rgba(56, 189, 248, 0.8);
     }
     </style>
-
-    <!-- Floating Dock HTML -->
-    <div class="floating-dock-container">
-        <a href="#" class="dock-icon" title="Home">🏠</a>
-        <a href="#" class="dock-icon" title="Hospital Hub">🏥</a>
-        <a href="#" class="dock-icon" title="Caregiver Portal">👁️</a>
-        <a href="#" class="dock-icon" title="Medical Passport">🪪</a>
-        <a href="#" class="dock-icon" title="SDG 3 Impact">🌍</a>
-    </div>
 """, unsafe_allow_html=True)
 
 # --- 2. SESSION STATE & HELPER FUNCTIONS ---
@@ -196,7 +177,7 @@ try:
 
     if "notifications" not in st.session_state:
         st.session_state.notifications = [
-            {"msg": "✨ HealthBridge Aceternity Master Edition initialized successfully.", "time": "System Init"}
+            {"msg": "✨ HealthBridge Master Edition initialized successfully.", "time": "System Init"}
         ]
 
     if "meds_by_week" not in st.session_state:
@@ -222,29 +203,29 @@ try:
 except Exception as init_error:
     st.error(f"Initialization Notice: {init_error}")
 
-# --- 3. SIDEBAR NAVIGATION MENU ---
+# --- 3. DYNAMIC TAB ROUTING VIA FLOATING DOCK ---
 try:
-    st.sidebar.title("✨ HealthBridge")
-    st.sidebar.markdown("##### *Aceternity Master Suite*")
-    app_mode = st.sidebar.radio(
-        "Navigation:", 
-        [
-            "🏠 Home & Bento Overview",
-            "🏥 Unified Health & Hospital Hub", 
-            "👁️ Caregiver Live Sync", 
-            "🪪 Digital Medical Passport & SOS",
-            "🌍 SDG 3 Impact & Metrics"
-        ]
-    )
-    st.sidebar.divider()
-    st.sidebar.info("💡 **Pitch Tip:** Type 'Heart', 'Eye', or 'Bones' in the Hospital Hub to test intelligent routing!")
+    current_tab = st.query_params.get("tab", "Home")
+    if isinstance(current_tab, list):
+        current_tab = current_tab[0]
 except Exception:
-    app_mode = "🏠 Home & Bento Overview"
+    current_tab = "Home"
+
+# Render Working Floating Navigation Dock at Bottom
+st.markdown("""
+    <div class="floating-dock-container">
+        <a href="?tab=Home" class="dock-icon" title="Home & Bento Overview">🏠</a>
+        <a href="?tab=Hospital" class="dock-icon" title="Hospital Hub & Medications">🏥</a>
+        <a href="?tab=Caregiver" class="dock-icon" title="Caregiver Portal">👁️</a>
+        <a href="?tab=Passport" class="dock-icon" title="Secure Medical Passport & SOS">🛡️</a>
+        <a href="?tab=Impact" class="dock-icon" title="SDG 3 Impact">🌍</a>
+    </div>
+""", unsafe_allow_html=True)
 
 # ----------------------------------------------------
 # 4. MODULE 0: HOME & BENTO OVERVIEW
 # ----------------------------------------------------
-if app_mode == "🏠 Home & Bento Overview":
+if current_tab == "Home":
     try:
         st.title("🌟 HealthBridge: Next-Gen Patient Companion")
         st.markdown("##### *Precision Healthcare, Gooey UI Triage & Family Caregiving for SDG 3*")
@@ -265,13 +246,13 @@ if app_mode == "🏠 Home & Bento Overview":
         
         with col_a:
             st.markdown("### 🏥 Hospital Hub\nIntelligent disease-to-hospital routing with dynamic dark-mode maps.")
-            st.info("👈 Select **Hospital Hub** in sidebar.")
+            st.info("👇 Click the 🏥 icon in the floating dock below.")
         with col_b:
             st.markdown("### 💊 Medication Suite\nMulti-week medication schedules, independent daily resets, and smart categorization.")
-            st.info("👈 Access via **Hospital Hub**.")
+            st.info("👇 Access via Hospital Hub tab.")
         with col_c:
-            st.markdown("### 🪪 Passport & SOS\nDigital Medical Passport ID with single-tap emergency SOS broadcasting.")
-            st.info("👈 Select **Medical Passport & SOS** in sidebar.")
+            st.markdown("### 🛡️ Passport & SOS\nDigital Secure Medical ID with single-tap emergency SOS broadcasting.")
+            st.info("👇 Click the 🛡️ icon in the floating dock below.")
 
     except Exception as home_err:
         st.error(f"Error loading Home Dashboard: {home_err}")
@@ -279,7 +260,7 @@ if app_mode == "🏠 Home & Bento Overview":
 # ----------------------------------------------------
 # 5. MODULE 1: UNIFIED HEALTH & HOSPITAL HUB
 # ----------------------------------------------------
-elif app_mode == "🏥 Unified Health & Hospital Hub":
+elif current_tab == "Hospital":
     try:
         col_title, col_bell = st.columns([4, 1])
         with col_title:
@@ -449,7 +430,7 @@ elif app_mode == "🏥 Unified Health & Hospital Hub":
 # ----------------------------------------------------
 # 6. MODULE 2: CAREGIVER LIVE SYNC
 # ----------------------------------------------------
-elif app_mode == "👁️ Caregiver Live Sync":
+elif current_tab == "Caregiver":
     try:
         st.title("👁️ Caregiver Prescription Manager")
         st.markdown("Secure portal for remote family monitoring and prescription assignment.")
@@ -537,9 +518,9 @@ elif app_mode == "👁️ Caregiver Live Sync":
 # ----------------------------------------------------
 # 7. MODULE 3: DIGITAL MEDICAL PASSPORT & SOS
 # ----------------------------------------------------
-elif app_mode == "🪪 Digital Medical Passport & SOS":
+elif current_tab == "Passport":
     try:
-        st.title("🪪 Digital Medical Passport & Emergency SOS")
+        st.title("🛡️ Secure Medical Passport & Emergency SOS")
         st.markdown("Critical offline/online patient medical passport and live broadcast portal.")
         st.divider()
 
@@ -555,8 +536,8 @@ elif app_mode == "🪪 Digital Medical Passport & SOS":
                 * **Chronic Conditions:** Type 2 Diabetes, Hypertension
                 * **Primary Physician:** Dr. Sharma (City General Hospital)
             """)
-            if st.button("📥 Download Medical ID (PDF/QR)"):
-                st.success("Emergency QR Passport generated!")
+            if st.button("📥 Download Secure Medical ID (PDF/QR)"):
+                st.success("Emergency QR Passport generated securely!")
 
         with col_id_right:
             st.subheader("🚨 One-Tap Emergency SOS Broadcast")
@@ -569,7 +550,7 @@ elif app_mode == "🪪 Digital Medical Passport & SOS":
                     "msg": f"🚨 EMERGENCY SOS TRIGGERED! Note: {sos_message or 'Immediate assistance requested.'}",
                     "time": "Just now (CRITICAL)"
                 })
-                st.error("🚨 SOS Alert Broadcasted!")
+                st.error("🚨 SOS Alert Broadcasted Successfully!")
 
     except Exception as passport_err:
         st.error(f"Error in Passport Portal: {passport_err}")
@@ -577,7 +558,7 @@ elif app_mode == "🪪 Digital Medical Passport & SOS":
 # ----------------------------------------------------
 # 8. MODULE 4: SDG 3 IMPACT & METRICS
 # ----------------------------------------------------
-elif app_mode == "🌍 SDG 3 Impact & Metrics":
+elif current_tab == "Impact":
     try:
         st.title("🌍 UN Sustainable Development Goal 3 Alignment")
         st.markdown("### *Ensure healthy lives and promote well-being for all at all ages.*")
