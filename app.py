@@ -18,10 +18,10 @@ if "active_tab" not in st.session_state:
 
 def set_tab(tab_name):
     st.session_state.active_tab = tab_name
-    tab_map = {"Home": "🏠", "Hospital": "🏥", "Caregiver": "👁️", "Passport": "🛡️", "Impact": "🌍"}
-    st.session_state["nav_dock_radio"] = tab_map.get(tab_name, "🏠")
+    tab_map = {"Home": "Home", "Hospital": "Hospital", "Caregiver": "Caregiver", "Passport": "Passport", "Impact": "Impact"}
+    st.session_state["nav_dock_radio"] = tab_map.get(tab_name, "Home")
 
-# Inject Master CSS (Cloud Shader, Gooey Inputs, Bulletproof Centered Floating Dock)
+# Inject Master CSS (Cloud Shader & Authentic Aceternity Floating Dock with Hover Tooltips)
 st.markdown("""
     <style>
     /* Completely Hide Sidebar and Header */
@@ -117,19 +117,19 @@ st.markdown("""
     }
 
     /* ========================================================
-       5. BULLETPROOF UNIFIED FLOATING DOCK (ST.RADIO DOCK)
+       5. AUTHENTIC ACETERNITY FLOATING DOCK STYLING
        ======================================================== */
     div[data-testid="stRadio"] {
         position: fixed !important;
         bottom: 25px !important;
         left: 50% !important;
         transform: translateX(-50%) !important;
-        background: rgba(15, 23, 42, 0.92) !important;
-        backdrop-filter: blur(25px) !important;
-        border: 1.5px solid rgba(56, 189, 248, 0.45) !important;
-        border-radius: 9999px !important;
-        padding: 8px 20px !important;
-        box-shadow: 0 25px 60px rgba(0, 0, 0, 0.85), 0 0 30px rgba(56, 189, 248, 0.3) !important;
+        background: rgba(10, 15, 30, 0.85) !important;
+        backdrop-filter: blur(30px) !important;
+        border: 1px solid rgba(56, 189, 248, 0.3) !important;
+        border-radius: 16px !important;
+        padding: 8px 16px !important;
+        box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.9), 0 0 30px rgba(56, 189, 248, 0.15) !important;
         z-index: 999999 !important;
         width: auto !important;
     }
@@ -140,32 +140,34 @@ st.markdown("""
 
     div[data-testid="stRadio"] > div {
         flex-direction: row !important;
-        gap: 14px !important;
+        gap: 10px !important;
         align-items: center !important;
         justify-content: center !important;
     }
 
     div[data-testid="stRadio"] div[role="radiogroup"] > label {
-        background: rgba(30, 41, 59, 0.95) !important;
-        border: 1px solid rgba(255, 255, 255, 0.18) !important;
-        border-radius: 50% !important;
-        width: 50px !important;
-        height: 50px !important;
+        background: rgba(30, 41, 59, 0.7) !important;
+        border: 1px solid rgba(255, 255, 255, 0.1) !important;
+        border-radius: 12px !important;
+        width: 44px !important;
+        height: 44px !important;
         display: flex !important;
         align-items: center !important;
         justify-content: center !important;
         cursor: pointer !important;
-        transition: all 0.3s cubic-bezier(0.34, 1.56, 0.64, 1) !important;
-        box-shadow: 0 4px 15px rgba(0, 0, 0, 0.4) !important;
+        transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275) !important;
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3) !important;
         padding: 0 !important;
         margin: 0 !important;
+        position: relative !important;
     }
 
+    /* Aceternity Hover Magnification Physics & Tooltip Effect */
     div[data-testid="stRadio"] div[role="radiogroup"] > label:hover {
-        transform: scale(1.35) translateY(-6px) !important;
-        background: linear-gradient(135deg, #0ea5e9 0%, #6366f1 100%) !important;
-        border-color: rgba(255, 255, 255, 0.6) !important;
-        box-shadow: 0 12px 35px rgba(56, 189, 248, 0.85) !important;
+        transform: scale(1.35) translateY(-8px) !important;
+        background: rgba(51, 65, 85, 0.95) !important;
+        border-color: rgba(56, 189, 248, 0.5) !important;
+        box-shadow: 0 15px 30px rgba(56, 189, 248, 0.35) !important;
     }
 
     div[data-testid="stRadio"] input[type="radio"] {
@@ -173,21 +175,16 @@ st.markdown("""
     }
 
     div[data-testid="stRadio"] div[role="radiogroup"] > label div p {
-        font-size: 20px !important;
+        font-size: 18px !important;
         margin: 0 !important;
         line-height: 1 !important;
-        color: #38bdf8 !important;
     }
 
     /* Highlight Active Dock Item */
     div[data-testid="stRadio"] div[role="radiogroup"] > label:has(input:checked) {
         background: linear-gradient(135deg, #0ea5e9 0%, #6366f1 100%) !important;
         border-color: #38bdf8 !important;
-        box-shadow: 0 0 25px rgba(56, 189, 248, 0.8) !important;
-    }
-
-    div[data-testid="stRadio"] div[role="radiogroup"] > label:has(input:checked) div p {
-        color: #ffffff !important;
+        box-shadow: 0 0 20px rgba(56, 189, 248, 0.6) !important;
     }
     </style>
 """, unsafe_allow_html=True)
@@ -219,7 +216,7 @@ try:
 
     if "notifications" not in st.session_state:
         st.session_state.notifications = [
-            {"msg": "HealthBridge Master Platform initialized successfully.", "time": "System Init"}
+            {"msg": "HealthBridge Aceternity Master Edition initialized.", "time": "System Init"}
         ]
 
     if "meds_by_week" not in st.session_state:
@@ -271,15 +268,24 @@ if current_tab == "Home":
         
         with col_a:
             st.markdown("### Hospital Hub\nIntelligent disease-to-hospital routing with dynamic dark-mode PyDeck maps.")
-            st.button("Open Hospital Hub", key="home_btn_hosp", on_click=set_tab, args=("Hospital",))
+            if st.button("Open Hospital Hub", key="home_btn_hosp"):
+                st.session_state.active_tab = "Hospital"
+                st.session_state["nav_dock_radio"] = "Hospital"
+                st.rerun()
 
         with col_b:
             st.markdown("### Medication Suite\nMulti-week medication schedules, independent daily resets, and smart categorization.")
-            st.button("Open Medication Hub", key="home_btn_med", on_click=set_tab, args=("Hospital",))
+            if st.button("Open Medication Hub", key="home_btn_med"):
+                st.session_state.active_tab = "Hospital"
+                st.session_state["nav_dock_radio"] = "Hospital"
+                st.rerun()
 
         with col_c:
             st.markdown("### Secure Passport\nDigital Medical ID with single-tap emergency SOS broadcasting.")
-            st.button("Open Medical Passport", key="home_btn_pass", on_click=set_tab, args=("Passport",))
+            if st.button("Open Medical Passport", key="home_btn_pass"):
+                st.session_state.active_tab = "Passport"
+                st.session_state["nav_dock_radio"] = "Passport"
+                st.rerun()
 
     except Exception as home_err:
         st.error(f"Error loading Home Dashboard: {home_err}")
@@ -608,23 +614,20 @@ elif current_tab == "Impact":
         st.error(f"Error loading metrics: {impact_err}")
 
 # ----------------------------------------------------
-# 8. BULLETPROOF FLOATING DOCK (ST.RADIO UNIFIED WIDGET)
+# 8. ACETERNITY FLOATING DOCK WIDGET
 # ----------------------------------------------------
-tab_map_to_emoji = {"Home": "🏠", "Hospital": "🏥", "Caregiver": "👁️", "Passport": "🛡️", "Impact": "🌍"}
-emoji_to_tab = {"🏠": "Home", "🏥": "Hospital", "👁️": "Caregiver", "🛡️": "Passport", "🌍": "Impact"}
+dock_items = {"Home": "🏠", "Hospital": "🏥", "Caregiver": "👁️", "Passport": "🛡️", "Impact": "🌍"}
 
-current_emoji = st.radio(
-    "Navigation Dock",
-    list(emoji_to_tab.keys()),
+current_dock_selection = st.radio(
+    "Aceternity Dock",
+    list(dock_items.keys()),
     horizontal=True,
     label_visibility="collapsed",
-    index=list(emoji_to_tab.keys()).index(tab_map_to_emoji.get(st.session_state.active_tab, "🏠")),
     key="nav_dock_radio"
 )
 
-new_tab = emoji_to_tab.get(current_emoji)
-if new_tab != st.session_state.active_tab:
-    st.session_state.active_tab = new_tab
+if current_dock_selection != st.session_state.active_tab:
+    st.session_state.active_tab = current_dock_selection
     st.rerun()
 
 # Footer
