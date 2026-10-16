@@ -82,12 +82,13 @@ st.markdown("""
         color: #ffffff !important;
         border-radius: 14px;
         border: 1px solid rgba(255, 255, 255, 0.25);
-        padding: 10px 24px;
+        padding: 12px 24px;
         font-weight: 600 !important;
         letter-spacing: 0.5px;
         transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
         box-shadow: 0 4px 20px rgba(14, 165, 233, 0.4);
         width: 100%;
+        cursor: pointer !important;
     }
 
     .stButton button:hover {
@@ -110,7 +111,7 @@ st.markdown("""
         box-shadow: 0 20px 40px rgba(0, 0, 0, 0.6);
     }
 
-    /* 4. INTERACTIVE FLOATING DOCK (ST.RADIO INTEGRATION) */
+    /* 4. HIGHLY INTERACTIVE FLOATING DOCK (ST.RADIO INTEGRATION) */
     div[data-testid="stRadio"] {
         position: fixed !important;
         bottom: 25px !important;
@@ -141,20 +142,20 @@ st.markdown("""
         background: rgba(30, 41, 59, 0.95) !important;
         border: 1px solid rgba(255, 255, 255, 0.18) !important;
         border-radius: 50% !important;
-        width: 50px !important;
-        height: 50px !important;
+        width: 52px !important;
+        height: 52px !important;
         display: flex !important;
         align-items: center !important;
         justify-content: center !important;
         cursor: pointer !important;
-        transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1) !important;
+        transition: all 0.3s cubic-bezier(0.34, 1.56, 0.64, 1) !important;
         box-shadow: 0 4px 15px rgba(0, 0, 0, 0.4) !important;
         padding: 0 !important;
         margin: 0 !important;
     }
 
     div[data-testid="stRadio"] div[role="radiogroup"] > label:hover {
-        transform: scale(1.3) translateY(-6px) !important;
+        transform: scale(1.35) translateY(-8px) !important;
         background: linear-gradient(135deg, #0ea5e9 0%, #6366f1 100%) !important;
         border-color: rgba(255, 255, 255, 0.6) !important;
         box-shadow: 0 12px 35px rgba(56, 189, 248, 0.85) !important;
@@ -386,7 +387,7 @@ elif current_tab == "Hospital":
 
         col_left, col_right = st.columns(2)
 
-        # 5. MULTI-WEEK MEDICATION SCHEDULE
+        # MULTI-WEEK MEDICATION SCHEDULE
         with col_left:
             try:
                 st.subheader("💊 Multi-Week Medication Schedule")
