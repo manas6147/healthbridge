@@ -158,28 +158,28 @@ if app_mode == "🏥 Unified Health & Hospital Hub":
 
     st.markdown(f"📍 **Recommended Facility:** **{h_name}** — *{travel_info}*")
 
-    # --- Unambiguous Map Data Frame (User = Blue, Hospital = Orange) ---
+    # --- Unambiguous Map Data Frame with Explicit Longitude/Latitude Mapping ---
     map_data = pd.DataFrame([
         {
-            "lat": user_lat, 
-            "lon": user_lon, 
+            "latitude": user_lat, 
+            "longitude": user_lon, 
             "name": "Your Location (Patient)", 
             "color": [30, 144, 255, 255],  # Strict Blue Pin for User
-            "radius": 60
+            "radius": 70
         },
         {
-            "lat": h_lat, 
-            "lon": h_lon, 
+            "latitude": h_lat, 
+            "longitude": h_lon, 
             "name": h_name, 
             "color": [255, 69, 0, 255],     # Strict Orange-Red Pin for Hospital
-            "radius": 70
+            "radius": 80
         }
     ])
 
     scatterplot_layer = pdk.Layer(
         "ScatterplotLayer",
         map_data,
-        get_position=["lon", "lat"],
+        get_position=["longitude", "latitude"],
         get_fill_color="color",
         get_radius="radius",
         pickable=True,
