@@ -12,170 +12,10 @@ try:
 except Exception:
     pass
 
-# Initialize Active Tab
-if "active_tab" not in st.session_state:
-    st.session_state.active_tab = "Home"
-
-def set_tab(tab_name):
-    st.session_state.active_tab = tab_name
-
-# Inject Master CSS (Cloud Shader, Gooey Inputs, Rigid Centered Floating Dock)
-st.markdown("""
-    <style>
-    /* Completely Hide Sidebar and Header */
-    section[data-testid="stSidebar"] {
-        display: none !important;
-    }
-    header[data-testid="stHeader"] {
-        background: transparent !important;
-    }
-
-    /* 1. CLOUD SHADER ATMOSPHERIC BACKGROUND */
-    .stApp {
-        background-color: #030712 !important;
-        background-image: 
-            radial-gradient(circle at 15% 20%, rgba(56, 189, 248, 0.28) 0%, transparent 45%),
-            radial-gradient(circle at 85% 80%, rgba(99, 102, 241, 0.25) 0%, transparent 50%),
-            radial-gradient(circle at 50% 50%, rgba(14, 165, 233, 0.18) 0%, transparent 65%),
-            radial-gradient(circle at 30% 70%, rgba(168, 85, 247, 0.2) 0%, transparent 60%);
-        background-size: 160% 160%;
-        animation: cloudDrift 18s ease-in-out infinite alternate;
-        color: #f8fafc;
-        font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif !important;
-        padding-bottom: 140px; /* Clearance for floating dock */
-    }
-
-    @keyframes cloudDrift {
-        0% { background-position: 0% 0%; }
-        50% { background-position: 100% 50%; }
-        100% { background-position: 50% 100%; }
-    }
-
-    /* Clean Gradient Headings */
-    h1, h2, h3 {
-        font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif !important;
-        font-weight: 800 !important;
-        background: linear-gradient(135deg, #ffffff 0%, #38bdf8 50%, #818cf8 100%);
-        -webkit-background-clip: text;
-        -webkit-text-fill-color: transparent;
-        letter-spacing: -0.8px;
-    }
-
-    /* 2. GOOEY INPUT FIELDS */
-    .stTextInput input, .stTextArea textarea, .stSelectbox select, div[data-baseweb="select"] div {
-        background-color: rgba(15, 23, 42, 0.85) !important;
-        color: #ffffff !important;
-        border: 2px solid rgba(56, 189, 248, 0.35) !important;
-        border-radius: 16px !important;
-        padding: 12px 20px !important;
-        box-shadow: 0 0 20px rgba(56, 189, 248, 0.12);
-        transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275) !important;
-    }
-
-    .stTextInput input:focus, .stTextArea textarea:focus {
-        border-color: #38bdf8 !important;
-        box-shadow: 0 0 35px rgba(56, 189, 248, 0.6), 0 0 70px rgba(99, 102, 241, 0.35) !important;
-        transform: scale(1.01);
-    }
-
-    input::placeholder, textarea::placeholder {
-        color: #64748b !important;
-        opacity: 1 !important;
-    }
-
-    /* 3. BENTO GLASS CARDS */
-    div[data-testid="metric-container"], div.stTabs, .stExpander {
-        background: rgba(15, 23, 42, 0.75) !important;
-        border: 1px solid rgba(56, 189, 248, 0.25) !important;
-        padding: 22px;
-        border-radius: 22px;
-        backdrop-filter: blur(20px);
-        box-shadow: 0 20px 40px rgba(0, 0, 0, 0.6);
-    }
-
-    /* 4. GENERAL BUTTONS */
-    .stButton button {
-        background: linear-gradient(135deg, #0ea5e9 0%, #6366f1 100%) !important;
-        color: #ffffff !important;
-        border-radius: 14px;
-        border: 1px solid rgba(255, 255, 255, 0.25);
-        padding: 12px 24px;
-        font-weight: 600 !important;
-        letter-spacing: 0.5px;
-        transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-        box-shadow: 0 4px 20px rgba(14, 165, 233, 0.4);
-        width: 100%;
-        cursor: pointer !important;
-    }
-
-    .stButton button:hover {
-        background: linear-gradient(135deg, #38bdf8 0%, #4f46e5 100%) !important;
-        box-shadow: 0 0 35px rgba(56, 189, 248, 0.85);
-        transform: translateY(-3px) scale(1.02);
-    }
-
-    /* ========================================================
-       5. RIGID ACETERNITY FLOATING DOCK WRAPPER
-       ======================================================== */
-    .floating-dock-wrapper {
-        position: fixed !important;
-        bottom: 25px !important;
-        left: 50% !important;
-        transform: translateX(-50%) !important;
-        background: rgba(15, 23, 42, 0.92) !important;
-        backdrop-filter: blur(25px) !important;
-        border: 1.5px solid rgba(56, 189, 248, 0.45) !important;
-        border-radius: 9999px !important;
-        padding: 6px 16px !important;
-        box-shadow: 0 25px 60px rgba(0, 0, 0, 0.85), 0 0 30px rgba(56, 189, 248, 0.3) !important;
-        z-index: 999999 !important;
-        width: 360px !important; /* Fixed dock width prevents scattering */
-        max-width: 90vw !important;
-    }
-
-    /* Overrides Streamlit column flex behavior inside the dock */
-    .floating-dock-wrapper div[data-testid="stHorizontalBlock"] {
-        display: flex !important;
-        flex-direction: row !important;
-        justify-content: space-between !important;
-        align-items: center !important;
-        width: 100% !important;
-        gap: 0px !important;
-    }
-
-    .floating-dock-wrapper div[data-testid="column"] {
-        width: auto !important;
-        flex: 1 1 auto !important;
-        min-width: unset !important;
-        display: flex !important;
-        justify-content: center !important;
-    }
-
-    /* Circular Dock Button Styles */
-    .floating-dock-wrapper div.stButton > button {
-        background: rgba(30, 41, 59, 0.9) !important;
-        border: 1px solid rgba(255, 255, 255, 0.15) !important;
-        border-radius: 50% !important;
-        height: 48px !important;
-        width: 48px !important;
-        padding: 0 !important;
-        font-size: 20px !important;
-        display: flex !important;
-        align-items: center !important;
-        justify-content: center !important;
-        margin: 0 auto !important;
-        box-shadow: 0 4px 15px rgba(0, 0, 0, 0.4) !important;
-        transition: all 0.3s cubic-bezier(0.34, 1.56, 0.64, 1) !important;
-    }
-
-    .floating-dock-wrapper div.stButton > button:hover {
-        transform: scale(1.3) translateY(-6px) !important;
-        background: linear-gradient(135deg, #0ea5e9 0%, #6366f1 100%) !important;
-        border-color: rgba(255, 255, 255, 0.6) !important;
-        box-shadow: 0 12px 35px rgba(56, 189, 248, 0.85) !important;
-    }
-    </style>
-""", unsafe_allow_html=True)
+# Read active tab from URL query params (defaults to "Home")
+current_tab = st.query_params.get("tab", "Home")
+if isinstance(current_tab, list):
+    current_tab = current_tab[0]
 
 # --- 2. SESSION STATE & HELPER FUNCTIONS ---
 try:
@@ -204,7 +44,7 @@ try:
 
     if "notifications" not in st.session_state:
         st.session_state.notifications = [
-            {"msg": "HealthBridge Master Platform initialized successfully.", "time": "System Init"}
+            {"msg": "HealthBridge Aceternity Master Edition initialized.", "time": "System Init"}
         ]
 
     if "meds_by_week" not in st.session_state:
@@ -230,7 +70,87 @@ try:
 except Exception as init_error:
     st.error(f"Initialization Notice: {init_error}")
 
-current_tab = st.session_state.active_tab
+# Inject Master CSS (Cloud Shader & Pure CSS Centered Floating Dock)
+st.markdown("""
+    <style>
+    section[data-testid="stSidebar"] { display: none !important; }
+    header[data-testid="stHeader"] { background: transparent !important; }
+
+    .stApp {
+        background-color: #030712 !important;
+        background-image: 
+            radial-gradient(circle at 15% 20%, rgba(56, 189, 248, 0.28) 0%, transparent 45%),
+            radial-gradient(circle at 85% 80%, rgba(99, 102, 241, 0.25) 0%, transparent 50%),
+            radial-gradient(circle at 50% 50%, rgba(14, 165, 233, 0.18) 0%, transparent 65%),
+            radial-gradient(circle at 30% 70%, rgba(168, 85, 247, 0.2) 0%, transparent 60%);
+        background-size: 160% 160%;
+        animation: cloudDrift 18s ease-in-out infinite alternate;
+        color: #f8fafc;
+        font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif !important;
+        padding-bottom: 140px;
+    }
+
+    @keyframes cloudDrift {
+        0% { background-position: 0% 0%; }
+        50% { background-position: 100% 50%; }
+        100% { background-position: 50% 100%; }
+    }
+
+    h1, h2, h3 {
+        font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif !important;
+        font-weight: 800 !important;
+        background: linear-gradient(135deg, #ffffff 0%, #38bdf8 50%, #818cf8 100%);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        letter-spacing: -0.8px;
+    }
+
+    .stTextInput input, .stTextArea textarea, .stSelectbox select, div[data-baseweb="select"] div {
+        background-color: rgba(15, 23, 42, 0.85) !important;
+        color: #ffffff !important;
+        border: 2px solid rgba(56, 189, 248, 0.35) !important;
+        border-radius: 16px !important;
+        padding: 12px 20px !important;
+        box-shadow: 0 0 20px rgba(56, 189, 248, 0.12);
+        transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275) !important;
+    }
+
+    .stTextInput input:focus, .stTextArea textarea:focus {
+        border-color: #38bdf8 !important;
+        box-shadow: 0 0 35px rgba(56, 189, 248, 0.6), 0 0 70px rgba(99, 102, 241, 0.35) !important;
+        transform: scale(1.01);
+    }
+
+    div[data-testid="metric-container"], div.stTabs, .stExpander {
+        background: rgba(15, 23, 42, 0.75) !important;
+        border: 1px solid rgba(56, 189, 248, 0.25) !important;
+        padding: 22px;
+        border-radius: 22px;
+        backdrop-filter: blur(20px);
+        box-shadow: 0 20px 40px rgba(0, 0, 0, 0.6);
+    }
+
+    .stButton button {
+        background: linear-gradient(135deg, #0ea5e9 0%, #6366f1 100%) !important;
+        color: #ffffff !important;
+        border-radius: 14px;
+        border: 1px solid rgba(255, 255, 255, 0.25);
+        padding: 12px 24px;
+        font-weight: 600 !important;
+        letter-spacing: 0.5px;
+        transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        box-shadow: 0 4px 20px rgba(14, 165, 233, 0.4);
+        width: 100%;
+        cursor: pointer !important;
+    }
+
+    .stButton button:hover {
+        background: linear-gradient(135deg, #38bdf8 0%, #4f46e5 100%) !important;
+        box-shadow: 0 0 35px rgba(56, 189, 248, 0.85);
+        transform: translateY(-3px) scale(1.02);
+    }
+    </style>
+""", unsafe_allow_html=True)
 
 # ----------------------------------------------------
 # 3. MODULE 0: HOME & BENTO OVERVIEW
@@ -257,19 +177,19 @@ if current_tab == "Home":
         with col_a:
             st.markdown("### Hospital Hub\nIntelligent disease-to-hospital routing with dynamic dark-mode PyDeck maps.")
             if st.button("Open Hospital Hub", key="home_btn_hosp"):
-                st.session_state.active_tab = "Hospital"
+                st.query_params["tab"] = "Hospital"
                 st.rerun()
 
         with col_b:
             st.markdown("### Medication Suite\nMulti-week medication schedules, independent daily resets, and smart categorization.")
             if st.button("Open Medication Hub", key="home_btn_med"):
-                st.session_state.active_tab = "Hospital"
+                st.query_params["tab"] = "Hospital"
                 st.rerun()
 
         with col_c:
             st.markdown("### Secure Passport\nDigital Medical ID with single-tap emergency SOS broadcasting.")
             if st.button("Open Medical Passport", key="home_btn_pass"):
-                st.session_state.active_tab = "Passport"
+                st.query_params["tab"] = "Passport"
                 st.rerun()
 
     except Exception as home_err:
@@ -569,10 +489,10 @@ elif current_tab == "Passport":
             
             if st.button("TRIGGER EMERGENCY SOS"):
                 st.session_state.notifications.append({
-                    "msg": f"EMERGENCY SOS TRIGGERED! Note: {sos_message or 'Immediate assistance requested.'}",
+                    "msg": f"🚨 EMERGENCY SOS TRIGGERED! Note: {sos_message or 'Immediate assistance requested.'}",
                     "time": "Just now (CRITICAL)"
                 })
-                st.error("SOS Alert Broadcasted Successfully!")
+                st.error("🚨 SOS Alert Broadcasted Successfully!")
 
     except Exception as passport_err:
         st.error(f"Error in Passport Portal: {passport_err}")
@@ -599,33 +519,108 @@ elif current_tab == "Impact":
         st.error(f"Error loading metrics: {impact_err}")
 
 # ----------------------------------------------------
-# 8. HARDENED FLOATING DOCK CONTAINER
+# 8. BULLETPROOF PURE CSS FLOATING DOCK (ZERO SCATTERING)
 # ----------------------------------------------------
-st.markdown('<div class="floating-dock-wrapper">', unsafe_allow_html=True)
-d1, d2, d3, d4, d5 = st.columns(5)
+active_home = "active" if current_tab == "Home" else ""
+active_hosp = "active" if current_tab == "Hospital" else ""
+active_care = "active" if current_tab == "Caregiver" else ""
+active_pass = "active" if current_tab == "Passport" else ""
+active_imp  = "active" if current_tab == "Impact" else ""
 
-with d1:
-    if st.button("🏠", key="dock_home"):
-        st.session_state.active_tab = "Home"
-        st.rerun()
-with d2:
-    if st.button("🏥", key="dock_hosp"):
-        st.session_state.active_tab = "Hospital"
-        st.rerun()
-with d3:
-    if st.button("👁️", key="dock_care"):
-        st.session_state.active_tab = "Caregiver"
-        st.rerun()
-with d4:
-    if st.button("🛡️", key="dock_pass"):
-        st.session_state.active_tab = "Passport"
-        st.rerun()
-with d5:
-    if st.button("🌍", key="dock_imp"):
-        st.session_state.active_tab = "Impact"
-        st.rerun()
+st.markdown(f"""
+    <style>
+    .aceternity-dock-container {{
+        position: fixed;
+        bottom: 25px;
+        left: 50%;
+        transform: translateX(-50%);
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        background: rgba(10, 15, 30, 0.9);
+        backdrop-filter: blur(25px);
+        -webkit-backdrop-filter: blur(25px);
+        border: 1px solid rgba(56, 189, 248, 0.4);
+        border-radius: 9999px;
+        padding: 8px 18px;
+        box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.9), 0 0 35px rgba(56, 189, 248, 0.25);
+        z-index: 999999;
+    }}
 
-st.markdown('</div>', unsafe_allow_html=True)
+    .dock-btn {{
+        position: relative;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        width: 48px;
+        height: 48px;
+        background: rgba(30, 41, 59, 0.85);
+        border: 1px solid rgba(255, 255, 255, 0.15);
+        border-radius: 50%;
+        color: #f8fafc;
+        font-size: 20px;
+        text-decoration: none !important;
+        transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        box-shadow: 0 4px 12px rgba(0,0,0,0.4);
+    }}
+
+    /* Tooltip Bubble */
+    .dock-btn .dock-tooltip {{
+        position: absolute;
+        top: -42px;
+        left: 50%;
+        transform: translateX(-50%) translateY(6px) scale(0.8);
+        background: rgba(15, 23, 42, 0.95);
+        color: #f8fafc;
+        border: 1px solid rgba(56, 189, 248, 0.4);
+        padding: 4px 10px;
+        border-radius: 8px;
+        font-size: 12px;
+        font-weight: 600;
+        white-space: nowrap;
+        opacity: 0;
+        pointer-events: none;
+        transition: all 0.25s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        box-shadow: 0 10px 25px rgba(0,0,0,0.5);
+    }}
+
+    .dock-btn:hover .dock-tooltip {{
+        opacity: 1;
+        transform: translateX(-50%) translateY(0px) scale(1);
+    }}
+
+    .dock-btn:hover {{
+        transform: scale(1.35) translateY(-8px);
+        background: rgba(51, 65, 85, 0.95);
+        border-color: rgba(56, 189, 248, 0.7);
+        box-shadow: 0 15px 30px rgba(56, 189, 248, 0.4);
+    }}
+
+    .dock-btn.active {{
+        background: linear-gradient(135deg, #0ea5e9 0%, #6366f1 100%) !important;
+        border-color: #38bdf8 !important;
+        box-shadow: 0 0 25px rgba(56, 189, 248, 0.8) !important;
+    }}
+    </style>
+
+    <div class="aceternity-dock-container">
+        <a href="?tab=Home" target="_self" class="dock-btn {active_home}">
+            <span class="dock-tooltip">Home</span>🏠
+        </a>
+        <a href="?tab=Hospital" target="_self" class="dock-btn {active_hosp}">
+            <span class="dock-tooltip">Hospital Hub</span>🏥
+        </a>
+        <a href="?tab=Caregiver" target="_self" class="dock-btn {active_care}">
+            <span class="dock-tooltip">Caregiver Portal</span>👁️
+        </a>
+        <a href="?tab=Passport" target="_self" class="dock-btn {active_pass}">
+            <span class="dock-tooltip">Medical Passport</span>🛡️
+        </a>
+        <a href="?tab=Impact" target="_self" class="dock-btn {active_imp}">
+            <span class="dock-tooltip">SDG 3 Impact</span>🌍
+        </a>
+    </div>
+""", unsafe_allow_html=True)
 
 # Footer
 try:
