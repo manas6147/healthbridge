@@ -19,7 +19,7 @@ if "active_tab" not in st.session_state:
 def set_tab(tab_name):
     st.session_state.active_tab = tab_name
 
-# Inject Master CSS (Cloud Shader, Gooey Inputs, Perfectly Centered Tight Dock)
+# Inject Master CSS (Cloud Shader, Gooey Inputs, Rigid Centered Floating Dock)
 st.markdown("""
     <style>
     /* Completely Hide Sidebar and Header */
@@ -115,9 +115,9 @@ st.markdown("""
     }
 
     /* ========================================================
-       5. BULLETPROOF TIGHTLY-PACKED ACETERNITY FLOATING DOCK
+       5. RIGID ACETERNITY FLOATING DOCK WRAPPER
        ======================================================== */
-    .floating-dock-container {
+    .floating-dock-wrapper {
         position: fixed !important;
         bottom: 25px !important;
         left: 50% !important;
@@ -126,39 +126,38 @@ st.markdown("""
         backdrop-filter: blur(25px) !important;
         border: 1.5px solid rgba(56, 189, 248, 0.45) !important;
         border-radius: 9999px !important;
-        padding: 8px 20px !important;
+        padding: 6px 16px !important;
         box-shadow: 0 25px 60px rgba(0, 0, 0, 0.85), 0 0 30px rgba(56, 189, 248, 0.3) !important;
         z-index: 999999 !important;
+        width: 360px !important; /* Fixed dock width prevents scattering */
+        max-width: 90vw !important;
+    }
+
+    /* Overrides Streamlit column flex behavior inside the dock */
+    .floating-dock-wrapper div[data-testid="stHorizontalBlock"] {
+        display: flex !important;
+        flex-direction: row !important;
+        justify-content: space-between !important;
+        align-items: center !important;
+        width: 100% !important;
+        gap: 0px !important;
+    }
+
+    .floating-dock-wrapper div[data-testid="column"] {
         width: auto !important;
+        flex: 1 1 auto !important;
+        min-width: unset !important;
         display: flex !important;
         justify-content: center !important;
-        align-items: center !important;
     }
 
-    /* Force Streamlit horizontal block inside dock to pack tightly */
-    .floating-dock-container [data-testid="stHorizontalBlock"] {
-        display: flex !important;
-        gap: 12px !important;
-        width: auto !important;
-        flex-grow: 0 !important;
-        align-items: center !important;
-    }
-
-    /* Force individual columns inside dock to shrink-wrap */
-    .floating-dock-container [data-testid="column"] {
-        width: auto !important;
-        flex: 0 0 auto !important;
-        min-width: unset !important;
-        padding: 0 !important;
-    }
-
-    /* Style dock buttons into sleek circular icons */
-    .floating-dock-container div.stButton > button {
+    /* Circular Dock Button Styles */
+    .floating-dock-wrapper div.stButton > button {
         background: rgba(30, 41, 59, 0.9) !important;
         border: 1px solid rgba(255, 255, 255, 0.15) !important;
         border-radius: 50% !important;
-        height: 50px !important;
-        width: 50px !important;
+        height: 48px !important;
+        width: 48px !important;
         padding: 0 !important;
         font-size: 20px !important;
         display: flex !important;
@@ -169,8 +168,8 @@ st.markdown("""
         transition: all 0.3s cubic-bezier(0.34, 1.56, 0.64, 1) !important;
     }
 
-    .floating-dock-container div.stButton > button:hover {
-        transform: scale(1.35) translateY(-6px) !important;
+    .floating-dock-wrapper div.stButton > button:hover {
+        transform: scale(1.3) translateY(-6px) !important;
         background: linear-gradient(135deg, #0ea5e9 0%, #6366f1 100%) !important;
         border-color: rgba(255, 255, 255, 0.6) !important;
         box-shadow: 0 12px 35px rgba(56, 189, 248, 0.85) !important;
@@ -600,28 +599,28 @@ elif current_tab == "Impact":
         st.error(f"Error loading metrics: {impact_err}")
 
 # ----------------------------------------------------
-# 8. BULLETPROOF TIGHTLY-PACKED FLOATING DOCK
+# 8. HARDENED FLOATING DOCK CONTAINER
 # ----------------------------------------------------
-st.markdown('<div class="floating-dock-container">', unsafe_allow_html=True)
-dock_cols = st.columns(5)
+st.markdown('<div class="floating-dock-wrapper">', unsafe_allow_html=True)
+d1, d2, d3, d4, d5 = st.columns(5)
 
-with dock_cols[0]:
+with d1:
     if st.button("🏠", key="dock_home"):
         st.session_state.active_tab = "Home"
         st.rerun()
-with dock_cols[1]:
+with d2:
     if st.button("🏥", key="dock_hosp"):
         st.session_state.active_tab = "Hospital"
         st.rerun()
-with dock_cols[2]:
+with d3:
     if st.button("👁️", key="dock_care"):
         st.session_state.active_tab = "Caregiver"
         st.rerun()
-with dock_cols[3]:
+with d4:
     if st.button("🛡️", key="dock_pass"):
         st.session_state.active_tab = "Passport"
         st.rerun()
-with dock_cols[4]:
+with d5:
     if st.button("🌍", key="dock_imp"):
         st.session_state.active_tab = "Impact"
         st.rerun()
