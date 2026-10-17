@@ -12,6 +12,13 @@ try:
 except Exception:
     pass
 
+# Initialize Active Tab in Session State (Prevents URL reload lag)
+if "active_tab" not in st.session_state:
+    st.session_state.active_tab = "Home"
+
+def switch_tab(tab_name):
+    st.session_state.active_tab = tab_name
+
 # --- 2. HIGH-PERFORMANCE DATA CACHING ---
 @st.cache_data
 def get_cached_map_data(user_lat, user_lon, h_lat, h_lon, h_name):
@@ -66,7 +73,7 @@ def get_default_schedule():
         }
     return default_schedule
 
-# Initialize Session State
+# Initialize Session State Data
 try:
     if "user_location" not in st.session_state:
         st.session_state.user_location = {
@@ -89,10 +96,7 @@ try:
 except Exception as init_error:
     st.error(f"Initialization Notice: {init_error}")
 
-# Read active tab from query parameter or default to Home
-current_tab = st.query_params.get("tab", "Home")
-if isinstance(current_tab, list):
-    current_tab = current_tab[0]
+current_tab = st.session_state.active_tab
 
 # Inject Master CSS
 st.markdown("""
@@ -173,6 +177,25 @@ st.markdown("""
         box-shadow: 0 0 35px rgba(56, 189, 248, 0.85);
         transform: translateY(-3px) scale(1.02);
     }
+
+    /* Floating Dock Layout Styling */
+    .aceternity-dock-container {
+        position: fixed;
+        bottom: 25px;
+        left: 50%;
+        transform: translateX(-50%);
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        background: rgba(10, 15, 30, 0.9);
+        backdrop-filter: blur(25px);
+        -webkit-backdrop-filter: blur(25px);
+        border: 1px solid rgba(56, 189, 248, 0.4);
+        border-radius: 9999px;
+        padding: 8px 18px;
+        box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.9), 0 0 35px rgba(56, 189, 248, 0.25);
+        z-index: 999999;
+    }
     </style>
 """, unsafe_allow_html=True)
 
@@ -201,19 +224,19 @@ if current_tab == "Home":
         with col_a:
             st.markdown("### Hospital Hub\nIntelligent disease-to-hospital routing with dynamic dark-mode PyDeck maps.")
             if st.button("Open Hospital Hub", key="home_btn_hosp"):
-                st.query_params["tab"] = "Hospital"
+                st.session_state.active_tab = "Hospital"
                 st.rerun()
 
         with col_b:
             st.markdown("### Medication Suite\nMulti-week medication schedules, independent daily resets, and smart categorization.")
             if st.button("Open Medication Hub", key="home_btn_med"):
-                st.query_params["tab"] = "Hospital"
+                st.session_state.active_tab = "Hospital"
                 st.rerun()
 
         with col_c:
             st.markdown("### Secure Passport\nDigital Medical ID with single-tap emergency SOS broadcasting.")
             if st.button("Open Medical Passport", key="home_btn_pass"):
-                st.query_params["tab"] = "Passport"
+                st.session_state.active_tab = "Passport"
                 st.rerun()
 
     except Exception as home_err:
@@ -516,107 +539,33 @@ elif current_tab == "Impact":
         st.error(f"Error loading metrics: {impact_err}")
 
 # ----------------------------------------------------
-# 4. ACETERNITY FLOATING DOCK NAVIGATION
+# 4. BLAZING-FAST SESSION-STATE FLOATING DOCK
 # ----------------------------------------------------
-active_home = "active" if current_tab == "Home" else ""
-active_hosp = "active" if current_tab == "Hospital" else ""
-active_care = "active" if current_tab == "Caregiver" else ""
-active_pass = "active" if current_tab == "Passport" else ""
-active_imp  = "active" if current_tab == "Impact" else ""
+st.markdown('<div class="aceternity-dock-container">', unsafe_allow_html=True)
+dock_cols = st.columns(5)
 
-st.markdown(f"""
-    <style>
-    .aceternity-dock-container {{
-        position: fixed;
-        bottom: 25px;
-        left: 50%;
-        transform: translateX(-50%);
-        display: flex;
-        align-items: center;
-        gap: 12px;
-        background: rgba(10, 15, 30, 0.9);
-        backdrop-filter: blur(25px);
-        -webkit-backdrop-filter: blur(25px);
-        border: 1px solid rgba(56, 189, 248, 0.4);
-        border-radius: 9999px;
-        padding: 8px 18px;
-        box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.9), 0 0 35px rgba(56, 189, 248, 0.25);
-        z-index: 999999;
-    }}
+with dock_cols[0]:
+    if st.button("🏠", key="dock_home_btn"):
+        switch_tab("Home")
+        st.rerun()
+with dock_cols[1]:
+    if st.button("🏥", key="dock_hosp_btn"):
+        switch_tab("Hospital")
+        st.rerun()
+with dock_cols[2]:
+    if st.button("👁️", key="dock_care_btn"):
+        switch_tab("Caregiver")
+        st.rerun()
+with dock_cols[3]:
+    if st.button("🛡️", key="dock_pass_btn"):
+        switch_tab("Passport")
+        st.rerun()
+with dock_cols[4]:
+    if st.button("🌍", key="dock_imp_btn"):
+        switch_tab("Impact")
+        st.rerun()
 
-    .dock-btn {{
-        position: relative;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        width: 48px;
-        height: 48px;
-        background: rgba(30, 41, 59, 0.85);
-        border: 1px solid rgba(255, 255, 255, 0.15);
-        border-radius: 50%;
-        color: #f8fafc;
-        font-size: 20px;
-        text-decoration: none !important;
-        transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-        box-shadow: 0 4px 12px rgba(0,0,0,0.4);
-    }}
-
-    .dock-btn .dock-tooltip {{
-        position: absolute;
-        top: -42px;
-        left: 50%;
-        transform: translateX(-50%) translateY(6px) scale(0.8);
-        background: rgba(15, 23, 42, 0.95);
-        color: #f8fafc;
-        border: 1px solid rgba(56, 189, 248, 0.4);
-        padding: 4px 10px;
-        border-radius: 8px;
-        font-size: 12px;
-        font-weight: 600;
-        white-space: nowrap;
-        opacity: 0;
-        pointer-events: none;
-        transition: all 0.25s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-        box-shadow: 0 10px 25px rgba(0,0,0,0.5);
-    }}
-
-    .dock-btn:hover .dock-tooltip {{
-        opacity: 1;
-        transform: translateX(-50%) translateY(0px) scale(1);
-    }}
-
-    .dock-btn:hover {{
-        transform: scale(1.35) translateY(-8px);
-        background: rgba(51, 65, 85, 0.95);
-        border-color: rgba(56, 189, 248, 0.7);
-        box-shadow: 0 15px 30px rgba(56, 189, 248, 0.4);
-    }}
-
-    .dock-btn.active {{
-        background: linear-gradient(135deg, #0ea5e9 0%, #6366f1 100%) !important;
-        border-color: #38bdf8 !important;
-        box-shadow: 0 0 25px rgba(56, 189, 248, 0.8) !important;
-    }}
-    </style>
-
-    <div class="aceternity-dock-container">
-        <a href="?tab=Home" target="_self" class="dock-btn {active_home}">
-            <span class="dock-tooltip">Home</span>🏠
-        </a>
-        <a href="?tab=Hospital" target="_self" class="dock-btn {active_hosp}">
-            <span class="dock-tooltip">Hospital Hub</span>🏥
-        </a>
-        <a href="?tab=Caregiver" target="_self" class="dock-btn {active_care}">
-            <span class="dock-tooltip">Caregiver Portal</span>👁️
-        </a>
-        <a href="?tab=Passport" target="_self" class="dock-btn {active_pass}">
-            <span class="dock-tooltip">Medical Passport</span>🛡️
-        </a>
-        <a href="?tab=Impact" target="_self" class="dock-btn {active_imp}">
-            <span class="dock-tooltip">SDG 3 Impact</span>🌍
-        </a>
-    </div>
-""", unsafe_allow_html=True)
+st.markdown('</div>', unsafe_allow_html=True)
 
 # Footer
 try:
