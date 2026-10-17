@@ -17,24 +17,45 @@ current_tab = st.query_params.get("tab", "Home")
 if isinstance(current_tab, list):
     current_tab = current_tab[0]
 
-# --- 2. SESSION STATE & HELPER FUNCTIONS ---
-try:
-    def auto_categorize_medicine(med_name):
-        try:
-            name = med_name.lower()
-            if any(k in name for k in ["metformin", "insulin", "sugar", "diab"]):
-                return "Diabetes"
-            elif any(k in name for k in ["amlodipine", "bp", "pressure", "atenolol", "losartan", "telmisartan"]):
-                return "Blood Pressure"
-            elif any(k in name for k in ["vitamin", "d3", "c", "supplement", "multivitamin", "calcium", "iron"]):
-                return "Wellness"
-            elif any(k in name for k in ["pain", "paracetamol", "ibuprofen", "aspirin", "diclofenac"]):
-                return "Pain Relief"
-            else:
-                return "General Medication"
-        except Exception:
-            return "General Medication"
+# --- 2. CACHED HELPERS FOR INSTANT LOADING ---
+@st.cache_data
+def get_cached_map_data(user_lat, user_lon, h_lat, h_lon, h_name):
+    return pd.DataFrame([
+        {
+            "latitude": user_lat, 
+            "longitude": user_lon, 
+            "name": "Your Location (Patient - GPS Active)", 
+            "color": [56, 189, 248, 255],
+            "radius": 75
+        },
+        {
+            "latitude": h_lat, 
+            "longitude": h_lon, 
+            "name": h_name, 
+            "color": [244, 63, 94, 255],
+            "radius": 85
+        }
+    ])
 
+@st.cache_data
+def auto_categorize_medicine(med_name):
+    try:
+        name = med_name.lower()
+        if any(k in name for k in ["metformin", "insulin", "sugar", "diab"]):
+            return "Diabetes"
+        elif any(k in name for k in ["amlodipine", "bp", "pressure", "atenolol", "losartan", "telmisartan"]):
+            return "Blood Pressure"
+        elif any(k in name for k in ["vitamin", "d3", "c", "supplement", "multivitamin", "calcium", "iron"]):
+            return "Wellness"
+        elif any(k in name for k in ["pain", "paracetamol", "ibuprofen", "aspirin", "diclofenac"]):
+            return "Pain Relief"
+        else:
+            return "General Medication"
+    except Exception:
+        return "General Medication"
+
+# Initialize Session State
+try:
     if "user_location" not in st.session_state:
         st.session_state.user_location = {
             "lat": 16.7010,
@@ -255,22 +276,7 @@ elif current_tab == "Hospital":
         st.markdown(f"📍 **Recommended Facility:** **{h_name}** — *{travel_info}*")
 
         try:
-            map_data = pd.DataFrame([
-                {
-                    "latitude": user_lat, 
-                    "longitude": user_lon, 
-                    "name": "Your Location (Patient - GPS Active)", 
-                    "color": [56, 189, 248, 255],
-                    "radius": 75
-                },
-                {
-                    "latitude": h_lat, 
-                    "longitude": h_lon, 
-                    "name": h_name, 
-                    "color": [244, 63, 94, 255],
-                    "radius": 85
-                }
-            ])
+            map_data = get_cached_map_data(user_lat, user_lon, h_lat, h_lon, h_name)
 
             scatterplot_layer = pdk.Layer(
                 "ScatterplotLayer",
@@ -519,7 +525,7 @@ elif current_tab == "Impact":
         st.error(f"Error loading metrics: {impact_err}")
 
 # ----------------------------------------------------
-# 8. BULLETPROOF PURE CSS FLOATING DOCK (ZERO SCATTERING)
+# 8. BULLETPROOF PURE CSS FLOATING DOCK (UNTOUCHED NAVIGATION)
 # ----------------------------------------------------
 active_home = "active" if current_tab == "Home" else ""
 active_hosp = "active" if current_tab == "Hospital" else ""
@@ -564,7 +570,6 @@ st.markdown(f"""
         box-shadow: 0 4px 12px rgba(0,0,0,0.4);
     }}
 
-    /* Tooltip Bubble */
     .dock-btn .dock-tooltip {{
         position: absolute;
         top: -42px;
