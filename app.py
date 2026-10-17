@@ -19,7 +19,7 @@ if "active_tab" not in st.session_state:
 def set_tab(tab_name):
     st.session_state.active_tab = tab_name
 
-# Inject Master CSS (Cloud Shader, Gooey Inputs, Centered Floating Dock)
+# Inject Master CSS (Cloud Shader, Gooey Inputs, Perfectly Centered Tight Dock)
 st.markdown("""
     <style>
     /* Completely Hide Sidebar and Header */
@@ -115,27 +115,45 @@ st.markdown("""
     }
 
     /* ========================================================
-       5. ACETERNITY FLOATING DOCK CONTAINER
+       5. BULLETPROOF TIGHTLY-PACKED ACETERNITY FLOATING DOCK
        ======================================================== */
-    .floating-dock-wrapper {
-        position: fixed;
-        bottom: 25px;
-        left: 50%;
-        transform: translateX(-50%);
-        background: rgba(15, 23, 42, 0.92);
-        backdrop-filter: blur(25px);
-        border: 1.5px solid rgba(56, 189, 248, 0.45);
-        border-radius: 9999px;
-        padding: 8px 18px;
-        box-shadow: 0 25px 60px rgba(0, 0, 0, 0.85), 0 0 30px rgba(56, 189, 248, 0.3);
-        z-index: 999999;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        width: auto;
+    .floating-dock-container {
+        position: fixed !important;
+        bottom: 25px !important;
+        left: 50% !important;
+        transform: translateX(-50%) !important;
+        background: rgba(15, 23, 42, 0.92) !important;
+        backdrop-filter: blur(25px) !important;
+        border: 1.5px solid rgba(56, 189, 248, 0.45) !important;
+        border-radius: 9999px !important;
+        padding: 8px 20px !important;
+        box-shadow: 0 25px 60px rgba(0, 0, 0, 0.85), 0 0 30px rgba(56, 189, 248, 0.3) !important;
+        z-index: 999999 !important;
+        width: auto !important;
+        display: flex !important;
+        justify-content: center !important;
+        align-items: center !important;
     }
 
-    .floating-dock-wrapper div.stButton > button {
+    /* Force Streamlit horizontal block inside dock to pack tightly */
+    .floating-dock-container [data-testid="stHorizontalBlock"] {
+        display: flex !important;
+        gap: 12px !important;
+        width: auto !important;
+        flex-grow: 0 !important;
+        align-items: center !important;
+    }
+
+    /* Force individual columns inside dock to shrink-wrap */
+    .floating-dock-container [data-testid="column"] {
+        width: auto !important;
+        flex: 0 0 auto !important;
+        min-width: unset !important;
+        padding: 0 !important;
+    }
+
+    /* Style dock buttons into sleek circular icons */
+    .floating-dock-container div.stButton > button {
         background: rgba(30, 41, 59, 0.9) !important;
         border: 1px solid rgba(255, 255, 255, 0.15) !important;
         border-radius: 50% !important;
@@ -151,7 +169,7 @@ st.markdown("""
         transition: all 0.3s cubic-bezier(0.34, 1.56, 0.64, 1) !important;
     }
 
-    .floating-dock-wrapper div.stButton > button:hover {
+    .floating-dock-container div.stButton > button:hover {
         transform: scale(1.35) translateY(-6px) !important;
         background: linear-gradient(135deg, #0ea5e9 0%, #6366f1 100%) !important;
         border-color: rgba(255, 255, 255, 0.6) !important;
@@ -582,9 +600,9 @@ elif current_tab == "Impact":
         st.error(f"Error loading metrics: {impact_err}")
 
 # ----------------------------------------------------
-# 8. BULLETPROOF FLOATING DOCK
+# 8. BULLETPROOF TIGHTLY-PACKED FLOATING DOCK
 # ----------------------------------------------------
-st.markdown('<div class="floating-dock-wrapper">', unsafe_allow_html=True)
+st.markdown('<div class="floating-dock-container">', unsafe_allow_html=True)
 dock_cols = st.columns(5)
 
 with dock_cols[0]:
