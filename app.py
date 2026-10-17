@@ -1,4 +1,3 @@
-import copy
 import streamlit as st
 import pandas as pd
 import pydeck as pdk
@@ -6,32 +5,33 @@ import pydeck as pdk
 # --- 1. APP CONFIG & STYLING ---
 try:
     st.set_page_config(
-        page_title="HealthBridge - Aceternity Cloud Edition",
-        page_icon="🏥",
+        page_title="HealthBridge - Aceternity Cloud Edition", 
+        page_icon="🏥", 
         layout="wide"
     )
 except Exception:
     pass
 
 # Read active tab from URL query params (defaults to "Home")
-qp = st.experimental_get_query_params()
-current_tab = qp.get("tab", ["Home"])[0] if isinstance(qp.get("tab", ["Home"]), list) else qp.get("tab", "Home")
+current_tab = st.query_params.get("tab", "Home")
+if isinstance(current_tab, list):
+    current_tab = current_tab[0]
 
 # --- 2. HIGH-PERFORMANCE DATA CACHING ---
 @st.cache_data
 def get_cached_map_data(user_lat, user_lon, h_lat, h_lon, h_name):
     return pd.DataFrame([
         {
-            "latitude": user_lat,
-            "longitude": user_lon,
-            "name": "Your Location (Patient - GPS Active)",
+            "latitude": user_lat, 
+            "longitude": user_lon, 
+            "name": "Your Location (Patient - GPS Active)", 
             "color": [56, 189, 248, 255],
             "radius": 75
         },
         {
-            "latitude": h_lat,
-            "longitude": h_lon,
-            "name": h_name,
+            "latitude": h_lat, 
+            "longitude": h_lon, 
+            "name": h_name, 
             "color": [244, 63, 94, 255],
             "radius": 85
         }
@@ -71,7 +71,7 @@ try:
     if "meds_by_week" not in st.session_state:
         weeks = ["Week 1", "Week 2", "Week 3", "Week 4"]
         days = ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday"]
-
+        
         default_schedule = {}
         for w in weeks:
             default_schedule[w] = {
@@ -99,7 +99,7 @@ st.markdown("""
 
     .stApp {
         background-color: #030712 !important;
-        background-image:
+        background-image: 
             radial-gradient(circle at 15% 20%, rgba(56, 189, 248, 0.28) 0%, transparent 45%),
             radial-gradient(circle at 85% 80%, rgba(99, 102, 241, 0.25) 0%, transparent 50%),
             radial-gradient(circle at 50% 50%, rgba(14, 165, 233, 0.18) 0%, transparent 65%),
@@ -194,25 +194,24 @@ if current_tab == "Home":
 
         st.subheader("Quick Access Bento Modules")
         col_a, col_b, col_c = st.columns(3)
-
+        
         with col_a:
             st.markdown("### Hospital Hub\nIntelligent disease-to-hospital routing with dynamic dark-mode PyDeck maps.")
             if st.button("Open Hospital Hub", key="home_btn_hosp"):
-                st.experimental_set_query_params(tab="Hospital")
-                st.experimental_rerun()
+                st.query_params["tab"] = "Hospital"
+                st.rerun()
 
         with col_b:
             st.markdown("### Medication Suite\nMulti-week medication schedules, independent daily resets, and smart categorization.")
             if st.button("Open Medication Hub", key="home_btn_med"):
-                # Medication suite lives under Hospital tab in this app
-                st.experimental_set_query_params(tab="Hospital")
-                st.experimental_rerun()
+                st.query_params["tab"] = "Hospital"
+                st.rerun()
 
         with col_c:
             st.markdown("### Secure Passport\nDigital Medical ID with single-tap emergency SOS broadcasting.")
             if st.button("Open Medical Passport", key="home_btn_pass"):
-                st.experimental_set_query_params(tab="Passport")
-                st.experimental_rerun()
+                st.query_params["tab"] = "Passport"
+                st.rerun()
 
     except Exception as home_err:
         st.error(f"Error loading Home Dashboard: {home_err}")
@@ -227,7 +226,7 @@ elif current_tab == "Hospital":
             st.title("Intelligent Hospital Finder & Schedule")
         with col_bell:
             notif_count = len(st.session_state.notifications)
-            with st.expander(f"🔔 Alerts ({notif_count})", expanded=False):
+            with st.popover(f"🔔 Alerts ({notif_count})"):
                 st.markdown("### **Patient Alert Feed**")
                 if not notif_count:
                     st.info("No notifications.")
@@ -253,7 +252,7 @@ elif current_tab == "Hospital":
         travel_info = "~2.1 km away | 5 mins via City Road"
 
         query = (user_disease_input or "").lower().strip()
-
+        
         if any(k in query for k in ["heart", "cardio", "chest", "bp", "stroke", "blood pressure"]):
             h_lat, h_lon = 16.7050, 74.2433
             h_name = "Aster Aadhar Hospital (Cardiology Center)"
@@ -318,22 +317,22 @@ elif current_tab == "Hospital":
         with col_left:
             try:
                 st.subheader("Multi-Week Medication Schedule")
-
+                
                 selected_week = st.selectbox(
-                    "Choose Treatment Week:",
+                    "Choose Treatment Week:", 
                     ["Week 1", "Week 2", "Week 3", "Week 4"],
                     key="patient_week_selector"
                 )
 
                 selected_day = st.selectbox(
-                    "Choose Day of Week:",
+                    "Choose Day of Week:", 
                     ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday"],
                     key="patient_day_selector"
                 )
-
+                
                 week_data = st.session_state.meds_by_week.get(selected_week, {})
                 day_meds = week_data.get(selected_day, [])
-
+                
                 if not day_meds:
                     st.info(f"No medications scheduled for {selected_day} in {selected_week}.")
                 else:
@@ -346,7 +345,7 @@ elif current_tab == "Hospital":
                             if med['status'] == "Pending":
                                 if st.button("Mark Taken", key=f"taken_{selected_week}_{selected_day}_{i}"):
                                     st.session_state.meds_by_week[selected_week][selected_day][i]['status'] = "Taken ✅"
-                                    st.experimental_rerun()
+                                    st.rerun()
                             else:
                                 st.success("Taken ✅")
             except Exception as med_err:
@@ -356,13 +355,13 @@ elif current_tab == "Hospital":
             try:
                 st.subheader("Doctor Appointments & Questions")
                 st.info("**Dr. Sharma (Cardiologist)**\n📅 Tomorrow at 10:30 AM\n📍 City General Hospital")
-
+                
                 new_q = st.text_input("Add a question for your doctor:", placeholder="e.g. Any food restrictions?")
                 if st.button("Save Question"):
                     if new_q:
                         st.session_state.questions.append(new_q)
                         st.success("Saved successfully!")
-
+                        
                 st.markdown("**Your Saved Questions:**")
                 for q in st.session_state.questions:
                     st.markdown(f"- 🔸 {q}")
@@ -382,10 +381,10 @@ elif current_tab == "Caregiver":
         st.divider()
 
         password_input = st.text_input("🔒 Enter Caregiver Access PIN:", type="password", placeholder="Enter PIN (Demo PIN: 1234)")
-
+        
         if password_input == "1234":
             st.success("🔓 Access Granted! Connected to Patient Profile #PAT-8821")
-
+            
             with st.expander("➕ Add New Medication to Schedule", expanded=True):
                 try:
                     with st.form("add_med_form", clear_on_submit=True):
@@ -393,27 +392,26 @@ elif current_tab == "Caregiver":
                         new_med_time = st.text_input("Scheduled Time:", placeholder="e.g., 02:00 PM")
                         target_week = st.selectbox("Assign to Week:", ["All Weeks", "Week 1", "Week 2", "Week 3", "Week 4"])
                         target_day = st.selectbox("Assign to Day of Week:", ["All Days", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday"])
-
+                        
                         submitted = st.form_submit_button("Add Medication")
                         if submitted:
                             if new_med_name and new_med_time:
                                 detected_category = auto_categorize_medicine(new_med_name)
                                 new_item = {"name": new_med_name, "time": new_med_time, "status": "Pending", "category": detected_category}
-
+                                
                                 weeks_to_update = ["Week 1", "Week 2", "Week 3", "Week 4"] if target_week == "All Weeks" else [target_week]
                                 days_to_update = ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday"] if target_day == "All Days" else [target_day]
-
+                                
                                 for w in weeks_to_update:
                                     if w not in st.session_state.meds_by_week:
                                         st.session_state.meds_by_week[w] = {}
                                     for d in days_to_update:
                                         if d not in st.session_state.meds_by_week[w]:
                                             st.session_state.meds_by_week[w][d] = []
-                                        # append a copy to avoid shared references
-                                        st.session_state.meds_by_week[w][d].append(new_item.copy())
-
+                                        st.session_state.meds_by_week[w][d].append(new_item)
+                                        
                                 st.success(f"Successfully added {new_med_name}!")
-                                st.experimental_rerun()
+                                st.rerun()
                             else:
                                 st.warning("Please fill in medicine name and time.")
                 except Exception as form_err:
@@ -421,27 +419,27 @@ elif current_tab == "Caregiver":
 
             st.divider()
             st.subheader("Multi-Week Prescriptions Overview")
-
+            
             try:
                 all_meds_flat = []
                 for week, d_dict in st.session_state.meds_by_week.items():
                     for day, m_list in d_dict.items():
                         for m in m_list:
                             all_meds_flat.append({
-                                "Week": week,
-                                "Day": day,
-                                "Medicine": m["name"],
-                                "Time": m["time"],
-                                "Category": m["category"],
+                                "Week": week, 
+                                "Day": day, 
+                                "Medicine": m["name"], 
+                                "Time": m["time"], 
+                                "Category": m["category"], 
                                 "Status": m["status"]
                             })
-
+                
                 st.dataframe(pd.DataFrame(all_meds_flat), use_container_width=True)
             except Exception as table_err:
                 st.error(f"Table rendering error: {table_err}")
-
+            
             st.metric(label="Overall Patient Adherence Rate", value="92%", delta="+4% improvement")
-
+            
             try:
                 with st.form("caregiver_alert", clear_on_submit=True):
                     msg = st.text_area("Send an encouraging note or reminder to patient:", placeholder="Dad, great job taking your medicine today!")
@@ -456,7 +454,7 @@ elif current_tab == "Caregiver":
                             st.warning("Please enter a message.")
             except Exception as alert_err:
                 st.error(f"Notification error: {alert_err}")
-
+                    
         elif password_input:
             st.error("Incorrect PIN. Please try again.")
         else:
@@ -492,9 +490,9 @@ elif current_tab == "Passport":
         with col_id_right:
             st.subheader("One-Tap Emergency SOS Broadcast")
             st.warning("Pressing this button instantly broadcasts your live GPS coordinates to emergency contacts.")
-
+            
             sos_message = st.text_area("Optional Emergency Note:", placeholder="e.g., Experiencing chest pain, need immediate assistance.")
-
+            
             if st.button("TRIGGER EMERGENCY SOS"):
                 st.session_state.notifications.append({
                     "msg": f"🚨 EMERGENCY SOS TRIGGERED! Note: {sos_message or 'Immediate assistance requested.'}",
@@ -533,7 +531,7 @@ active_home = "active" if current_tab == "Home" else ""
 active_hosp = "active" if current_tab == "Hospital" else ""
 active_care = "active" if current_tab == "Caregiver" else ""
 active_pass = "active" if current_tab == "Passport" else ""
-active_imp = "active" if current_tab == "Impact" else ""
+active_imp  = "active" if current_tab == "Impact" else ""
 
 st.markdown(f"""
     <style>
