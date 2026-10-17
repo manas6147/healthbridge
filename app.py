@@ -54,6 +54,23 @@ def auto_categorize_medicine(med_name):
     except Exception:
         return "General Medication"
 
+@st.cache_data
+def get_default_schedule():
+    weeks = ["Week 1", "Week 2", "Week 3", "Week 4"]
+    days = ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday"]
+    default_schedule = {}
+    for w in weeks:
+        default_schedule[w] = {
+            d: [
+                {"name": "Metformin (500mg)", "time": "08:00 AM", "status": "Pending", "category": "Diabetes"}
+            ] if d in ["Monday", "Thursday"] else [
+                {"name": "Amlodipine (5mg)", "time": "01:00 PM", "status": "Pending", "category": "Blood Pressure"}
+            ] if d in ["Tuesday", "Friday"] else [
+                {"name": "Vitamin D3 Supplement", "time": "08:00 PM", "status": "Pending", "category": "Wellness"}
+            ] for d in days
+        }
+    return default_schedule
+
 # Initialize Session State
 try:
     if "user_location" not in st.session_state:
@@ -69,21 +86,7 @@ try:
         ]
 
     if "meds_by_week" not in st.session_state:
-        weeks = ["Week 1", "Week 2", "Week 3", "Week 4"]
-        days = ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday"]
-        
-        default_schedule = {}
-        for w in weeks:
-            default_schedule[w] = {
-                d: [
-                    {"name": "Metformin (500mg)", "time": "08:00 AM", "status": "Pending", "category": "Diabetes"}
-                ] if d in ["Monday", "Thursday"] else [
-                    {"name": "Amlodipine (5mg)", "time": "01:00 PM", "status": "Pending", "category": "Blood Pressure"}
-                ] if d in ["Tuesday", "Friday"] else [
-                    {"name": "Vitamin D3 Supplement", "time": "08:00 PM", "status": "Pending", "category": "Wellness"}
-                ] for d in days
-            }
-        st.session_state.meds_by_week = default_schedule
+        st.session_state.meds_by_week = get_default_schedule()
 
     if "questions" not in st.session_state:
         st.session_state.questions = ["Are there any food restrictions with this dosage?"]
@@ -525,7 +528,7 @@ elif current_tab == "Impact":
         st.error(f"Error loading metrics: {impact_err}")
 
 # ----------------------------------------------------
-# 8. BULLETPROOF PURE CSS FLOATING DOCK (UNTOUCHED & SNAPPY)
+# 8. BULLETPROOF FLOATING DOCK (UNTOUCHED NAVIGATION)
 # ----------------------------------------------------
 active_home = "active" if current_tab == "Home" else ""
 active_hosp = "active" if current_tab == "Hospital" else ""
