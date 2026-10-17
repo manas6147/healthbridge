@@ -12,7 +12,7 @@ try:
 except Exception:
     pass
 
-# Initialize Active Tab in Session State (Prevents URL reload lag)
+# Initialize Active Tab in Session State (Instant switching)
 if "active_tab" not in st.session_state:
     st.session_state.active_tab = "Home"
 
@@ -98,7 +98,7 @@ except Exception as init_error:
 
 current_tab = st.session_state.active_tab
 
-# Inject Master CSS
+# Inject Master CSS & Strict Floating Dock Container Constraints
 st.markdown("""
     <style>
     section[data-testid="stSidebar"] { display: none !important; }
@@ -178,23 +178,66 @@ st.markdown("""
         transform: translateY(-3px) scale(1.02);
     }
 
-    /* Floating Dock Layout Styling */
+    /* ========================================================
+       STRICT CENTERED FLOATING DOCK CONTAINER & COLUMN FIX
+       ======================================================== */
     .aceternity-dock-container {
-        position: fixed;
-        bottom: 25px;
-        left: 50%;
-        transform: translateX(-50%);
-        display: flex;
-        align-items: center;
-        gap: 12px;
-        background: rgba(10, 15, 30, 0.9);
-        backdrop-filter: blur(25px);
-        -webkit-backdrop-filter: blur(25px);
-        border: 1px solid rgba(56, 189, 248, 0.4);
-        border-radius: 9999px;
-        padding: 8px 18px;
-        box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.9), 0 0 35px rgba(56, 189, 248, 0.25);
-        z-index: 999999;
+        position: fixed !important;
+        bottom: 25px !important;
+        left: 50% !important;
+        transform: translateX(-50%) !important;
+        background: rgba(15, 23, 42, 0.92) !important;
+        backdrop-filter: blur(25px) !important;
+        border: 1.5px solid rgba(56, 189, 248, 0.45) !important;
+        border-radius: 9999px !important;
+        padding: 8px 18px !important;
+        box-shadow: 0 25px 60px rgba(0, 0, 0, 0.85), 0 0 30px rgba(56, 189, 248, 0.3) !important;
+        z-index: 999999 !important;
+        width: auto !important;
+        display: flex !important;
+        justify-content: center !important;
+        align-items: center !important;
+    }
+
+    /* Force Streamlit horizontal block inside dock to pack tightly */
+    .aceternity-dock-container [data-testid="stHorizontalBlock"] {
+        display: flex !important;
+        gap: 12px !important;
+        width: auto !important;
+        flex-grow: 0 !important;
+        align-items: center !important;
+    }
+
+    /* Force individual columns inside dock to shrink-wrap */
+    .aceternity-dock-container [data-testid="column"] {
+        width: auto !important;
+        flex: 0 0 auto !important;
+        min-width: unset !important;
+        padding: 0 !important;
+    }
+
+    /* Circular Dock Button Styles */
+    .aceternity-dock-container div.stButton > button {
+        background: rgba(30, 41, 59, 0.9) !important;
+        border: 1px solid rgba(255, 255, 255, 0.15) !important;
+        border-radius: 50% !important;
+        height: 48px !important;
+        width: 48px !important;
+        padding: 0 !important;
+        font-size: 20px !important;
+        display: flex !important;
+        align-items: center !important;
+        justify-content: center !important;
+        margin: 0 auto !important;
+        box-shadow: 0 4px 15px rgba(0, 0, 0, 0.4) !important;
+        transition: all 0.3s cubic-bezier(0.34, 1.56, 0.64, 1) !important;
+    }
+
+    .aceternity-dock-container div.stButton > button:hover {
+        transform: scale(1.35) translateY(-6px) !important;
+        background: linear-gradient(135deg, #0ea5e9 0%, #6366f1 100%) !important;
+        border-color: rgba(255, 255, 255, 0.6) !important;
+        box-shadow: 0 12px 35px rgba(56, 189, 248, 0.85) !important;
     }
     </style>
 """, unsafe_allow_html=True)
@@ -224,19 +267,19 @@ if current_tab == "Home":
         with col_a:
             st.markdown("### Hospital Hub\nIntelligent disease-to-hospital routing with dynamic dark-mode PyDeck maps.")
             if st.button("Open Hospital Hub", key="home_btn_hosp"):
-                st.session_state.active_tab = "Hospital"
+                switch_tab("Hospital")
                 st.rerun()
 
         with col_b:
             st.markdown("### Medication Suite\nMulti-week medication schedules, independent daily resets, and smart categorization.")
             if st.button("Open Medication Hub", key="home_btn_med"):
-                st.session_state.active_tab = "Hospital"
+                switch_tab("Hospital")
                 st.rerun()
 
         with col_c:
             st.markdown("### Secure Passport\nDigital Medical ID with single-tap emergency SOS broadcasting.")
             if st.button("Open Medical Passport", key="home_btn_pass"):
-                st.session_state.active_tab = "Passport"
+                switch_tab("Passport")
                 st.rerun()
 
     except Exception as home_err:
@@ -539,7 +582,7 @@ elif current_tab == "Impact":
         st.error(f"Error loading metrics: {impact_err}")
 
 # ----------------------------------------------------
-# 4. BLAZING-FAST SESSION-STATE FLOATING DOCK
+# 4. BLANKED & CENTERED FLOATING DOCK CONTAINER
 # ----------------------------------------------------
 st.markdown('<div class="aceternity-dock-container">', unsafe_allow_html=True)
 dock_cols = st.columns(5)
