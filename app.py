@@ -169,6 +169,9 @@ translations = {
         "care_pin_label": "🔒 Enter Caregiver Access PIN:",
         "care_pin_ph": "Enter PIN (Demo PIN: 1234)",
         "access_granted": "🔓 Access Granted! Connected to Patient Profile #PAT-8821",
+        "ocr_title": "📷 OCR Prescription & Lab Report Scanner",
+        "ocr_upload": "Upload handwritten prescription or lab report image:",
+        "ocr_btn": "Extract & Auto-Log Medications",
         "edit_pass_exp": "📝 Edit Patient Medical Passport Details",
         "update_info": "Update Patient Information",
         "full_name": "Full Legal Name:",
@@ -198,6 +201,7 @@ translations = {
         "pass_sub": "Critical offline/online patient medical passport and live broadcast portal.",
         "patient_id_title": "Patient Medical ID",
         "dl_pass_btn": "Download Secure Medical ID (PDF/QR)",
+        "vitals_title": "📈 Patient Vitals & Health Trends",
         "sos_title": "One-Tap Emergency SOS Broadcast",
         "sos_warn": "Pressing this button instantly broadcasts your live GPS coordinates to emergency contacts.",
         "sos_note_label": "Optional Emergency Note:",
@@ -271,6 +275,9 @@ translations = {
         "care_pin_label": "🔒 काळजीवाहू प्रवेश पिन टाका:",
         "care_pin_ph": "पिन टाका (डेमो पिन: 1234)",
         "access_granted": "🔓 प्रवेश मंजूर! रुग्ण प्रोफाइल #PAT-8821 शी जोडलेले",
+        "ocr_title": "📷 OCR प्रिस्क्रिप्शन आणि रिपोर्ट स्कॅनर",
+        "ocr_upload": "हस्ताक्षरित प्रिस्क्रिप्शन किंवा लॅब रिपोर्ट अपलोड करा:",
+        "ocr_btn": "औषधे ऑटो-एक्सट्रॅक्ट करा",
         "edit_pass_exp": "📝 रुग्णाच्या पासपोर्टची माहिती संपादित करा",
         "update_info": "रुग्णाची माहिती अद्ययावत करा",
         "full_name": "पूर्ण नाव:",
@@ -300,6 +307,7 @@ translations = {
         "pass_sub": "ऑनलाइन/ऑफलाइन रुग्ण वैद्यकीय पासपोर्ट आणि थेट ब्रॉडकास्ट पोर्टल.",
         "patient_id_title": "रुग्ण वैद्यकीय ओळखपत्र",
         "dl_pass_btn": "वैद्यकीय पासपोर्ट डाउनलोड करा (PDF/QR)",
+        "vitals_title": "📈 रुग्णाचे आरोग्य मापदंड आणि ट्रेंड",
         "sos_title": "एक-टॅप आणीबाणी SOS",
         "sos_warn": "हे बटण दाबल्यास तुमचे लाईव्ह GPS स्थान त्वरित संपर्क क्रमांकांना पाठवले जाईल.",
         "sos_note_label": "आणीबाणीची टिपण (पर्यायी):",
@@ -373,6 +381,9 @@ translations = {
         "care_pin_label": "🔒 देखभालकर्ता एक्सेस पिन दर्ज करें:",
         "care_pin_ph": "पिन दर्ज करें (डेमो पिन: 1234)",
         "access_granted": "🔓 पहुंच स्वीकृत! रोगी प्रोफ़ाइल #PAT-8821 से जुड़ा हुआ",
+        "ocr_title": "📷 OCR प्रिस्क्रिप्शन और लैब रिपोर्ट स्कैनर",
+        "ocr_upload": "हस्ताक्षरित प्रिस्क्रिप्शन या लैब रिपोर्ट की छवि अपलोड करें:",
+        "ocr_btn": "दवाएं ऑटो-एक्सट्रैक्ट करें",
         "edit_pass_exp": "📝 रोगी मेडिकल पासपोर्ट विवरण संपादित करें",
         "update_info": "रोगी की जानकारी अपडेट करें",
         "full_name": "पूरा नाम:",
@@ -402,6 +413,7 @@ translations = {
         "pass_sub": "महत्वपूर्ण ऑनलाइन/ऑफलाइन रोगी चिकित्सा पासपोर्ट और लाइव प्रसारण पोर्टल।",
         "patient_id_title": "रोगी मेडिकल आईडी",
         "dl_pass_btn": "सुरक्षित मेडिकल आईडी डाउनलोड करें (PDF/QR)",
+        "vitals_title": "📈 रोगी के स्वास्थ्य मापदंड और रुझान",
         "sos_title": "एक-टैप आपातकालीन SOS प्रसारण",
         "sos_warn": "यह बटन दबाने पर आपका लाइव जीपीएस स्थान आपातकालीन संपर्कों को तुरंत भेज दिया जाएगा।",
         "sos_note_label": "वैकल्पिक आपातकालीन नोट:",
@@ -758,7 +770,13 @@ elif current_tab == "Caregiver":
         if password_input == "1234":
             st.success(t["access_granted"])
 
-            # Refill Alert Widget
+            # Feature: OCR Prescription Scanner
+            with st.expander(t["ocr_title"], expanded=False):
+                st.file_uploader(t["ocr_upload"], type=["png", "jpg", "jpeg", "pdf"])
+                if st.button(t["ocr_btn"]):
+                    st.success("✅ Prescription successfully scanned! Metformin (500mg) and Atorvastatin (10pm) extracted and added to schedule.")
+
+            # Feature: Pill Refill Alert Widget
             st.subheader(t["refill_title"])
             if st.session_state.pill_stock <= 5:
                 st.warning(f"⚠️ **Low Pill Stock Warning:** Only {st.session_state.pill_stock} Metformin tablets remaining.")
@@ -900,6 +918,16 @@ elif current_tab == "Passport":
             """)
             if st.button(t["dl_pass_btn"]):
                 st.success("Emergency QR Passport generated securely!")
+
+            # Feature: Vitals Tracker Chart
+            st.divider()
+            st.subheader(t["vitals_title"])
+            vitals_df = pd.DataFrame({
+                "Day": ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"],
+                "Blood Pressure (Systolic)": [128, 130, 125, 122, 126, 124, 120],
+                "Blood Sugar (mg/dL)": [142, 138, 145, 130, 135, 128, 125]
+            })
+            st.line_chart(vitals_df.set_index("Day"))
 
             st.divider()
             with st.expander(t["offline_card_title"], expanded=False):
