@@ -72,8 +72,18 @@ def get_default_schedule():
         }
     return default_schedule
 
-# Initialize Session State
+# --- 3. SESSION STATE INITIALIZATION ---
 try:
+    if "patient_passport" not in st.session_state:
+        st.session_state.patient_passport = {
+            "name": "Manas S. Abitkar",
+            "blood_group": "O+ Positive",
+            "emergency_contact": "+91 98765 43210 (Caregiver)",
+            "allergies": "Penicillin, Peanuts",
+            "conditions": "Type 2 Diabetes, Hypertension",
+            "physician": "Dr. Sharma (City General Hospital)"
+        }
+
     if "user_location" not in st.session_state:
         st.session_state.user_location = {
             "lat": 16.7010,
@@ -178,7 +188,7 @@ st.markdown("""
 """, unsafe_allow_html=True)
 
 # ----------------------------------------------------
-# 3. MODULE 0: HOME & BENTO OVERVIEW
+# 4. MODULE 0: HOME & BENTO OVERVIEW
 # ----------------------------------------------------
 if current_tab == "Home":
     try:
@@ -221,7 +231,7 @@ if current_tab == "Home":
         st.error(f"Error loading Home Dashboard: {home_err}")
 
 # ----------------------------------------------------
-# 4. MODULE 1: UNIFIED HEALTH & HOSPITAL HUB
+# 5. MODULE 1: UNIFIED HEALTH & HOSPITAL HUB
 # ----------------------------------------------------
 elif current_tab == "Hospital":
     try:
@@ -376,12 +386,12 @@ elif current_tab == "Hospital":
         st.error(f"Error in Hospital Hub: {hub_err}")
 
 # ----------------------------------------------------
-# 5. MODULE 2: CAREGIVER LIVE SYNC
+# 6. MODULE 2: CAREGIVER LIVE SYNC & PASSPORT EDITOR
 # ----------------------------------------------------
 elif current_tab == "Caregiver":
     try:
-        st.title("Caregiver Prescription Manager")
-        st.markdown("Secure portal for remote family monitoring and prescription assignment.")
+        st.title("Caregiver Prescription & Profile Manager")
+        st.markdown("Secure portal for remote family monitoring, prescription assignment, and Medical Passport edits.")
         st.divider()
 
         password_input = st.text_input("🔒 Enter Caregiver Access PIN:", type="password", placeholder="Enter PIN (Demo PIN: 1234)")
@@ -389,6 +399,36 @@ elif current_tab == "Caregiver":
         if password_input == "1234":
             st.success("🔓 Access Granted! Connected to Patient Profile #PAT-8821")
             
+            # --- FEATURE ADDITION: EDIT MEDICAL PASSPORT DETAILS ---
+            with st.expander("📝 Edit Patient Medical Passport Details", expanded=False):
+                try:
+                    with st.form("edit_passport_form"):
+                        st.markdown("### Update Patient Information")
+                        edited_name = st.text_input("Full Legal Name:", value=st.session_state.patient_passport["name"])
+                        edited_blood = st.text_input("Blood Group:", value=st.session_state.patient_passport["blood_group"])
+                        edited_contact = st.text_input("Emergency Contact:", value=st.session_state.patient_passport["emergency_contact"])
+                        edited_allergies = st.text_input("Known Allergies:", value=st.session_state.patient_passport["allergies"])
+                        edited_conditions = st.text_input("Chronic Conditions:", value=st.session_state.patient_passport["conditions"])
+                        edited_physician = st.text_input("Primary Physician:", value=st.session_state.patient_passport["physician"])
+                        
+                        save_passport = st.form_submit_button("Save Passport Updates")
+                        if save_passport:
+                            st.session_state.patient_passport["name"] = edited_name
+                            st.session_state.patient_passport["blood_group"] = edited_blood
+                            st.session_state.patient_passport["emergency_contact"] = edited_contact
+                            st.session_state.patient_passport["allergies"] = edited_allergies
+                            st.session_state.patient_passport["conditions"] = edited_conditions
+                            st.session_state.patient_passport["physician"] = edited_physician
+                            
+                            st.session_state.notifications.append({
+                                "msg": "Medical Passport updated by Caregiver.",
+                                "time": "Just now"
+                            })
+                            st.success("Medical Passport details successfully updated!")
+                            st.rerun()
+                except Exception as pass_edit_err:
+                    st.error(f"Error updating passport: {pass_edit_err}")
+
             with st.expander("➕ Add New Medication to Schedule", expanded=True):
                 try:
                     with st.form("add_med_form", clear_on_submit=True):
@@ -462,13 +502,13 @@ elif current_tab == "Caregiver":
         elif password_input:
             st.error("Incorrect PIN. Please try again.")
         else:
-            st.info("Enter PIN `1234` to unlock prescription controls.")
+            st.info("Enter PIN `1234` to unlock prescription & profile controls.")
 
     except Exception as caregiver_err:
         st.error(f"Error in Caregiver Portal: {caregiver_err}")
 
 # ----------------------------------------------------
-# 6. MODULE 3: DIGITAL MEDICAL PASSPORT & SOS
+# 7. MODULE 3: DIGITAL MEDICAL PASSPORT & SOS
 # ----------------------------------------------------
 elif current_tab == "Passport":
     try:
@@ -480,13 +520,14 @@ elif current_tab == "Passport":
 
         with col_id_left:
             st.subheader("Patient Medical ID")
-            st.markdown("""
-                * **Full Legal Name:** Manas S. Abitkar
-                * **Blood Group:** O+ Positive
-                * **Emergency Contact:** +91 98765 43210 (Caregiver)
-                * **Known Allergies:** Penicillin, Peanuts
-                * **Chronic Conditions:** Type 2 Diabetes, Hypertension
-                * **Primary Physician:** Dr. Sharma (City General Hospital)
+            p = st.session_state.patient_passport
+            st.markdown(f"""
+                * **Full Legal Name:** {p['name']}
+                * **Blood Group:** {p['blood_group']}
+                * **Emergency Contact:** {p['emergency_contact']}
+                * **Known Allergies:** {p['allergies']}
+                * **Chronic Conditions:** {p['conditions']}
+                * **Primary Physician:** {p['physician']}
             """)
             if st.button("Download Secure Medical ID (PDF/QR)"):
                 st.success("Emergency QR Passport generated securely!")
@@ -508,7 +549,7 @@ elif current_tab == "Passport":
         st.error(f"Error in Passport Portal: {passport_err}")
 
 # ----------------------------------------------------
-# 7. MODULE 4: SDG 3 IMPACT & INTERACTIVE 3D GLOBE
+# 8. MODULE 4: SDG 3 IMPACT & INTERACTIVE 3D GLOBE
 # ----------------------------------------------------
 elif current_tab == "Impact":
     try:
@@ -519,10 +560,8 @@ elif current_tab == "Impact":
         st.subheader("🌐 Global Disease Burden 3D Globe")
         st.markdown("Interactive global visualization showing primary health burdens and case volumes across major regions.")
 
-        # Embedded 3D Globe Component tracking global disease metrics
         globe_html = """
         <div style="width: 100%; height: 420px; background: radial-gradient(circle at center, #0f172a 0%, #030712 100%); border-radius: 20px; border: 1px solid rgba(56, 189, 248, 0.3); display: flex; flex-direction: column; align-items: center; justify-content: center; position: relative; overflow: hidden; box-shadow: 0 20px 40px rgba(0,0,0,0.6);">
-            <!-- Decorative Globe Atmosphere Ring -->
             <div style="position: absolute; width: 320px; height: 320px; border: 2px dashed rgba(56, 189, 248, 0.25); border-radius: 50%; animation: spin 25s linear infinite;"></div>
             <div style="position: absolute; width: 260px; height: 260px; border: 1px solid rgba(99, 102, 241, 0.35); border-radius: 50%; animation: spinReverse 20s linear infinite;"></div>
             
@@ -563,7 +602,7 @@ elif current_tab == "Impact":
         st.error(f"Error loading metrics: {impact_err}")
 
 # ----------------------------------------------------
-# 8. BULLETPROOF PURE CSS FLOATING DOCK (EXACT LAYOUT PRESERVED)
+# 9. BULLETPROOF PURE CSS FLOATING DOCK
 # ----------------------------------------------------
 active_home = "active" if current_tab == "Home" else ""
 active_hosp = "active" if current_tab == "Hospital" else ""
