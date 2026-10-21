@@ -108,7 +108,7 @@ try:
 except Exception as init_error:
     st.error(f"Initialization Notice: {init_error}")
 
-# Comprehensive Multilingual Translations Dictionary
+# Comprehensive Multilingual Dictionary for ALL UI Labels
 translations = {
     "English": {
         "title": "Next-Gen Patient Companion",
@@ -119,6 +119,29 @@ translations = {
         "care_title": "Caregiver Prescription & Profile Manager",
         "pass_title": "Secure Medical Passport & Emergency SOS",
         "impact_title": "UN Sustainable Development Goal 3 Alignment",
+        # Renamed & Localized Search Section
+        "search_heading": "Smart Symptom & Hospital Match",
+        "search_label": "Type condition / symptom:",
+        "search_placeholder": "Type condition here... (e.g., Heart, Eye, Bones)",
+        # Adherence & Metrics
+        "active_plan": "Active Treatment Plan",
+        "emergency_ready": "Emergency Readiness",
+        "caregiver_link": "Caregiver Link",
+        "bento_title": "Quick Access Bento Modules",
+        "hosp_card_title": "Hospital Hub",
+        "hosp_card_desc": "Intelligent disease-to-hospital routing with dynamic dark-mode PyDeck maps.",
+        "med_card_title": "Medication Suite",
+        "med_card_desc": "Multi-week medication schedules, independent daily resets, and smart categorization.",
+        "pass_card_title": "Secure Passport",
+        "pass_card_desc": "Digital Medical ID with single-tap emergency SOS broadcasting.",
+        # Caregiver & Passport UI
+        "care_pin_label": "🔒 Enter Caregiver Access PIN:",
+        "care_pin_placeholder": "Enter PIN (Demo PIN: 1234)",
+        "edit_pass_expander": "📝 Edit Patient Medical Passport Details",
+        "add_med_expander": "➕ Add New Medication to Schedule",
+        "med_overview": "Multi-Week Prescriptions Overview",
+        "sos_button": "TRIGGER EMERGENCY SOS",
+        "sos_warning": "Pressing this button instantly broadcasts your live GPS coordinates to emergency contacts.",
     },
     "Marathi": {
         "title": "पुढील पिढीचा रुग्ण सोबती",
@@ -129,16 +152,62 @@ translations = {
         "care_title": "केअरगिव्हर् प्रिस्क्रिप्शन आणि प्रोफाइल व्यवस्थापक",
         "pass_title": "सुरक्षित वैद्यकीय पासपोर्ट आणि आणीबाणी SOS",
         "impact_title": "युएन शाश्वत विकास ध्येय ३ संलीकरण",
+        # Renamed & Localized Search Section
+        "search_heading": "स्मार्ट लक्षण आणि रुग्णालय जुळणी",
+        "search_label": "आजार / लक्षण टाइप करा:",
+        "search_placeholder": "येथे आजार टाइप करा... (उदा. हृदय, डोळे, हाडे)",
+        # Adherence & Metrics
+        "active_plan": "सक्रिय उपचार योजना",
+        "emergency_ready": "आणीबाणीची तयारी",
+        "caregiver_link": "काळजीवाहू लिंक",
+        "bento_title": "जलद प्रवेश विभाग",
+        "hosp_card_title": "रुग्णालय केंद्र",
+        "hosp_card_desc": "डायनॅमिक डार्क-मोड नकाशांसह बुद्धिमत्तापूर्ण आजार-ते-रुग्णालय मार्ग.",
+        "med_card_title": "औषध सूची",
+        "med_card_desc": "अनेक आठवड्यांचे औषध वेळापत्रक आणि स्मार्ट वर्गीकरण.",
+        "pass_card_title": "सुरक्षित पासपोर्ट",
+        "pass_card_desc": "सिंगल-टॅप आणीबाणी SOS सह डिजिटल वैद्यकीय ओळखपत्र.",
+        # Caregiver & Passport UI
+        "care_pin_label": "🔒 काळजीवाहू प्रवेश पिन टाका:",
+        "care_pin_placeholder": "पिन टाका (डेमो पिन: 1234)",
+        "edit_pass_expander": "📝 रुग्णाच्या पासपोर्टची माहिती संपादित करा",
+        "add_med_expander": "➕ वेळापत्रकात नवीन औषध जोडा",
+        "med_overview": "अनेक आठवड्यांचा औषध आढावा",
+        "sos_button": "आणीबाणी SOS सुरू करा",
+        "sos_warning": "हे बटण दाबल्यास तुमचे लाईव्ह GPS स्थान त्वरित संपर्क क्रमांकांना पाठवले जाईल.",
     },
     "Hindi": {
         "title": "अगली पीढ़ी का रोगी साथी",
         "subtitle": "सटीक स्वास्थ्य सेवा, क्लाउड ट्राइएज और एसडीजी 3 के लिए पारिवारिक देखभाल",
-        "ai_title": "🤖 हेल्थब्रिज एआय लक्षण और दवा सुरक्षा चेकर",
+        "ai_title": "🤖 हेल्थब्रिज एआई लक्षण और दवा सुरक्षा चेकर",
         "summary_title": "📋 डॉक्टर की मुलाक़ात का सारांश",
         "hosp_title": "इंटेलिजेंट अस्पताल खोजक और अनुसूची",
         "care_title": "देखभाल करने वाला नुस्खा और प्रोफ़ाइल प्रबंधक",
         "pass_title": "सुरक्षित चिकित्सा पासपोर्ट और आपातकालीन SOS",
         "impact_title": "संयुक्त राष्ट्र सतत विकास लक्ष्य 3 संरेखण",
+        # Renamed & Localized Search Section
+        "search_heading": "स्मार्ट लक्षण और अस्पताल मिलान",
+        "search_label": "बीमारी / लक्षण दर्ज करें:",
+        "search_placeholder": "यहाँ बीमारी दर्ज करें... (उदा. हृदय, आँखें, हड्डियाँ)",
+        # Adherence & Metrics
+        "active_plan": "सक्रिय उपचार योजना",
+        "emergency_ready": "आपातकालीन तत्परता",
+        "caregiver_link": "देखभाल करने वाले का लिंक",
+        "bento_title": "त्वरित पहुँच मॉड्यूल",
+        "hosp_card_title": "अस्पताल केंद्र",
+        "hosp_card_desc": "डायनामिक डार्क-मोड मानचित्रों के साथ बुद्धिमान बीमारी-से-अस्पताल मार्ग।",
+        "med_card_title": "दवा सूची",
+        "med_card_desc": "बहु-सप्ताह दवा अनुसूची और स्मार्ट वर्गीकरण।",
+        "pass_card_title": "सुरक्षित पासपोर्ट",
+        "pass_card_desc": "सिंगल-टैप आपातकालीन SOS के साथ डिजिटल मेडिकल आईडी।",
+        # Caregiver & Passport UI
+        "care_pin_label": "🔒 देखभालकर्ता एक्सेस पिन दर्ज करें:",
+        "care_pin_placeholder": "पिन दर्ज करें (डेमो पिन: 1234)",
+        "edit_pass_expander": "📝 रोगी मेडिकल पासपोर्ट विवरण संपादित करें",
+        "add_med_expander": "➕ अनुसूची में नई दवा जोड़ें",
+        "med_overview": "बहु-सप्ताह दवाओं का अवलोकन",
+        "sos_button": "आपातकालीन SOS ट्रिगर करें",
+        "sos_warning": "यह बटन दबाने पर आपका लाइव GPS स्थान आपातकालीन संपर्कों को तुरंत भेज दिया जाएगा।",
     }
 }
 
@@ -243,11 +312,11 @@ if current_tab == "Home":
 
         col1, col2, col3 = st.columns(3)
         with col1:
-            st.metric(label="Active Treatment Plan", value="Week 1 Active", delta="92% Dose Adherence")
+            st.metric(label=t["active_plan"], value="Week 1 Active", delta="92% Dose Adherence")
         with col2:
-            st.metric(label="Emergency Readiness", value="GPS Online", delta="Kolhapur Region")
+            st.metric(label=t["emergency_ready"], value="GPS Online", delta="Kolhapur Region")
         with col3:
-            st.metric(label="Caregiver Link", value="Connected 🔒", delta="PIN Protected")
+            st.metric(label=t["caregiver_link"], value="Connected 🔒", delta="PIN Protected")
 
         st.divider()
 
@@ -274,24 +343,24 @@ if current_tab == "Home":
 
         st.divider()
 
-        st.subheader("Quick Access Bento Modules")
+        st.subheader(t["bento_title"])
         col_a, col_b, col_c = st.columns(3)
         
         with col_a:
-            st.markdown("### Hospital Hub\nIntelligent disease-to-hospital routing with dynamic dark-mode PyDeck maps.")
-            if st.button("Open Hospital Hub", key="home_btn_hosp"):
+            st.markdown(f"### {t['hosp_card_title']}\n{t['hosp_card_desc']}")
+            if st.button(f"Open {t['hosp_card_title']}", key="home_btn_hosp"):
                 st.query_params["tab"] = "Hospital"
                 st.rerun()
 
         with col_b:
-            st.markdown("### Medication Suite\nMulti-week medication schedules, independent daily resets, and smart categorization.")
-            if st.button("Open Medication Hub", key="home_btn_med"):
+            st.markdown(f"### {t['med_card_title']}\n{t['med_card_desc']}")
+            if st.button(f"Open {t['med_card_title']}", key="home_btn_med"):
                 st.query_params["tab"] = "Hospital"
                 st.rerun()
 
         with col_c:
-            st.markdown("### Secure Passport\nDigital Medical ID with single-tap emergency SOS broadcasting.")
-            if st.button("Open Medical Passport", key="home_btn_pass"):
+            st.markdown(f"### {t['pass_card_title']}\n{t['pass_card_desc']}")
+            if st.button(f"Open {t['pass_card_title']}", key="home_btn_pass"):
                 st.query_params["tab"] = "Passport"
                 st.rerun()
 
@@ -319,10 +388,11 @@ elif current_tab == "Hospital":
 
         st.divider()
 
-        st.subheader("Gooey Disease-to-Hospital Search")
+        # RENAMED & LOCALIZED SEARCH SECTION
+        st.subheader(t["search_heading"])
         user_disease_input = st.text_input(
-            "Type condition / symptom:",
-            placeholder="Type condition here... (e.g., Heart, Eye, Bones)",
+            t["search_label"],
+            placeholder=t["search_placeholder"],
             key="map_disease_search"
         )
 
@@ -462,12 +532,12 @@ elif current_tab == "Caregiver":
         st.markdown("Secure portal for remote family monitoring, prescription assignment, and Medical Passport edits.")
         st.divider()
 
-        password_input = st.text_input("🔒 Enter Caregiver Access PIN:", type="password", placeholder="Enter PIN (Demo PIN: 1234)")
+        password_input = st.text_input(t["care_pin_label"], type="password", placeholder=t["care_pin_placeholder"])
         
         if password_input == "1234":
             st.success("🔓 Access Granted! Connected to Patient Profile #PAT-8821")
             
-            with st.expander("📝 Edit Patient Medical Passport Details", expanded=False):
+            with st.expander(t["edit_pass_expander"], expanded=False):
                 try:
                     with st.form("edit_passport_form"):
                         st.markdown("### Update Patient Information")
@@ -496,7 +566,7 @@ elif current_tab == "Caregiver":
                 except Exception as pass_edit_err:
                     st.error(f"Error updating passport: {pass_edit_err}")
 
-            with st.expander("➕ Add New Medication to Schedule", expanded=True):
+            with st.expander(t["add_med_expander"], expanded=True):
                 try:
                     with st.form("add_med_form", clear_on_submit=True):
                         new_med_name = st.text_input("Medicine Name & Dosage:", placeholder="e.g., Paracetamol (650mg)")
@@ -529,7 +599,7 @@ elif current_tab == "Caregiver":
                     st.error(f"Form submission error: {form_err}")
 
             st.divider()
-            st.subheader("Multi-Week Prescriptions Overview")
+            st.subheader(t["med_overview"])
             
             try:
                 all_meds_flat = []
@@ -601,11 +671,11 @@ elif current_tab == "Passport":
 
         with col_id_right:
             st.subheader("One-Tap Emergency SOS Broadcast")
-            st.warning("Pressing this button instantly broadcasts your live GPS coordinates to emergency contacts.")
+            st.warning(t["sos_warning"])
             
             sos_message = st.text_area("Optional Emergency Note:", placeholder="e.g., Experiencing chest pain, need immediate assistance.")
             
-            if st.button("TRIGGER EMERGENCY SOS"):
+            if st.button(t["sos_button"]):
                 st.session_state.notifications.append({
                     "msg": f"🚨 EMERGENCY SOS TRIGGERED! Note: {sos_message or 'Immediate assistance requested.'}",
                     "time": "Just now (CRITICAL)"
