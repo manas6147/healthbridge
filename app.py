@@ -108,25 +108,37 @@ try:
 except Exception as init_error:
     st.error(f"Initialization Notice: {init_error}")
 
-# Multilingual Translations Dictionary
+# Comprehensive Multilingual Translations Dictionary
 translations = {
     "English": {
         "title": "Next-Gen Patient Companion",
         "subtitle": "Precision Healthcare, Atmospheric Cloud Triage & Family Caregiving for SDG 3",
         "ai_title": "🤖 HealthBridge AI Triage & Drug Safety Checker",
         "summary_title": "📋 Printable Doctor Visit Summary",
+        "hosp_title": "Intelligent Hospital Finder & Schedule",
+        "care_title": "Caregiver Prescription & Profile Manager",
+        "pass_title": "Secure Medical Passport & Emergency SOS",
+        "impact_title": "UN Sustainable Development Goal 3 Alignment",
     },
     "Marathi": {
         "title": "पुढील पिढीचा रुग्ण सोबती",
         "subtitle": "अचूक आरोग्य सेवा, क्लाउड ट्रायेज आणि एसडीजी ३ साठी कुटुंब काळजी",
         "ai_title": "🤖 हेल्थब्रिज एआय तपासणी आणि औषध सुरक्षा",
         "summary_title": "📋 डॉक्टर भेटीचा सारांश (प्रिंट करण्यायोग्य)",
+        "hosp_title": "हुशार रुग्णालय शोधक आणि वेळापत्रक",
+        "care_title": "केअरगिव्हर् प्रिस्क्रिप्शन आणि प्रोफाइल व्यवस्थापक",
+        "pass_title": "सुरक्षित वैद्यकीय पासपोर्ट आणि आणीबाणी SOS",
+        "impact_title": "युएन शाश्वत विकास ध्येय ३ संलीकरण",
     },
     "Hindi": {
         "title": "अगली पीढ़ी का रोगी साथी",
         "subtitle": "सटीक स्वास्थ्य सेवा, क्लाउड ट्राइएज और एसडीजी 3 के लिए पारिवारिक देखभाल",
         "ai_title": "🤖 हेल्थब्रिज एआय लक्षण और दवा सुरक्षा चेकर",
         "summary_title": "📋 डॉक्टर की मुलाक़ात का सारांश",
+        "hosp_title": "इंटेलिजेंट अस्पताल खोजक और अनुसूची",
+        "care_title": "देखभाल करने वाला नुस्खा और प्रोफ़ाइल प्रबंधक",
+        "pass_title": "सुरक्षित चिकित्सा पासपोर्ट और आपातकालीन SOS",
+        "impact_title": "संयुक्त राष्ट्र सतत विकास लक्ष्य 3 संरेखण",
     }
 }
 
@@ -239,7 +251,6 @@ if current_tab == "Home":
 
         st.divider()
 
-        # Competition Add-on: AI Triage & Clinical Summary
         with st.expander(t["ai_title"], expanded=False):
             st.markdown("Enter any new symptom or medication to check for potential side-effects or clinical warnings:")
             symptom_query = st.text_input("Describe symptom or drug name:", placeholder="e.g., Mild dizziness after taking Metformin", key="home_ai_query")
@@ -294,7 +305,7 @@ elif current_tab == "Hospital":
     try:
         col_title, col_bell = st.columns([4, 1])
         with col_title:
-            st.title("Intelligent Hospital Finder & Schedule")
+            st.title(t["hosp_title"])
         with col_bell:
             notif_count = len(st.session_state.notifications)
             with st.popover(f"🔔 Alerts ({notif_count})"):
@@ -447,7 +458,7 @@ elif current_tab == "Hospital":
 # ----------------------------------------------------
 elif current_tab == "Caregiver":
     try:
-        st.title("Caregiver Prescription & Profile Manager")
+        st.title(t["care_title"])
         st.markdown("Secure portal for remote family monitoring, prescription assignment, and Medical Passport edits.")
         st.divider()
 
@@ -568,7 +579,7 @@ elif current_tab == "Caregiver":
 # ----------------------------------------------------
 elif current_tab == "Passport":
     try:
-        st.title("Secure Medical Passport & Emergency SOS")
+        st.title(t["pass_title"])
         st.markdown("Critical offline/online patient medical passport and live broadcast portal.")
         st.divider()
 
@@ -609,7 +620,7 @@ elif current_tab == "Passport":
 # ----------------------------------------------------
 elif current_tab == "Impact":
     try:
-        st.title("UN Sustainable Development Goal 3 Alignment")
+        st.title(t["impact_title"])
         st.markdown("### *Ensure healthy lives and promote well-being for all at all ages.*")
         st.divider()
 
