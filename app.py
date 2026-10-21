@@ -108,6 +108,12 @@ try:
     if "pill_stock" not in st.session_state:
         st.session_state.pill_stock = 4  # Low stock demo trigger
 
+    # Initialize Healtho Chat History
+    if "healtho_messages" not in st.session_state:
+        st.session_state.healtho_messages = [
+            {"role": "assistant", "content": "Hello Manas! 👋 I am **Healtho**, your 24/7 personal health companion. How are you feeling today?"}
+        ]
+
 except Exception as init_error:
     st.error(f"Initialization Notice: {init_error}")
 
@@ -125,6 +131,12 @@ translations = {
         "care_link": "Caregiver Link",
         "care_val": "Connected 🔒",
         "care_delta": "PIN Protected",
+        # Healtho AI Companion Labels
+        "healtho_title": "🤖 Meet Healtho - Your AI Health Companion",
+        "healtho_subtitle": "Talk, ask questions, or describe how you feel in real-time.",
+        "healtho_input_placeholder": "Ask Healtho anything... e.g. 'Can I take Metformin after dinner?'",
+        "healtho_send_btn": "Talk to Healtho",
+        "healtho_voice_btn": "🎙️ Speak to Healtho (Voice Mode)",
         "ai_title": "🤖 HealthBridge AI Triage & Drug Safety Checker",
         "ai_prompt": "Enter or speak any new symptom or medication to check for potential side-effects or clinical warnings:",
         "ai_input_label": "Describe symptom or drug name:",
@@ -231,6 +243,12 @@ translations = {
         "care_link": "काळजीवाहू लिंक",
         "care_val": "जोडलेले 🔒",
         "care_delta": "पिन सुरक्षित",
+        # Healtho AI Companion Labels
+        "healtho_title": "🤖 हेल्थो - तुमचा एआय आरोग्य सोबती",
+        "healtho_subtitle": "हेल्थोशी बोला, प्रश्न विचारा किंवा तुम्हाला कसे वाटत आहे ते सांगा.",
+        "healtho_input_placeholder": "हेल्थोला काहीही विचारा... उदा. 'मी जेवणानंतर मेटफॉर्मिन घेऊ शकतो का?'",
+        "healtho_send_btn": "हेल्थोशी बोला",
+        "healtho_voice_btn": "🎙️ हेल्थोशी आवाज द्वारे बोला (व्हॉइस मोड)",
         "ai_title": "🤖 हेल्थब्रिज एआय तपासणी आणि औषध सुरक्षा",
         "ai_prompt": "दुष्परिणाम किंवा इशारे तपासण्यासाठी नवीन लक्षण किंवा औषध टाका किंवा बोला:",
         "ai_input_label": "लक्षण किंवा औषधाचे नाव सांगा:",
@@ -337,6 +355,12 @@ translations = {
         "care_link": "देखभालकर्ता लिंक",
         "care_val": "कनेक्टेड 🔒",
         "care_delta": "पिन सुरक्षित",
+        # Healtho AI Companion Labels
+        "healtho_title": "🤖 हेल्थो - आपका एआई स्वास्थ्य साथी",
+        "healtho_subtitle": "हेल्थो से बात करें, प्रश्न पूछें या बताएं कि आप कैसा महसूस कर रहे हैं।",
+        "healtho_input_placeholder": "हेल्थो से कुछ भी पूछें... उदा. 'क्या मैं रात के खाने के बाद मेटफॉर्मिन ले सकता हूं?'",
+        "healtho_send_btn": "हेल्थो से बात करें",
+        "healtho_voice_btn": "🎙️ हेल्थो से आवाज में बात करें (वॉइस मोड)",
         "ai_title": "🤖 हेल्थब्रिज एआई लक्षण और दवा सुरक्षा चेकर",
         "ai_prompt": "संभावित दुष्प्रभावों या चेतावनियों की जांच के लिए कोई नया लक्षण या दवा दर्ज करें या बोलें:",
         "ai_input_label": "लक्षण या दवा का नाम बताएं:",
@@ -539,6 +563,57 @@ if current_tab == "Home":
             st.metric(label=t["emerg_ready"], value=t["emerg_val"], delta=t["emerg_delta"])
         with col3:
             st.metric(label=t["care_link"], value=t["care_val"], delta=t["care_delta"])
+
+        st.divider()
+
+        # --- HEALTHO AI COMPANION SECTION ---
+        st.subheader(t["healtho_title"])
+        st.caption(t["healtho_subtitle"])
+
+        # Display Chat History
+        chat_container = st.container()
+        with chat_container:
+            for msg in st.session_state.healtho_messages:
+                if msg["role"] == "user":
+                    st.markdown(f"👤 **You:** {msg['content']}")
+                else:
+                    st.markdown(f"🤖 **Healtho:** {msg['content']}")
+
+        # Healtho Interaction Controls
+        st.write("")
+        col_h1, col_h2, col_h3 = st.columns([4, 1, 1])
+        
+        with col_h1:
+            healtho_input = st.text_input(
+                "Ask Healtho:", 
+                placeholder=t["healtho_input_placeholder"], 
+                label_visibility="collapsed", 
+                key="healtho_user_query"
+            )
+        
+        with col_h2:
+            if st.button(t["healtho_send_btn"], key="healtho_send"):
+                if healtho_input.strip():
+                    # Add user query
+                    st.session_state.healtho_messages.append({"role": "user", "content": healtho_input})
+                    
+                    # Generate Healtho AI Response
+                    query_lower = healtho_input.lower()
+                    if "metformin" in query_lower:
+                        reply = "Metformin is best taken with meals to reduce stomach upset. Always keep yourself well hydrated!"
+                    elif "dizziness" in query_lower or "headache" in query_lower:
+                        reply = "Mild dizziness can happen during dosage changes. Sit down, drink water, and rest. If it persists, I will flag Dr. Sharma for you!"
+                    elif "food" in query_lower or "diet" in query_lower:
+                        reply = "For Type 2 Diabetes management, focus on low-GI complex carbs, green leafy vegetables, and adequate protein."
+                    else:
+                        reply = "I'm monitoring your health trends! Remember to take your scheduled medications on time and stay hydrated today."
+                    
+                    st.session_state.healtho_messages.append({"role": "assistant", "content": reply})
+                    st.rerun()
+
+        with col_h3:
+            if st.button(t["healtho_voice_btn"], key="healtho_voice"):
+                st.info("🎙️ Healtho is listening... Speak now!")
 
         st.divider()
 
