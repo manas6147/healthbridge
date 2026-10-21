@@ -163,11 +163,11 @@ translations = {
         "care_pin_label": "Enter Caregiver Access PIN:",
         "care_pin_ph": "Enter PIN (Demo: 1234)",
         "access_granted": "Access Granted! Connected to Patient Profile #PAT-8821",
-        "ocr_title": "OCR Prescription Scanner",
+        "ocr_title": "📷 OCR Prescription Scanner",
         "ocr_upload": "Upload prescription image:",
         "ocr_btn": "Extract Medications",
-        "edit_pass_exp": "Edit Patient Medical Passport Details",
-        "update_info": "Update Information",
+        "edit_pass_exp": "📝 Edit Patient Medical Passport Details",
+        "update_info": "Update Passport Information",
         "full_name": "Full Legal Name:",
         "blood_group": "Blood Group:",
         "emerg_contact": "Emergency Contact:",
@@ -175,21 +175,21 @@ translations = {
         "conditions": "Chronic Conditions:",
         "physician": "Primary Physician:",
         "save_pass_btn": "Save Passport Updates",
-        "add_med_exp": "Add New Medication",
-        "med_name_label": "Medicine Name:",
+        "add_med_exp": "➕ Add New Medication to Schedule",
+        "med_name_label": "Medicine Name & Dosage:",
         "med_name_ph": "e.g., Paracetamol (650mg)",
-        "sched_time_label": "Time:",
+        "sched_time_label": "Scheduled Time:",
         "sched_time_ph": "e.g., 02:00 PM",
-        "assign_week": "Assign Week:",
-        "assign_day": "Assign Day:",
+        "assign_week": "Assign to Week:",
+        "assign_day": "Assign to Day:",
         "add_med_btn": "Add Medication",
-        "med_table_title": "Prescriptions Overview",
-        "overall_adh": "Patient Adherence Rate",
+        "med_table_title": "Multi-Week Prescriptions Overview",
+        "overall_adh": "Overall Patient Adherence Rate",
         "send_note_label": "Send reminder to patient:",
         "send_note_ph": "Great job taking your medicine today!",
-        "send_push_btn": "Send Notification",
-        "refill_title": "Pill Stock & Refill Alert",
-        "refill_btn": "Send WhatsApp Alert to Local Pharmacy",
+        "send_push_btn": "Send Push Notification",
+        "refill_title": "💊 Pill Refill & Pharmacy Alert",
+        "refill_btn": "Send WhatsApp Refill Alert to Local Pharmacy",
         "pass_title": "Secure Medical Passport & Emergency SOS",
         "pass_sub": "Critical offline/online patient medical passport and live broadcast portal.",
         "patient_id_title": "Patient Medical ID",
@@ -259,10 +259,10 @@ translations = {
         "care_pin_label": "काळजीवाहू पिन टाका:",
         "care_pin_ph": "पिन टाका (डेमो: 1234)",
         "access_granted": "प्रवेश मंजूर! रुग्ण प्रोफाइल #PAT-8821",
-        "ocr_title": "OCR प्रिस्क्रिप्शन स्कॅनर",
+        "ocr_title": "📷 OCR प्रिस्क्रिप्शन स्कॅनर",
         "ocr_upload": "प्रिस्क्रिप्शन फोटो अपलोड करा:",
         "ocr_btn": "औषधे एक्सट्रॅक्ट करा",
-        "edit_pass_exp": "पासपोर्ट संपादित करा",
+        "edit_pass_exp": "📝 रुग्णाच्या पासपोर्टची माहिती संपादित करा",
         "update_info": "माहिती अद्ययावत करा",
         "full_name": "पूर्ण नाव:",
         "blood_group": "रक्तगट:",
@@ -271,7 +271,7 @@ translations = {
         "conditions": "दीर्घकालीन आजार:",
         "physician": "मुख्य डॉक्टर:",
         "save_pass_btn": "जतन करा",
-        "add_med_exp": "नवीन औषध जोडा",
+        "add_med_exp": "➕ नवीन औषध जोडा",
         "med_name_label": "औषधाचे नाव:",
         "med_name_ph": "उदा. पॅरासिटामॉल (650mg)",
         "sched_time_label": "वेळ:",
@@ -284,7 +284,7 @@ translations = {
         "send_note_label": "रुग्णाला संदेश पाठवा:",
         "send_note_ph": "वेळेवर औषध घेतल्याबद्दल छान!",
         "send_push_btn": "संदेश पाठवा",
-        "refill_title": "गोळ्यांचा साठा अलर्ट",
+        "refill_title": "💊 गोळ्यांचा साठा अलर्ट",
         "refill_btn": "व्हॉट्सॲप अलर्ट पाठवा",
         "pass_title": "वैद्यकीय पासपोर्ट आणि SOS",
         "pass_sub": "रुग्ण पासपोर्ट आणि थेट ब्रॉडकास्ट.",
@@ -355,10 +355,10 @@ translations = {
         "care_pin_label": "देखभालकर्ता पिन दर्ज करें:",
         "care_pin_ph": "पिन दर्ज करें (डेमो: 1234)",
         "access_granted": "पहुंच स्वीकृत! रोगी प्रोफ़ाइल #PAT-8821",
-        "ocr_title": "OCR प्रिस्क्रिप्शन स्कैनर",
+        "ocr_title": "📷 OCR प्रिस्क्रिप्शन स्कैनर",
         "ocr_upload": "प्रिस्क्रिप्शन इमेज अपलोड करें:",
         "ocr_btn": "दवाएं ऑटो-एक्सट्रैक्ट करें",
-        "edit_pass_exp": "पासपोर्ट संपादित करें",
+        "edit_pass_exp": "📝 रोगी मेडिकल पासपोर्ट विवरण संपादित करें",
         "update_info": "जानकारी अपडेट करें",
         "full_name": "पूरा नाम:",
         "blood_group": "रक्त समूह:",
@@ -367,7 +367,7 @@ translations = {
         "conditions": "पुरानी बीमारियाँ:",
         "physician": "प्राथमिक चिकित्सक:",
         "save_pass_btn": "सहेजें",
-        "add_med_exp": "नई दवा जोड़ें",
+        "add_med_exp": "➕ नई दवा जोड़ें",
         "med_name_label": "दवा का नाम:",
         "med_name_ph": "उदा. पैरासिटामोल (650mg)",
         "sched_time_label": "समय:",
@@ -380,7 +380,7 @@ translations = {
         "send_note_label": "रोगी को संदेश भेजें:",
         "send_note_ph": "समय पर दवा लेने के लिए बहुत बढ़िया!",
         "send_push_btn": "संदेश भेजें",
-        "refill_title": "गोली स्टॉक रीफिल चेतावनी",
+        "refill_title": "💊 गोली स्टॉक रीफिल चेतावनी",
         "refill_btn": "व्हाट्सएप रिफिल अलर्ट भेजें",
         "pass_title": "चिकित्सा पासपोर्ट और SOS",
         "pass_sub": "रोगी पासपोर्ट और लाइव प्रसारण।",
@@ -646,7 +646,7 @@ elif current_tab == "Hospital":
         st.error(f"Error in Hospital Hub: {hub_err}")
 
 # ----------------------------------------------------
-# 8. MODULE 2: CAREGIVER PORTAL & OCR
+# 8. MODULE 2: CAREGIVER PORTAL, OCR & PASSPORT EDITOR
 # ----------------------------------------------------
 elif current_tab == "Caregiver":
     try:
@@ -658,24 +658,107 @@ elif current_tab == "Caregiver":
         if password_input == "1234":
             st.success(t["access_granted"])
 
+            # Feature: OCR Prescription Scanner
             with st.expander(t["ocr_title"], expanded=False):
                 st.file_uploader(t["ocr_upload"], type=["png", "jpg", "jpeg"])
                 if st.button(t["ocr_btn"]):
                     st.success("Prescription scanned! Metformin (500mg) logged.")
 
+            # Feature: Pill Stock & Refill Alert
             st.subheader(t["refill_title"])
             st.info(f"Pill Stock: {st.session_state.pill_stock} tablets remaining.")
             if st.button(t["refill_btn"]):
                 st.success("WhatsApp refill message sent!")
 
             st.divider()
+
+            # --- RESTORED FEATURE: EDIT MEDICAL PASSPORT ---
+            with st.expander(t["edit_pass_exp"], expanded=True):
+                try:
+                    with st.form("edit_passport_form"):
+                        st.markdown(f"### {t['update_info']}")
+                        edited_name = st.text_input(t["full_name"], value=st.session_state.patient_passport["name"])
+                        edited_blood = st.text_input(t["blood_group"], value=st.session_state.patient_passport["blood_group"])
+                        edited_contact = st.text_input(t["emerg_contact"], value=st.session_state.patient_passport["emergency_contact"])
+                        edited_allergies = st.text_input(t["allergies"], value=st.session_state.patient_passport["allergies"])
+                        edited_conditions = st.text_input(t["conditions"], value=st.session_state.patient_passport["conditions"])
+                        edited_physician = st.text_input(t["physician"], value=st.session_state.patient_passport["physician"])
+                        
+                        save_passport = st.form_submit_button(t["save_pass_btn"])
+                        if save_passport:
+                            st.session_state.patient_passport["name"] = edited_name
+                            st.session_state.patient_passport["blood_group"] = edited_blood
+                            st.session_state.patient_passport["emergency_contact"] = edited_contact
+                            st.session_state.patient_passport["allergies"] = edited_allergies
+                            st.session_state.patient_passport["conditions"] = edited_conditions
+                            st.session_state.patient_passport["physician"] = edited_physician
+                            
+                            st.session_state.notifications.append({
+                                "msg": "Medical Passport updated by Caregiver.",
+                                "time": "Just now"
+                            })
+                            st.success("Medical Passport details successfully updated!")
+                            st.rerun()
+                except Exception as pass_edit_err:
+                    st.error(f"Error updating passport: {pass_edit_err}")
+
+            st.divider()
+
+            # Feature: Add New Medication
+            with st.expander(t["add_med_exp"], expanded=False):
+                try:
+                    with st.form("add_med_form", clear_on_submit=True):
+                        new_med_name = st.text_input(t["med_name_label"], placeholder=t["med_name_ph"])
+                        new_med_time = st.text_input(t["sched_time_label"], placeholder=t["sched_time_ph"])
+                        target_week = st.selectbox(t["assign_week"], ["All Weeks", "Week 1", "Week 2", "Week 3", "Week 4"])
+                        target_day = st.selectbox(t["assign_day"], ["All Days", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday"])
+                        
+                        submitted = st.form_submit_button(t["add_med_btn"])
+                        if submitted:
+                            if new_med_name and new_med_time:
+                                detected_category = auto_categorize_medicine(new_med_name)
+                                new_item = {"name": new_med_name, "time": new_med_time, "status": "Pending", "category": detected_category}
+                                
+                                weeks_to_update = ["Week 1", "Week 2", "Week 3", "Week 4"] if target_week == "All Weeks" else [target_week]
+                                days_to_update = ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday"] if target_day == "All Days" else [target_day]
+                                
+                                for w in weeks_to_update:
+                                    if w not in st.session_state.meds_by_week:
+                                        st.session_state.meds_by_week[w] = {}
+                                    for d in days_to_update:
+                                        if d not in st.session_state.meds_by_week[w]:
+                                            st.session_state.meds_by_week[w][d] = []
+                                        st.session_state.meds_by_week[w][d].append(new_item)
+                                        
+                                st.success(f"Successfully added {new_med_name}!")
+                                st.rerun()
+                            else:
+                                st.warning("Please fill in medicine name and time.")
+                except Exception as form_err:
+                    st.error(f"Form submission error: {form_err}")
+
+            st.divider()
+
+            # Feature: Prescriptions Table & Push Notification
             st.subheader(t["med_table_title"])
             all_meds = []
             for w, days in st.session_state.meds_by_week.items():
                 for d, m_list in days.items():
                     for m in m_list:
-                        all_meds.append({"Week": w, "Day": d, "Medicine": m["name"], "Status": m["status"]})
+                        all_meds.append({"Week": w, "Day": d, "Medicine": m["name"], "Time": m.get("time", "N/A"), "Status": m["status"]})
             st.dataframe(pd.DataFrame(all_meds), use_container_width=True)
+
+            with st.form("caregiver_alert", clear_on_submit=True):
+                msg = st.text_area(t["send_note_label"], placeholder=t["send_note_ph"])
+                if st.form_submit_button(t["send_push_btn"]):
+                    if msg.strip():
+                        st.session_state.notifications.append({
+                            "msg": f"Caregiver Note: {msg}",
+                            "time": "Just now"
+                        })
+                        st.success("Notification sent to Patient Bell Feed!")
+                    else:
+                        st.warning("Please enter a message.")
 
         elif password_input:
             st.error("Incorrect PIN.")
@@ -697,7 +780,7 @@ elif current_tab == "Passport":
         with col_l:
             st.subheader(t["patient_id_title"])
             p = st.session_state.patient_passport
-            st.markdown(f"* **Name:** {p['name']}\n* **Blood Group:** {p['blood_group']}\n* **Contact:** {p['emergency_contact']}\n* **Allergies:** {p['allergies']}")
+            st.markdown(f"* **Name:** {p['name']}\n* **Blood Group:** {p['blood_group']}\n* **Emergency Contact:** {p['emergency_contact']}\n* **Allergies:** {p['allergies']}\n* **Conditions:** {p['conditions']}\n* **Physician:** {p['physician']}")
             if st.button(t["dl_pass_btn"]):
                 st.success("Medical ID QR generated!")
 
@@ -705,6 +788,14 @@ elif current_tab == "Passport":
             st.subheader(t["vitals_title"])
             v_df = pd.DataFrame({"Day": ["Mon", "Tue", "Wed", "Thu", "Fri"], "BP": [128, 125, 122, 126, 120]})
             st.line_chart(v_df.set_index("Day"))
+
+            st.divider()
+            with st.expander(t["offline_card_title"], expanded=False):
+                st.markdown("""
+                * **CPR Instructions:** 100-120 chest compressions/min.
+                * **Hypoglycemia Emergency:** Administer glucose/sugar water immediately.
+                * **Local Emergency Numbers:** 108 (Ambulance), 112 (National Emergency).
+                """)
 
         with col_r:
             st.subheader(t["sos_title"])
