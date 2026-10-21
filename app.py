@@ -108,25 +108,29 @@ try:
 except Exception as init_error:
     st.error(f"Initialization Notice: {init_error}")
 
-# Comprehensive Multilingual Dictionary for ALL UI Labels
+# Comprehensive Multilingual Translation Dictionary for ALL UI Components
 translations = {
     "English": {
         "title": "Next-Gen Patient Companion",
         "subtitle": "Precision Healthcare, Atmospheric Cloud Triage & Family Caregiving for SDG 3",
-        "ai_title": "🤖 HealthBridge AI Triage & Drug Safety Checker",
-        "summary_title": "📋 Printable Doctor Visit Summary",
-        "hosp_title": "Intelligent Hospital Finder & Schedule",
-        "care_title": "Caregiver Prescription & Profile Manager",
-        "pass_title": "Secure Medical Passport & Emergency SOS",
-        "impact_title": "UN Sustainable Development Goal 3 Alignment",
-        # Renamed & Localized Search Section
-        "search_heading": "Smart Symptom & Hospital Match",
-        "search_label": "Type condition / symptom:",
-        "search_placeholder": "Type condition here... (e.g., Heart, Eye, Bones)",
-        # Adherence & Metrics
         "active_plan": "Active Treatment Plan",
-        "emergency_ready": "Emergency Readiness",
-        "caregiver_link": "Caregiver Link",
+        "active_val": "Week 1 Active",
+        "active_delta": "92% Dose Adherence",
+        "emerg_ready": "Emergency Readiness",
+        "emerg_val": "GPS Online",
+        "emerg_delta": "Kolhapur Region",
+        "care_link": "Caregiver Link",
+        "care_val": "Connected 🔒",
+        "care_delta": "PIN Protected",
+        "ai_title": "🤖 HealthBridge AI Triage & Drug Safety Checker",
+        "ai_prompt": "Enter any new symptom or medication to check for potential side-effects or clinical warnings:",
+        "ai_input_label": "Describe symptom or drug name:",
+        "ai_placeholder": "e.g., Mild dizziness after taking Metformin",
+        "ai_btn": "Run AI Safety Check",
+        "ai_res": "💡 **AI Triage Analysis:** Mild side-effects can occur during initial adjustment phases. Ensure adequate hydration. *Disclaimer: Consult Dr. Sharma if symptoms persist beyond 48 hours.*",
+        "summary_title": "📋 Printable Doctor Visit Summary",
+        "summary_btn": "Generate Downloadable Clinical PDF Report",
+        "summary_success": "✅ Clinical summary package compiled successfully! Ready for printing or export to clinic database.",
         "bento_title": "Quick Access Bento Modules",
         "hosp_card_title": "Hospital Hub",
         "hosp_card_desc": "Intelligent disease-to-hospital routing with dynamic dark-mode PyDeck maps.",
@@ -134,32 +138,97 @@ translations = {
         "med_card_desc": "Multi-week medication schedules, independent daily resets, and smart categorization.",
         "pass_card_title": "Secure Passport",
         "pass_card_desc": "Digital Medical ID with single-tap emergency SOS broadcasting.",
-        # Caregiver & Passport UI
+        "btn_open": "Open",
+        # Hospital Tab
+        "hosp_title": "Intelligent Hospital Finder & Schedule",
+        "search_heading": "Smart Symptom & Hospital Match",
+        "search_label": "Type condition / symptom:",
+        "search_placeholder": "Type condition here... (e.g., Heart, Eye, Bones)",
+        "rec_fac": "Recommended Facility:",
+        "map_cyan": "🔵 Cyan Pin = Live GPS Location",
+        "map_rose": "🔴 Rose Pin = Recommended Specialized Hospital",
+        "med_sched_title": "Multi-Week Medication Schedule",
+        "choose_week": "Choose Treatment Week:",
+        "choose_day": "Choose Day of Week:",
+        "no_meds": "No medications scheduled for",
+        "mark_taken": "Mark Taken",
+        "taken": "Taken ✅",
+        "doc_title": "Doctor Appointments & Questions",
+        "doc_info": "**Dr. Sharma (Cardiologist)**\n📅 Tomorrow at 10:30 AM\n📍 City General Hospital",
+        "add_q_label": "Add a question for your doctor:",
+        "add_q_placeholder": "e.g. Any food restrictions?",
+        "save_q_btn": "Save Question",
+        "saved_qs": "Your Saved Questions:",
+        # Caregiver Tab
+        "care_title": "Caregiver Prescription & Profile Manager",
+        "care_sub": "Secure portal for remote family monitoring, prescription assignment, and Medical Passport edits.",
         "care_pin_label": "🔒 Enter Caregiver Access PIN:",
-        "care_pin_placeholder": "Enter PIN (Demo PIN: 1234)",
-        "edit_pass_expander": "📝 Edit Patient Medical Passport Details",
-        "add_med_expander": "➕ Add New Medication to Schedule",
-        "med_overview": "Multi-Week Prescriptions Overview",
-        "sos_button": "TRIGGER EMERGENCY SOS",
-        "sos_warning": "Pressing this button instantly broadcasts your live GPS coordinates to emergency contacts.",
+        "care_pin_ph": "Enter PIN (Demo PIN: 1234)",
+        "access_granted": "🔓 Access Granted! Connected to Patient Profile #PAT-8821",
+        "edit_pass_exp": "📝 Edit Patient Medical Passport Details",
+        "update_info": "Update Patient Information",
+        "full_name": "Full Legal Name:",
+        "blood_group": "Blood Group:",
+        "emerg_contact": "Emergency Contact:",
+        "allergies": "Known Allergies:",
+        "conditions": "Chronic Conditions:",
+        "physician": "Primary Physician:",
+        "save_pass_btn": "Save Passport Updates",
+        "add_med_exp": "➕ Add New Medication to Schedule",
+        "med_name_label": "Medicine Name & Dosage:",
+        "med_name_ph": "e.g., Paracetamol (650mg)",
+        "sched_time_label": "Scheduled Time:",
+        "sched_time_ph": "e.g., 02:00 PM",
+        "assign_week": "Assign to Week:",
+        "assign_day": "Assign to Day of Week:",
+        "add_med_btn": "Add Medication",
+        "med_table_title": "Multi-Week Prescriptions Overview",
+        "overall_adh": "Overall Patient Adherence Rate",
+        "send_note_label": "Send an encouraging note or reminder to patient:",
+        "send_note_ph": "Dad, great job taking your medicine today!",
+        "send_push_btn": "Send Push Notification",
+        # Passport Tab
+        "pass_title": "Secure Medical Passport & Emergency SOS",
+        "pass_sub": "Critical offline/online patient medical passport and live broadcast portal.",
+        "patient_id_title": "Patient Medical ID",
+        "dl_pass_btn": "Download Secure Medical ID (PDF/QR)",
+        "sos_title": "One-Tap Emergency SOS Broadcast",
+        "sos_warn": "Pressing this button instantly broadcasts your live GPS coordinates to emergency contacts.",
+        "sos_note_label": "Optional Emergency Note:",
+        "sos_note_ph": "e.g., Experiencing chest pain, need immediate assistance.",
+        "sos_btn": "TRIGGER EMERGENCY SOS",
+        # Impact Tab
+        "impact_title": "UN Sustainable Development Goal 3 Alignment",
+        "impact_sub": "Ensure healthy lives and promote well-being for all at all ages.",
+        "globe_title": "🌐 Global Disease Burden 3D Globe",
+        "globe_desc": "Interactive global visualization showing primary health burdens and case volumes across major regions.",
+        "metric_doses": "Projected Reduction in Missed Doses",
+        "metric_doses_desc": "Through intelligent automated multi-week reminders and family caregiver prescription syncing.",
+        "metric_triage": "Emergency Triage Time Saved",
+        "metric_triage_desc": "By linking disease searches instantly to specialized local hospitals and utilizing real-time GPS coordinates.",
+        "low_resource": "Low-Resource Scalability: Designed to operate smoothly on low-bandwidth mobile networks in rural communities."
     },
     "Marathi": {
         "title": "पुढील पिढीचा रुग्ण सोबती",
         "subtitle": "अचूक आरोग्य सेवा, क्लाउड ट्रायेज आणि एसडीजी ३ साठी कुटुंब काळजी",
-        "ai_title": "🤖 हेल्थब्रिज एआय तपासणी आणि औषध सुरक्षा",
-        "summary_title": "📋 डॉक्टर भेटीचा सारांश (प्रिंट करण्यायोग्य)",
-        "hosp_title": "हुशार रुग्णालय शोधक आणि वेळापत्रक",
-        "care_title": "केअरगिव्हर् प्रिस्क्रिप्शन आणि प्रोफाइल व्यवस्थापक",
-        "pass_title": "सुरक्षित वैद्यकीय पासपोर्ट आणि आणीबाणी SOS",
-        "impact_title": "युएन शाश्वत विकास ध्येय ३ संलीकरण",
-        # Renamed & Localized Search Section
-        "search_heading": "स्मार्ट लक्षण आणि रुग्णालय जुळणी",
-        "search_label": "आजार / लक्षण टाइप करा:",
-        "search_placeholder": "येथे आजार टाइप करा... (उदा. हृदय, डोळे, हाडे)",
-        # Adherence & Metrics
         "active_plan": "सक्रिय उपचार योजना",
-        "emergency_ready": "आणीबाणीची तयारी",
-        "caregiver_link": "काळजीवाहू लिंक",
+        "active_val": "आठवडा १ सक्रिय",
+        "active_delta": "९२% औषध पालन",
+        "emerg_ready": "आणीबाणीची तयारी",
+        "emerg_val": "GPS ऑनलाइन",
+        "emerg_delta": "कोल्हापूर परिसर",
+        "care_link": "काळजीवाहू लिंक",
+        "care_val": "जोडलेले 🔒",
+        "care_delta": "पिन सुरक्षित",
+        "ai_title": "🤖 हेल्थब्रिज एआय तपासणी आणि औषध सुरक्षा",
+        "ai_prompt": "दुष्परिणाम किंवा इशारे तपासण्यासाठी नवीन लक्षण किंवा औषध टाका:",
+        "ai_input_label": "लक्षण किंवा औषधाचे नाव सांगा:",
+        "ai_placeholder": "उदा. मेटफॉर्मिन घेतल्यानंतर हलकी चक्कर येणे",
+        "ai_btn": "एआय सुरक्षा तपासणी करा",
+        "ai_res": "💡 **एआय विश्लेषण:** सुरुवातीच्या काळात सौम्य दुष्परिणाम होऊ शकतात. भरपूर पाणी प्या. *टीप: लक्षणे ४८ तासांपेक्षा जास्त राहिल्यास डॉक्टरांचा सल्ला घ्या.*",
+        "summary_title": "📋 डॉक्टर भेटीचा सारांश (प्रिंट करण्यायोग्य)",
+        "summary_btn": "डाउनलोड करण्यायोग्य रिपोर्ट तयार करा",
+        "summary_success": "✅ वैद्यकीय सारांश यशस्वीरीत्या तयार झाला! प्रिंट किंवा निर्यातीसाठी तयार.",
         "bento_title": "जलद प्रवेश विभाग",
         "hosp_card_title": "रुग्णालय केंद्र",
         "hosp_card_desc": "डायनॅमिक डार्क-मोड नकाशांसह बुद्धिमत्तापूर्ण आजार-ते-रुग्णालय मार्ग.",
@@ -167,32 +236,97 @@ translations = {
         "med_card_desc": "अनेक आठवड्यांचे औषध वेळापत्रक आणि स्मार्ट वर्गीकरण.",
         "pass_card_title": "सुरक्षित पासपोर्ट",
         "pass_card_desc": "सिंगल-टॅप आणीबाणी SOS सह डिजिटल वैद्यकीय ओळखपत्र.",
-        # Caregiver & Passport UI
+        "btn_open": "उघडा",
+        # Hospital Tab
+        "hosp_title": "हुशार रुग्णालय शोधक आणि वेळापत्रक",
+        "search_heading": "स्मार्ट लक्षण आणि रुग्णालय जुळणी",
+        "search_label": "आजार / लक्षण टाइप करा:",
+        "search_placeholder": "येथे आजार टाइप करा... (उदा. हृदय, डोळे, हाडे)",
+        "rec_fac": "शिफारस केलेले रुग्णालय:",
+        "map_cyan": "🔵 निळा पिन = तुमचे थेट GPS स्थान",
+        "map_rose": "🔴 लाल पिन = शिफारस केलेले विशेष रुग्णालय",
+        "med_sched_title": "अनेक आठवड्यांचे औषध वेळापत्रक",
+        "choose_week": "उपचार आठवडा निवडा:",
+        "choose_day": "आठवड्याचा दिवस निवडा:",
+        "no_meds": "या दिवशी कोणतीही औषधे नाहीत:",
+        "mark_taken": "घेतले म्हणून नोंदवा",
+        "taken": "घेतले ✅",
+        "doc_title": "डॉक्टर भेटी आणि प्रश्न",
+        "doc_info": "**डॉ. शर्मा (हृदयरोग तज्ज्ञ)**\n📅 उद्या सकाळी १०:३० वाजता\n📍 सिटी जनरल हॉस्पिटल",
+        "add_q_label": "डॉक्टरांसाठी प्रश्न जोडा:",
+        "add_q_placeholder": "उदा. अन्नाचे काही पथ्य आहे का?",
+        "save_q_btn": "प्रश्न जतन करा",
+        "saved_qs": "तुमचे जतन केलेले प्रश्न:",
+        # Caregiver Tab
+        "care_title": "केअरगिव्हर् प्रिस्क्रिप्शन आणि प्रोफाइल व्यवस्थापक",
+        "care_sub": "दूरस्थ कुटुंब देखरेख, औषध वाटप आणि वैद्यकीय पासपोर्ट संपादनासाठी सुरक्षित पोर्टल.",
         "care_pin_label": "🔒 काळजीवाहू प्रवेश पिन टाका:",
-        "care_pin_placeholder": "पिन टाका (डेमो पिन: 1234)",
-        "edit_pass_expander": "📝 रुग्णाच्या पासपोर्टची माहिती संपादित करा",
-        "add_med_expander": "➕ वेळापत्रकात नवीन औषध जोडा",
-        "med_overview": "अनेक आठवड्यांचा औषध आढावा",
-        "sos_button": "आणीबाणी SOS सुरू करा",
-        "sos_warning": "हे बटण दाबल्यास तुमचे लाईव्ह GPS स्थान त्वरित संपर्क क्रमांकांना पाठवले जाईल.",
+        "care_pin_ph": "पिन टाका (डेमो पिन: 1234)",
+        "access_granted": "🔓 प्रवेश मंजूर! रुग्ण प्रोफाइल #PAT-8821 शी जोडलेले",
+        "edit_pass_exp": "📝 रुग्णाच्या पासपोर्टची माहिती संपादित करा",
+        "update_info": "रुग्णाची माहिती अद्ययावत करा",
+        "full_name": "पूर्ण नाव:",
+        "blood_group": "रक्तगट:",
+        "emerg_contact": "आणीबाणी संपर्क:",
+        "allergies": "माहित असलेल्या ऍलर्जी:",
+        "conditions": "दीर्घकालीन आजार:",
+        "physician": "मुख्य डॉक्टर:",
+        "save_pass_btn": "माहिती जतन करा",
+        "add_med_exp": "➕ वेळापत्रकात नवीन औषध जोडा",
+        "med_name_label": "औषधाचे नाव आणि प्रमाण:",
+        "med_name_ph": "उदा. पॅरासिटामॉल (650mg)",
+        "sched_time_label": "वेळ:",
+        "sched_time_ph": "उदा. दुपारी 02:00",
+        "assign_week": "आठवडा निवडा:",
+        "assign_day": "दिवस निवडा:",
+        "add_med_btn": "औषध जोडा",
+        "med_table_title": "अनेक आठवड्यांचा औषध आढावा",
+        "overall_adh": "एकूण रुग्ण औषध पालन दर",
+        "send_note_label": "रुग्णाला संदेश किंवा आठवण पाठवा:",
+        "send_note_ph": "बाबा, आज वेळेवर औषध घेतल्याबद्दल छान!",
+        "send_push_btn": "संदेश पाठवा",
+        # Passport Tab
+        "pass_title": "सुरक्षित वैद्यकीय पासपोर्ट आणि आणीबाणी SOS",
+        "pass_sub": "ऑनलाइन/ऑफलाइन रुग्ण वैद्यकीय पासपोर्ट आणि थेट ब्रॉडकास्ट पोर्टल.",
+        "patient_id_title": "रुग्ण वैद्यकीय ओळखपत्र",
+        "dl_pass_btn": "वैद्यकीय पासपोर्ट डाउनलोड करा (PDF/QR)",
+        "sos_title": "एक-टॅप आणीबाणी SOS",
+        "sos_warn": "हे बटण दाबल्यास तुमचे लाईव्ह GPS स्थान त्वरित संपर्क क्रमांकांना पाठवले जाईल.",
+        "sos_note_label": "आणीबाणीची टिपण (पर्यायी):",
+        "sos_note_ph": "उदा. छातीत दुखत आहे, त्वरित मदतीची गरज आहे.",
+        "sos_btn": "आणीबाणी SOS सुरू करा",
+        # Impact Tab
+        "impact_title": "युएन शाश्वत विकास ध्येय ३ संलीकरण",
+        "impact_sub": "सर्व वयोगटातील लोकांसाठी निरोगी आयुष्य सुनिश्चित करा आणि कल्याणाला चालना द्या.",
+        "globe_title": "🌐 जागतिक आजार भार 3D ग्लोब",
+        "globe_desc": "प्रमुख क्षेत्रांमधील प्रमुख आरोग्य भार आणि प्रकरणे दर्शवणारे परस्परसंवादी व्हिज्युअलायझेशन.",
+        "metric_doses": "औषध चुकण्याच्या प्रमाणात अपेक्षित घट",
+        "metric_doses_desc": "स्वयंचलित स्मरणपत्रे आणि कौटुंबिक काळजीवाहू सिंकद्वारे.",
+        "metric_triage": "आणीबाणी उपचारात वाचलेला वेळ",
+        "metric_triage_desc": "त्वरित रुग्णालय मार्ग आणि थेट GPS द्वारे.",
+        "low_resource": "ग्रामीण भागात कमी इंटरनेट बँडविड्थवरही सुलभतेने चालण्यासाठी डिझाइन केलेले."
     },
     "Hindi": {
         "title": "अगली पीढ़ी का रोगी साथी",
         "subtitle": "सटीक स्वास्थ्य सेवा, क्लाउड ट्राइएज और एसडीजी 3 के लिए पारिवारिक देखभाल",
-        "ai_title": "🤖 हेल्थब्रिज एआई लक्षण और दवा सुरक्षा चेकर",
-        "summary_title": "📋 डॉक्टर की मुलाक़ात का सारांश",
-        "hosp_title": "इंटेलिजेंट अस्पताल खोजक और अनुसूची",
-        "care_title": "देखभाल करने वाला नुस्खा और प्रोफ़ाइल प्रबंधक",
-        "pass_title": "सुरक्षित चिकित्सा पासपोर्ट और आपातकालीन SOS",
-        "impact_title": "संयुक्त राष्ट्र सतत विकास लक्ष्य 3 संरेखण",
-        # Renamed & Localized Search Section
-        "search_heading": "स्मार्ट लक्षण और अस्पताल मिलान",
-        "search_label": "बीमारी / लक्षण दर्ज करें:",
-        "search_placeholder": "यहाँ बीमारी दर्ज करें... (उदा. हृदय, आँखें, हड्डियाँ)",
-        # Adherence & Metrics
         "active_plan": "सक्रिय उपचार योजना",
-        "emergency_ready": "आपातकालीन तत्परता",
-        "caregiver_link": "देखभाल करने वाले का लिंक",
+        "active_val": "सप्ताह 1 सक्रिय",
+        "active_delta": "92% दवा पालन",
+        "emerg_ready": "आपातकालीन तत्परता",
+        "emerg_val": "जीपीएस ऑनलाइन",
+        "emerg_delta": "कोल्हापुर क्षेत्र",
+        "care_link": "देखभालकर्ता लिंक",
+        "care_val": "कनेक्टेड 🔒",
+        "care_delta": "पिन सुरक्षित",
+        "ai_title": "🤖 हेल्थब्रिज एआई लक्षण और दवा सुरक्षा चेकर",
+        "ai_prompt": "संभावित दुष्प्रभावों या चेतावनियों की जांच के लिए कोई नया लक्षण या दवा दर्ज करें:",
+        "ai_input_label": "लक्षण या दवा का नाम बताएं:",
+        "ai_placeholder": "उदा. मेटफॉर्मिन लेने के बाद हल्का चक्कर आना",
+        "ai_btn": "एआई सुरक्षा जांच चलाएं",
+        "ai_res": "💡 **एआई विश्लेषण:** शुरुआती समायोजन चरणों के दौरान हल्के दुष्प्रभाव हो सकते हैं। पर्याप्त पानी पिएं। *अस्वीकरण: यदि लक्षण 48 घंटे से अधिक बने रहते हैं तो डॉक्टर से परामर्श करें।*",
+        "summary_title": "📋 डॉक्टर की मुलाक़ात का सारांश",
+        "summary_btn": "डाउनलोड करने योग्य मेडिकल रिपोर्ट बनाएं",
+        "summary_success": "✅ मेडिकल सारांश सफलतापूर्वक तैयार किया गया! प्रिंट या निर्यात के लिए तैयार।",
         "bento_title": "त्वरित पहुँच मॉड्यूल",
         "hosp_card_title": "अस्पताल केंद्र",
         "hosp_card_desc": "डायनामिक डार्क-मोड मानचित्रों के साथ बुद्धिमान बीमारी-से-अस्पताल मार्ग।",
@@ -200,14 +334,75 @@ translations = {
         "med_card_desc": "बहु-सप्ताह दवा अनुसूची और स्मार्ट वर्गीकरण।",
         "pass_card_title": "सुरक्षित पासपोर्ट",
         "pass_card_desc": "सिंगल-टैप आपातकालीन SOS के साथ डिजिटल मेडिकल आईडी।",
-        # Caregiver & Passport UI
+        "btn_open": "खोलें",
+        # Hospital Tab
+        "hosp_title": "इंटेलिजेंट अस्पताल खोजक और अनुसूची",
+        "search_heading": "स्मार्ट लक्षण और अस्पताल मिलान",
+        "search_label": "बीमारी / लक्षण दर्ज करें:",
+        "search_placeholder": "यहाँ बीमारी दर्ज करें... (उदा. हृदय, आँखें, हड्डियाँ)",
+        "rec_fac": "अनुशंसित अस्पताल:",
+        "map_cyan": "🔵 नीला पिन = आपका लाइव जीपीएस स्थान",
+        "map_rose": "🔴 लाल पिन = अनुशंसित विशेष अस्पताल",
+        "med_sched_title": "बहु-सप्ताह दवा अनुसूची",
+        "choose_week": "उपचार सप्ताह चुनें:",
+        "choose_day": "सप्ताह का दिन चुनें:",
+        "no_meds": "इस दिन कोई दवाएं निर्धारित नहीं हैं:",
+        "mark_taken": "ली गई दर्ज करें",
+        "taken": "ली गई ✅",
+        "doc_title": "डॉक्टर के अपॉइंटमेंट और प्रश्न",
+        "doc_info": "**डॉ. शर्मा (हृदय रोग विशेषज्ञ)**\n📅 कल सुबह 10:30 बजे\n📍 सिटी जनरल अस्पताल",
+        "add_q_label": "डॉक्टर के लिए प्रश्न जोड़ें:",
+        "add_q_placeholder": "उदा. क्या खाने का कोई परहेज है?",
+        "save_q_btn": "प्रश्न सहेजें",
+        "saved_qs": "आपके सहेजे गए प्रश्न:",
+        # Caregiver Tab
+        "care_title": "देखभाल करने वाला नुस्खा और प्रोफ़ाइल प्रबंधक",
+        "care_sub": "रिमोट परिवार निगरानी, दवा असाइनमेंट और मेडिकल पासपोर्ट संपादन के लिए सुरक्षित पोर्टल।",
         "care_pin_label": "🔒 देखभालकर्ता एक्सेस पिन दर्ज करें:",
-        "care_pin_placeholder": "पिन दर्ज करें (डेमो पिन: 1234)",
-        "edit_pass_expander": "📝 रोगी मेडिकल पासपोर्ट विवरण संपादित करें",
-        "add_med_expander": "➕ अनुसूची में नई दवा जोड़ें",
-        "med_overview": "बहु-सप्ताह दवाओं का अवलोकन",
-        "sos_button": "आपातकालीन SOS ट्रिगर करें",
-        "sos_warning": "यह बटन दबाने पर आपका लाइव GPS स्थान आपातकालीन संपर्कों को तुरंत भेज दिया जाएगा।",
+        "care_pin_ph": "पिन दर्ज करें (डेमो पिन: 1234)",
+        "access_granted": "🔓 पहुंच स्वीकृत! रोगी प्रोफ़ाइल #PAT-8821 से जुड़ा हुआ",
+        "edit_pass_exp": "📝 रोगी मेडिकल पासपोर्ट विवरण संपादित करें",
+        "update_info": "रोगी की जानकारी अपडेट करें",
+        "full_name": "पूरा नाम:",
+        "blood_group": "रक्त समूह:",
+        "emerg_contact": "आपातकालीन संपर्क:",
+        "allergies": "ज्ञात एलर्जी:",
+        "conditions": "पुरानी बीमारियाँ:",
+        "physician": "प्राथमिक चिकित्सक:",
+        "save_pass_btn": "पासपोर्ट अपडेट सहेजें",
+        "add_med_exp": "➕ अनुसूची में नई दवा जोड़ें",
+        "med_name_label": "दवा का नाम और खुराक:",
+        "med_name_ph": "उदा. पैरासिटामोल (650mg)",
+        "sched_time_label": "निर्धारित समय:",
+        "sched_time_ph": "उदा. दोपहर 02:00 बजे",
+        "assign_week": "सप्ताह में असाइन करें:",
+        "assign_day": "दिन में असाइन करें:",
+        "add_med_btn": "दवा जोड़ें",
+        "med_table_title": "बहु-सप्ताह दवाओं का अवलोकन",
+        "overall_adh": "कुल रोगी दवा पालन दर",
+        "send_note_label": "रोगी को एक प्रोत्साहन संदेश या अनुस्मारक भेजें:",
+        "send_note_ph": "पिताजी, आज समय पर दवा लेने के लिए बहुत बढ़िया!",
+        "send_push_btn": "पुश अधिसूचना भेजें",
+        # Passport Tab
+        "pass_title": "सुरक्षित चिकित्सा पासपोर्ट और आपातकालीन SOS",
+        "pass_sub": "महत्वपूर्ण ऑनलाइन/ऑफलाइन रोगी चिकित्सा पासपोर्ट और लाइव प्रसारण पोर्टल।",
+        "patient_id_title": "रोगी मेडिकल आईडी",
+        "dl_pass_btn": "सुरक्षित मेडिकल आईडी डाउनलोड करें (PDF/QR)",
+        "sos_title": "एक-टैप आपातकालीन SOS प्रसारण",
+        "sos_warn": "यह बटन दबाने पर आपका लाइव जीपीएस स्थान आपातकालीन संपर्कों को तुरंत भेज दिया जाएगा।",
+        "sos_note_label": "वैकल्पिक आपातकालीन नोट:",
+        "sos_note_ph": "उदा. सीने में दर्द हो रहा है, तत्काल सहायता की आवश्यकता है।",
+        "sos_btn": "आपातकालीन SOS ट्रिगर करें",
+        # Impact Tab
+        "impact_title": "संयुक्त राष्ट्र सतत विकास लक्ष्य 3 संरेखण",
+        "impact_sub": "सभी उम्र के लोगों के लिए स्वस्थ जीवन सुनिश्चित करें और कल्याण को बढ़ावा दें।",
+        "globe_title": "🌐 वैश्विक बीमारी बोझ 3D ग्लोब",
+        "globe_desc": "प्रमुख क्षेत्रों में प्राथमिक स्वास्थ्य बोझ और मामलों की मात्रा दर्शाने वाला इंटरैक्टिव विज़ुअलाइज़ेशन।",
+        "metric_doses": "दवा छूटने की दर में अनुमानित कमी",
+        "metric_doses_desc": "स्वचालित अनुस्मारक और पारिवारिक देखभालकर्ता सिंक के माध्यम से।",
+        "metric_triage": "आपातकालीन ट्राइएज में बचाया गया समय",
+        "metric_triage_desc": "त्वरित अस्पताल मार्ग और लाइव जीपीएस द्वारा।",
+        "low_resource": "ग्रामीण क्षेत्रों में कम इंटरनेट बैंडविड्थ पर भी सुचारू रूप से चलने के लिए डिज़ाइन किया गया।"
     }
 }
 
@@ -312,34 +507,35 @@ if current_tab == "Home":
 
         col1, col2, col3 = st.columns(3)
         with col1:
-            st.metric(label=t["active_plan"], value="Week 1 Active", delta="92% Dose Adherence")
+            st.metric(label=t["active_plan"], value=t["active_val"], delta=t["active_delta"])
         with col2:
-            st.metric(label=t["emergency_ready"], value="GPS Online", delta="Kolhapur Region")
+            st.metric(label=t["emerg_ready"], value=t["emerg_val"], delta=t["emerg_delta"])
         with col3:
-            st.metric(label=t["caregiver_link"], value="Connected 🔒", delta="PIN Protected")
+            st.metric(label=t["care_link"], value=t["care_val"], delta=t["care_delta"])
 
         st.divider()
 
         with st.expander(t["ai_title"], expanded=False):
-            st.markdown("Enter any new symptom or medication to check for potential side-effects or clinical warnings:")
-            symptom_query = st.text_input("Describe symptom or drug name:", placeholder="e.g., Mild dizziness after taking Metformin", key="home_ai_query")
-            if st.button("Run AI Safety Check", key="home_ai_btn"):
+            st.markdown(t["ai_prompt"])
+            symptom_query = st.text_input(t["ai_input_label"], placeholder=t["ai_placeholder"], key="home_ai_query")
+            if st.button(t["ai_btn"], key="home_ai_btn"):
                 if symptom_query:
-                    st.info("💡 **AI Triage Analysis:** Mild side-effects can occur during initial adjustment phases. Ensure adequate hydration. *Disclaimer: Consult Dr. Sharma if symptoms persist beyond 48 hours.*")
+                    st.info(t["ai_res"])
                 else:
                     st.warning("Please enter a symptom or drug name to analyze.")
 
         with st.expander(t["summary_title"], expanded=False):
             st.markdown("### 🏥 Clinical Handover Report")
-            st.markdown(f"**Patient Name:** {st.session_state.patient_passport['name']}")
-            st.markdown(f"**Active Conditions:** {st.session_state.patient_passport['conditions']}")
+            p = st.session_state.patient_passport
+            st.markdown(f"**Patient Name:** {p['name']}")
+            st.markdown(f"**Active Conditions:** {p['conditions']}")
             st.markdown(f"**Overall Adherence Rate:** 92.4% (Last 4 Weeks)")
             st.markdown(f"**Saved Patient Questions:**")
             for q in st.session_state.questions:
                 st.markdown(f"- {q}")
             
-            if st.button("Generate Downloadable Clinical PDF Report", key="home_pdf_btn"):
-                st.success("✅ Clinical summary package compiled successfully! Ready for printing or export to clinic database.")
+            if st.button(t["summary_btn"], key="home_pdf_btn"):
+                st.success(t["summary_success"])
 
         st.divider()
 
@@ -348,19 +544,19 @@ if current_tab == "Home":
         
         with col_a:
             st.markdown(f"### {t['hosp_card_title']}\n{t['hosp_card_desc']}")
-            if st.button(f"Open {t['hosp_card_title']}", key="home_btn_hosp"):
+            if st.button(f"{t['btn_open']} {t['hosp_card_title']}", key="home_btn_hosp"):
                 st.query_params["tab"] = "Hospital"
                 st.rerun()
 
         with col_b:
             st.markdown(f"### {t['med_card_title']}\n{t['med_card_desc']}")
-            if st.button(f"Open {t['med_card_title']}", key="home_btn_med"):
+            if st.button(f"{t['btn_open']} {t['med_card_title']}", key="home_btn_med"):
                 st.query_params["tab"] = "Hospital"
                 st.rerun()
 
         with col_c:
             st.markdown(f"### {t['pass_card_title']}\n{t['pass_card_desc']}")
-            if st.button(f"Open {t['pass_card_title']}", key="home_btn_pass"):
+            if st.button(f"{t['btn_open']} {t['pass_card_title']}", key="home_btn_pass"):
                 st.query_params["tab"] = "Passport"
                 st.rerun()
 
@@ -388,7 +584,6 @@ elif current_tab == "Hospital":
 
         st.divider()
 
-        # RENAMED & LOCALIZED SEARCH SECTION
         st.subheader(t["search_heading"])
         user_disease_input = st.text_input(
             t["search_label"],
@@ -423,9 +618,9 @@ elif current_tab == "Hospital":
         elif user_disease_input:
             st.success("General Multi-Specialty Care")
         else:
-            st.info("Type a condition above (e.g., 'Heart', 'Eye', 'Bones') to locate the specialized facility.")
+            st.info("Type a condition above to locate the specialized facility.")
 
-        st.markdown(f"📍 **Recommended Facility:** **{h_name}** — *{travel_info}*")
+        st.markdown(f"📍 **{t['rec_fac']}** **{h_name}** — *{travel_info}*")
 
         try:
             map_data = get_cached_map_data(user_lat, user_lon, h_lat, h_lon, h_name)
@@ -458,7 +653,7 @@ elif current_tab == "Hospital":
             )
 
             st.pydeck_chart(r, use_container_width=True)
-            st.caption("🔵 Cyan Pin = Live GPS Location | 🔴 Rose Pin = Recommended Specialized Hospital")
+            st.caption(f"{t['map_cyan']} | {t['map_rose']}")
         except Exception as map_err:
             st.error(f"Map rendering error: {map_err}")
 
@@ -468,16 +663,16 @@ elif current_tab == "Hospital":
 
         with col_left:
             try:
-                st.subheader("Multi-Week Medication Schedule")
+                st.subheader(t["med_sched_title"])
                 
                 selected_week = st.selectbox(
-                    "Choose Treatment Week:", 
+                    t["choose_week"], 
                     ["Week 1", "Week 2", "Week 3", "Week 4"],
                     key="patient_week_selector"
                 )
 
                 selected_day = st.selectbox(
-                    "Choose Day of Week:", 
+                    t["choose_day"], 
                     ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday"],
                     key="patient_day_selector"
                 )
@@ -486,7 +681,7 @@ elif current_tab == "Hospital":
                 day_meds = week_data.get(selected_day, [])
                 
                 if not day_meds:
-                    st.info(f"No medications scheduled for {selected_day} in {selected_week}.")
+                    st.info(f"{t['no_meds']} {selected_day} ({selected_week}).")
                 else:
                     for i, med in enumerate(day_meds):
                         c1, c2 = st.columns([2, 1])
@@ -495,26 +690,26 @@ elif current_tab == "Hospital":
                             st.caption(f"Time: {med['time']} | Category: *{med['category']}* | Status: {med['status']}")
                         with c2:
                             if med['status'] == "Pending":
-                                if st.button("Mark Taken", key=f"taken_{selected_week}_{selected_day}_{i}"):
+                                if st.button(t["mark_taken"], key=f"taken_{selected_week}_{selected_day}_{i}"):
                                     st.session_state.meds_by_week[selected_week][selected_day][i]['status'] = "Taken ✅"
                                     st.rerun()
                             else:
-                                st.success("Taken ✅")
+                                st.success(t["taken"])
             except Exception as med_err:
                 st.error(f"Error loading schedule: {med_err}")
 
         with col_right:
             try:
-                st.subheader("Doctor Appointments & Questions")
-                st.info("**Dr. Sharma (Cardiologist)**\n📅 Tomorrow at 10:30 AM\n📍 City General Hospital")
+                st.subheader(t["doc_title"])
+                st.info(t["doc_info"])
                 
-                new_q = st.text_input("Add a question for your doctor:", placeholder="e.g. Any food restrictions?")
-                if st.button("Save Question"):
+                new_q = st.text_input(t["add_q_label"], placeholder=t["add_q_placeholder"])
+                if st.button(t["save_q_btn"]):
                     if new_q:
                         st.session_state.questions.append(new_q)
                         st.success("Saved successfully!")
                         
-                st.markdown("**Your Saved Questions:**")
+                st.markdown(f"**{t['saved_qs']}**")
                 for q in st.session_state.questions:
                     st.markdown(f"- 🔸 {q}")
             except Exception as doc_err:
@@ -529,26 +724,26 @@ elif current_tab == "Hospital":
 elif current_tab == "Caregiver":
     try:
         st.title(t["care_title"])
-        st.markdown("Secure portal for remote family monitoring, prescription assignment, and Medical Passport edits.")
+        st.markdown(t["care_sub"])
         st.divider()
 
-        password_input = st.text_input(t["care_pin_label"], type="password", placeholder=t["care_pin_placeholder"])
+        password_input = st.text_input(t["care_pin_label"], type="password", placeholder=t["care_pin_ph"])
         
         if password_input == "1234":
-            st.success("🔓 Access Granted! Connected to Patient Profile #PAT-8821")
+            st.success(t["access_granted"])
             
-            with st.expander(t["edit_pass_expander"], expanded=False):
+            with st.expander(t["edit_pass_exp"], expanded=False):
                 try:
                     with st.form("edit_passport_form"):
-                        st.markdown("### Update Patient Information")
-                        edited_name = st.text_input("Full Legal Name:", value=st.session_state.patient_passport["name"])
-                        edited_blood = st.text_input("Blood Group:", value=st.session_state.patient_passport["blood_group"])
-                        edited_contact = st.text_input("Emergency Contact:", value=st.session_state.patient_passport["emergency_contact"])
-                        edited_allergies = st.text_input("Known Allergies:", value=st.session_state.patient_passport["allergies"])
-                        edited_conditions = st.text_input("Chronic Conditions:", value=st.session_state.patient_passport["conditions"])
-                        edited_physician = st.text_input("Primary Physician:", value=st.session_state.patient_passport["physician"])
+                        st.markdown(f"### {t['update_info']}")
+                        edited_name = st.text_input(t["full_name"], value=st.session_state.patient_passport["name"])
+                        edited_blood = st.text_input(t["blood_group"], value=st.session_state.patient_passport["blood_group"])
+                        edited_contact = st.text_input(t["emerg_contact"], value=st.session_state.patient_passport["emergency_contact"])
+                        edited_allergies = st.text_input(t["allergies"], value=st.session_state.patient_passport["allergies"])
+                        edited_conditions = st.text_input(t["conditions"], value=st.session_state.patient_passport["conditions"])
+                        edited_physician = st.text_input(t["physician"], value=st.session_state.patient_passport["physician"])
                         
-                        save_passport = st.form_submit_button("Save Passport Updates")
+                        save_passport = st.form_submit_button(t["save_pass_btn"])
                         if save_passport:
                             st.session_state.patient_passport["name"] = edited_name
                             st.session_state.patient_passport["blood_group"] = edited_blood
@@ -566,15 +761,15 @@ elif current_tab == "Caregiver":
                 except Exception as pass_edit_err:
                     st.error(f"Error updating passport: {pass_edit_err}")
 
-            with st.expander(t["add_med_expander"], expanded=True):
+            with st.expander(t["add_med_exp"], expanded=True):
                 try:
                     with st.form("add_med_form", clear_on_submit=True):
-                        new_med_name = st.text_input("Medicine Name & Dosage:", placeholder="e.g., Paracetamol (650mg)")
-                        new_med_time = st.text_input("Scheduled Time:", placeholder="e.g., 02:00 PM")
-                        target_week = st.selectbox("Assign to Week:", ["All Weeks", "Week 1", "Week 2", "Week 3", "Week 4"])
-                        target_day = st.selectbox("Assign to Day of Week:", ["All Days", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday"])
+                        new_med_name = st.text_input(t["med_name_label"], placeholder=t["med_name_ph"])
+                        new_med_time = st.text_input(t["sched_time_label"], placeholder=t["sched_time_ph"])
+                        target_week = st.selectbox(t["assign_week"], ["All Weeks", "Week 1", "Week 2", "Week 3", "Week 4"])
+                        target_day = st.selectbox(t["assign_day"], ["All Days", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday"])
                         
-                        submitted = st.form_submit_button("Add Medication")
+                        submitted = st.form_submit_button(t["add_med_btn"])
                         if submitted:
                             if new_med_name and new_med_time:
                                 detected_category = auto_categorize_medicine(new_med_name)
@@ -599,7 +794,7 @@ elif current_tab == "Caregiver":
                     st.error(f"Form submission error: {form_err}")
 
             st.divider()
-            st.subheader(t["med_overview"])
+            st.subheader(t["med_table_title"])
             
             try:
                 all_meds_flat = []
@@ -619,12 +814,12 @@ elif current_tab == "Caregiver":
             except Exception as table_err:
                 st.error(f"Table rendering error: {table_err}")
             
-            st.metric(label="Overall Patient Adherence Rate", value="92%", delta="+4% improvement")
+            st.metric(label=t["overall_adh"], value="92%", delta="+4% improvement")
             
             try:
                 with st.form("caregiver_alert", clear_on_submit=True):
-                    msg = st.text_area("Send an encouraging note or reminder to patient:", placeholder="Dad, great job taking your medicine today!")
-                    if st.form_submit_button("Send Push Notification"):
+                    msg = st.text_area(t["send_note_label"], placeholder=t["send_note_ph"])
+                    if st.form_submit_button(t["send_push_btn"]):
                         if msg.strip():
                             st.session_state.notifications.append({
                                 "msg": f"Caregiver Note: {msg}",
@@ -650,32 +845,32 @@ elif current_tab == "Caregiver":
 elif current_tab == "Passport":
     try:
         st.title(t["pass_title"])
-        st.markdown("Critical offline/online patient medical passport and live broadcast portal.")
+        st.markdown(t["pass_sub"])
         st.divider()
 
         col_id_left, col_id_right = st.columns(2)
 
         with col_id_left:
-            st.subheader("Patient Medical ID")
+            st.subheader(t["patient_id_title"])
             p = st.session_state.patient_passport
             st.markdown(f"""
-                * **Full Legal Name:** {p['name']}
-                * **Blood Group:** {p['blood_group']}
-                * **Emergency Contact:** {p['emergency_contact']}
-                * **Known Allergies:** {p['allergies']}
-                * **Chronic Conditions:** {p['conditions']}
-                * **Primary Physician:** {p['physician']}
+                * **{t['full_name']}** {p['name']}
+                * **{t['blood_group']}** {p['blood_group']}
+                * **{t['emerg_contact']}** {p['emergency_contact']}
+                * **{t['allergies']}** {p['allergies']}
+                * **{t['conditions']}** {p['conditions']}
+                * **{t['physician']}** {p['physician']}
             """)
-            if st.button("Download Secure Medical ID (PDF/QR)"):
+            if st.button(t["dl_pass_btn"]):
                 st.success("Emergency QR Passport generated securely!")
 
         with col_id_right:
-            st.subheader("One-Tap Emergency SOS Broadcast")
-            st.warning(t["sos_warning"])
+            st.subheader(t["sos_title"])
+            st.warning(t["sos_warn"])
             
-            sos_message = st.text_area("Optional Emergency Note:", placeholder="e.g., Experiencing chest pain, need immediate assistance.")
+            sos_message = st.text_area(t["sos_note_label"], placeholder=t["sos_note_ph"])
             
-            if st.button(t["sos_button"]):
+            if st.button(t["sos_btn"]):
                 st.session_state.notifications.append({
                     "msg": f"🚨 EMERGENCY SOS TRIGGERED! Note: {sos_message or 'Immediate assistance requested.'}",
                     "time": "Just now (CRITICAL)"
@@ -691,11 +886,11 @@ elif current_tab == "Passport":
 elif current_tab == "Impact":
     try:
         st.title(t["impact_title"])
-        st.markdown("### *Ensure healthy lives and promote well-being for all at all ages.*")
+        st.markdown(f"### *{t['impact_sub']}*")
         st.divider()
 
-        st.subheader("🌐 Global Disease Burden 3D Globe")
-        st.markdown("Interactive global visualization showing primary health burdens and case volumes across major regions.")
+        st.subheader(t["globe_title"])
+        st.markdown(t["globe_desc"])
 
         globe_html = """
         <div style="width: 100%; height: 420px; background: radial-gradient(circle at center, #0f172a 0%, #030712 100%); border-radius: 20px; border: 1px solid rgba(56, 189, 248, 0.3); display: flex; flex-direction: column; align-items: center; justify-content: center; position: relative; overflow: hidden; box-shadow: 0 20px 40px rgba(0,0,0,0.6);">
@@ -728,13 +923,13 @@ elif current_tab == "Impact":
 
         col1, col2 = st.columns(2)
         with col1:
-            st.metric(label="Projected Reduction in Missed Doses", value="38%", delta="High Adherence")
-            st.write("Through intelligent automated multi-week reminders and family caregiver prescription syncing.")
+            st.metric(label=t["metric_doses"], value="38%", delta="High Adherence")
+            st.write(t["metric_doses_desc"])
         with col2:
-            st.metric(label="Emergency Triage Time Saved", value="45%", delta="Fast GPS Routing")
-            st.write("By linking disease searches instantly to specialized local hospitals and utilizing real-time GPS coordinates.")
+            st.metric(label=t["metric_triage"], value="45%", delta="Fast GPS Routing")
+            st.write(t["metric_triage_desc"])
 
-        st.info("Low-Resource Scalability: Designed to operate smoothly on low-bandwidth mobile networks in rural communities.")
+        st.info(t["low_resource"])
     except Exception as impact_err:
         st.error(f"Error loading metrics: {impact_err}")
 
