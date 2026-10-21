@@ -17,7 +17,7 @@ current_tab = st.query_params.get("tab", "Home")
 if isinstance(current_tab, list):
     current_tab = current_tab[0]
 
-# --- 2. CACHED FUNCTIONS ---
+# --- 2. CACHED DATA & LOGIC ---
 @st.cache_data
 def get_cached_map_data(user_lat, user_lon, h_lat, h_lon, h_name):
     return pd.DataFrame([
@@ -108,12 +108,12 @@ try:
         st.session_state.pill_stock = 4
 
     if "last_speech" not in st.session_state:
-        st.session_state.last_speech = "Hello Manas! I am Healtho, your interactive AI companion. How can I help you today?"
+        st.session_state.last_speech = "Hello Manas! I am Healtho, your interactive AI health companion. Ask me any question below."
 
 except Exception as init_error:
     st.error(f"Initialization Notice: {init_error}")
 
-# --- 4. TRANSLATIONS ---
+# --- 4. TRANSLATIONS DICTIONARY ---
 translations = {
     "English": {
         "title": "Next-Gen Patient Companion",
@@ -128,9 +128,9 @@ translations = {
         "care_val": "Connected",
         "care_delta": "PIN Protected",
         "healtho_title": "Meet Healtho - Voice & Text AI Health Companion",
-        "healtho_subtitle": "Type or speak to Healtho. Click 'Speak Response' to hear Healtho talk out loud!",
-        "healtho_input_ph": "Ask Healtho... (e.g. 'How should I take Metformin?')",
-        "speak_btn": "🔊 Hear Healtho Speak",
+        "healtho_subtitle": "Type your query below. Healtho will respond and can read the answer out loud!",
+        "healtho_input_ph": "Ask Healtho... (e.g., 'When should I take Metformin?' or 'I feel dizzy')",
+        "speak_btn": "🔊 Hear Healtho Speak Response Out Loud",
         "bento_title": "Quick Access Modules",
         "hosp_card_title": "Hospital Hub",
         "hosp_card_desc": "Disease-to-hospital routing with PyDeck maps.",
@@ -144,17 +144,17 @@ translations = {
         "search_label": "Type condition / symptom:",
         "search_placeholder": "Type condition... (e.g., Heart, Eye, Bones)",
         "rec_fac": "Recommended Facility:",
-        "map_cyan": "Cyan Pin = GPS Location",
-        "map_rose": "Rose Pin = Recommended Hospital",
-        "med_sched_title": "Multi-Week Schedule",
+        "map_cyan": "Cyan Pin = Live GPS Location",
+        "map_rose": "Rose Pin = Recommended Specialized Hospital",
+        "med_sched_title": "Multi-Week Medication Schedule",
         "choose_week": "Choose Week:",
         "choose_day": "Choose Day:",
         "no_meds": "No medications scheduled for",
         "mark_taken": "Mark Taken",
-        "taken": "Taken",
-        "doc_title": "Doctor Appointments",
+        "taken": "Taken ✅",
+        "doc_title": "Doctor Appointments & Questions",
         "doc_info": "**Dr. Sharma (Cardiologist)**\nTomorrow at 10:30 AM\nCity General Hospital",
-        "add_q_label": "Add a question:",
+        "add_q_label": "Add a question for your doctor:",
         "add_q_placeholder": "e.g. Any food restrictions?",
         "save_q_btn": "Save Question",
         "saved_qs": "Your Saved Questions:",
@@ -166,7 +166,7 @@ translations = {
         "ocr_title": "OCR Prescription Scanner",
         "ocr_upload": "Upload prescription image:",
         "ocr_btn": "Extract Medications",
-        "edit_pass_exp": "Edit Passport Details",
+        "edit_pass_exp": "Edit Patient Medical Passport Details",
         "update_info": "Update Information",
         "full_name": "Full Legal Name:",
         "blood_group": "Blood Group:",
@@ -174,7 +174,7 @@ translations = {
         "allergies": "Known Allergies:",
         "conditions": "Chronic Conditions:",
         "physician": "Primary Physician:",
-        "save_pass_btn": "Save Passport",
+        "save_pass_btn": "Save Passport Updates",
         "add_med_exp": "Add New Medication",
         "med_name_label": "Medicine Name:",
         "med_name_ph": "e.g., Paracetamol (650mg)",
@@ -188,28 +188,28 @@ translations = {
         "send_note_label": "Send reminder to patient:",
         "send_note_ph": "Great job taking your medicine today!",
         "send_push_btn": "Send Notification",
-        "refill_title": "Pill Refill Alert",
-        "refill_btn": "Send Pharmacy WhatsApp Alert",
+        "refill_title": "Pill Stock & Refill Alert",
+        "refill_btn": "Send WhatsApp Alert to Local Pharmacy",
         "pass_title": "Secure Medical Passport & Emergency SOS",
-        "pass_sub": "Patient passport and emergency SOS broadcasting.",
+        "pass_sub": "Critical offline/online patient medical passport and live broadcast portal.",
         "patient_id_title": "Patient Medical ID",
         "dl_pass_btn": "Download Medical ID (PDF/QR)",
-        "vitals_title": "Vitals & Health Trends",
-        "sos_title": "Emergency SOS Broadcast",
-        "sos_warn": "Pressing this broadcasts live GPS coordinates to emergency contacts.",
+        "vitals_title": "📈 Vitals & Health Trends",
+        "sos_title": "One-Tap Emergency SOS Broadcast",
+        "sos_warn": "Pressing this button instantly broadcasts your live GPS coordinates to emergency contacts.",
         "sos_note_label": "Optional Emergency Note:",
         "sos_note_ph": "e.g. Experiencing chest pain",
         "sos_btn": "TRIGGER EMERGENCY SOS",
-        "offline_card_title": "Rural Offline First-Aid Guide",
-        "impact_title": "UN SDG Goal 3 Alignment",
+        "offline_card_title": "📡 Rural Offline First-Aid Guide",
+        "impact_title": "UN Sustainable Development Goal 3 Alignment",
         "impact_sub": "Ensure healthy lives and promote well-being for all at all ages.",
-        "globe_title": "Global Health Intelligence 3D Globe",
-        "globe_desc": "Global visualization showing primary health burdens.",
+        "globe_title": "Global Disease Burden 3D Globe",
+        "globe_desc": "Interactive global visualization showing primary health burdens across major regions.",
         "metric_doses": "Reduction in Missed Doses",
-        "metric_doses_desc": "Through automated reminders and family caregiver syncing.",
+        "metric_doses_desc": "Through automated multi-week reminders and family caregiver syncing.",
         "metric_triage": "Emergency Triage Time Saved",
-        "metric_triage_desc": "By linking searches to specialized local hospitals.",
-        "low_resource": "Low-Resource Scalability: Designed to operate on low-bandwidth rural networks."
+        "metric_triage_desc": "By linking disease searches instantly to specialized local hospitals.",
+        "low_resource": "Low-Resource Scalability: Designed to operate smoothly on low-bandwidth mobile networks in rural communities."
     },
     "Marathi": {
         "title": "पुढील पिढीचा रुग्ण सोबती",
@@ -224,7 +224,7 @@ translations = {
         "care_val": "जोडलेले",
         "care_delta": "पिन सुरक्षित",
         "healtho_title": "हेल्थो - एआय आरोग्य सोबती",
-        "healtho_subtitle": "हेल्थोशी बोला किंवा प्रश्न विचारा. आवाज ऐकण्यासाठी बटनावर क्लिक करा!",
+        "healtho_subtitle": "तुमचा प्रश्न खाली टाका. हेल्थो तुम्हाला लगेच उत्तर देईल!",
         "healtho_input_ph": "हेल्थोला विचारा... (उदा. 'मेटफॉर्मिन कसे घ्यावे?')",
         "speak_btn": "🔊 हेल्थोचा आवाज ऐका",
         "bento_title": "जलद विभाग",
@@ -247,7 +247,7 @@ translations = {
         "choose_day": "दिवस निवडा:",
         "no_meds": "या दिवशी औषधे नाहीत:",
         "mark_taken": "घेतले म्हणून नोंदवा",
-        "taken": "घेतले",
+        "taken": "घेतले ✅",
         "doc_title": "डॉक्टर भेटी",
         "doc_info": "**डॉ. शर्मा (हृदयरोग तज्ज्ञ)**\nउद्या सकाळी १०:३० वाजता\nसिटी जनरल हॉस्पिटल",
         "add_q_label": "प्रश्न जोडा:",
@@ -290,13 +290,13 @@ translations = {
         "pass_sub": "रुग्ण पासपोर्ट आणि थेट ब्रॉडकास्ट.",
         "patient_id_title": "रुग्ण ओळखपत्र",
         "dl_pass_btn": "पासपोर्ट डाउनलोड करा",
-        "vitals_title": "आरोग्य मापदंड",
+        "vitals_title": "📈 आरोग्य मापदंड",
         "sos_title": "आणीबाणी SOS",
         "sos_warn": "हे दाबल्यास तुमचे GPS स्थान पाठवले जाईल.",
         "sos_note_label": "आणीबाणी टिपण:",
         "sos_note_ph": "उदा. छातीत दुखत आहे",
         "sos_btn": "आणीबाणी SOS सुरू करा",
-        "offline_card_title": "ऑफलाइन प्रथमोपचार मार्गदर्शक",
+        "offline_card_title": "📡 ऑफलाइन प्रथमोपचार मार्गदर्शक",
         "impact_title": "युएन एसडीजी ३ ध्येय",
         "impact_sub": "निरोगी आयुष्य सुनिश्चित करा.",
         "globe_title": "जागतिक आरोग्य 3D ग्लोब",
@@ -320,7 +320,7 @@ translations = {
         "care_val": "कनेक्टेड",
         "care_delta": "पिन सुरक्षित",
         "healtho_title": "हेल्थो - आपका एआई स्वास्थ्य साथी",
-        "healtho_subtitle": "हेल्थो से बात करें या प्रश्न पूछें। आवाज सुनने के लिए बटन पर क्लिक करें!",
+        "healtho_subtitle": "अपना प्रश्न नीचे दर्ज करें। हेल्थो तुरंत जवाब देगा!",
         "healtho_input_ph": "हेल्थो से पूछें... (उदा. 'मेटफॉर्मिन कैसे लें?')",
         "speak_btn": "🔊 हेल्थो की आवाज सुनें",
         "bento_title": "त्वरित पहुँच मॉड्यूल",
@@ -343,7 +343,7 @@ translations = {
         "choose_day": "दिन चुनें:",
         "no_meds": "इस दिन कोई दवाएं नहीं हैं:",
         "mark_taken": "ली गई दर्ज करें",
-        "taken": "ली गई",
+        "taken": "ली गई ✅",
         "doc_title": "डॉक्टर अपॉइंटमेंट",
         "doc_info": "**डॉ. शर्मा (हृदय रोग विशेषज्ञ)**\nकल सुबह 10:30 बजे\nसिटी जनरल अस्पताल",
         "add_q_label": "प्रश्न जोड़ें:",
@@ -386,13 +386,13 @@ translations = {
         "pass_sub": "रोगी पासपोर्ट और लाइव प्रसारण।",
         "patient_id_title": "रोगी मेडिकल आईडी",
         "dl_pass_btn": "पासपोर्ट डाउनलोड करें",
-        "vitals_title": "स्वास्थ्य मापदंड",
+        "vitals_title": "📈 स्वास्थ्य मापदंड",
         "sos_title": "आपातकालीन SOS",
         "sos_warn": "यह बटन दबाने पर जीपीएस स्थान भेजा जाएगा।",
         "sos_note_label": "आपातकालीन नोट:",
         "sos_note_ph": "उदा. सीने में दर्द हो रहा है",
         "sos_btn": "आपातकालीन SOS शुरू करें",
-        "offline_card_title": "ऑफ़लाइन प्राथमिक चिकित्सा कार्ड",
+        "offline_card_title": "📡 ऑफ़लाइन प्राथमिक चिकित्सा कार्ड",
         "impact_title": "संयुक्त राष्ट्र एसडीजी 3 ध्येय",
         "impact_sub": "सभी के लिए स्वस्थ जीवन सुनिश्चित करें।",
         "globe_title": "वैश्विक स्वास्थ्य 3D ग्लोब",
@@ -405,7 +405,7 @@ translations = {
     }
 }
 
-# --- 5. STYLING ---
+# --- 5. GLOBAL CUSTOM STYLING ---
 st.markdown("""
     <style>
     section[data-testid="stSidebar"] { display: none !important; }
@@ -469,7 +469,9 @@ with col_lang:
 
 t = translations[st.session_state.language]
 
-# --- 6. MODULE 0: HOME & HEALTHO SPEECH ASSISTANT ---
+# ----------------------------------------------------
+# 6. MODULE 0: HOME & HEALTHO SPEECH ASSISTANT
+# ----------------------------------------------------
 if current_tab == "Home":
     try:
         st.title(t["title"])
@@ -486,53 +488,51 @@ if current_tab == "Home":
 
         st.divider()
 
-        # HEALTHO REAL SPEECH ASSISTANT
+        # HEALTHO AI SPEECH ASSISTANT ENGINE
         st.subheader(f"🤖 {t['healtho_title']}")
         st.caption(t['healtho_subtitle'])
 
-        c_q, c_b = st.columns([4, 1])
-        with c_q:
-            user_q = st.text_input("Ask Healtho:", placeholder=t["healtho_input_ph"], label_visibility="collapsed")
-        with c_b:
-            ask_healtho = st.button("Ask Healtho 💬")
-
-        if ask_healtho and user_q.strip():
-            q_low = user_q.lower()
-            if "metformin" in q_low:
-                st.session_state.last_speech = "Metformin is best taken with meals to reduce stomach discomfort. Please make sure to stay well hydrated."
-            elif "dizziness" in q_low or "headache" in q_low:
-                st.session_state.last_speech = "Mild dizziness can occur during initial treatment. Sit down, drink water, and rest. If symptoms continue beyond 48 hours, contact Dr. Sharma."
-            elif "food" in q_low or "diet" in q_low:
-                st.session_state.last_speech = "For diabetic care, focus on low-GI foods, green vegetables, and balanced protein intake."
-            else:
-                st.session_state.last_speech = f"I recorded your question: {user_q}. Your health parameters are stable. Remember to take your doses on schedule."
+        with st.form("healtho_chat_form"):
+            user_q = st.text_input("Ask Healtho:", placeholder=t["healtho_input_ph"], key="healtho_form_q")
+            submit_q = st.form_submit_button("Ask Healtho 💬")
+            
+            if submit_q and user_q.strip():
+                q_low = user_q.lower()
+                if "metformin" in q_low or "sugar" in q_low or "diab" in q_low:
+                    st.session_state.last_speech = "Metformin is best taken with meals to minimize stomach upset. Always keep yourself adequately hydrated throughout the day."
+                elif "dizziness" in q_low or "headache" in q_low or "pain" in q_low or "fever" in q_low:
+                    st.session_state.last_speech = "Mild dizziness or discomfort can occur during initial dosage adjustments. Sit comfortably, drink water, and rest. If it lasts over 48 hours, consult Dr. Sharma."
+                elif "food" in q_low or "diet" in q_low or "eat" in q_low:
+                    st.session_state.last_speech = "For optimal diabetes control, stick to low-GI complex carbs, green vegetables, and lean protein."
+                else:
+                    st.session_state.last_speech = f"I recorded your query regarding: '{user_q}'. Your current adherence rate is 92%. Keep up the good work and remember to take your doses on schedule!"
 
         # Display current Healtho Speech Card
-        st.info(f"🤖 **Healtho says:** \"{st.session_state.last_speech}\"")
+        st.info(f"🤖 **Healtho:** \"{st.session_state.last_speech}\"")
 
-        # HTML5 / Web Speech API Integration for REAL Browser Audio
+        # HTML5 / Web Speech API Integration for REAL Browser Audio Output
+        clean_speech_text = st.session_state.last_speech.replace('"', '').replace("'", "")
         tts_html = f"""
-        <div style="background: rgba(15, 23, 42, 0.8); padding: 15px; border-radius: 16px; border: 1px solid rgba(56, 189, 248, 0.4); text-align: center;">
+        <div style="background: rgba(15, 23, 42, 0.8); padding: 12px; border-radius: 16px; border: 1px solid rgba(56, 189, 248, 0.4); text-align: center;">
             <button onclick="speakText()" style="background: linear-gradient(135deg, #0ea5e9, #6366f1); color: white; border: none; padding: 12px 24px; border-radius: 12px; font-size: 16px; font-weight: bold; cursor: pointer; width: 100%;">
-                🔊 Hear Healtho Speak Response
+                {t['speak_btn']}
             </button>
         </div>
         <script>
         function speakText() {{
             if ('speechSynthesis' in window) {{
                 window.speechSynthesis.cancel();
-                var text = "{st.session_state.last_speech.replace('"', '')}";
-                var msg = new SpeechSynthesisUtterance(text);
+                var msg = new SpeechSynthesisUtterance("{clean_speech_text}");
                 msg.rate = 0.95;
                 msg.pitch = 1.0;
                 window.speechSynthesis.speak(msg);
             }} else {{
-                alert("Browser Speech Synthesis is not supported in this browser.");
+                alert("Speech Synthesis is not supported in this browser.");
             }}
         }}
         </script>
         """
-        components.html(tts_html, height=80)
+        components.html(tts_html, height=75)
 
         st.divider()
 
@@ -560,7 +560,9 @@ if current_tab == "Home":
     except Exception as home_err:
         st.error(f"Error loading Home: {home_err}")
 
-# --- 7. MODULE 1: HOSPITAL HUB ---
+# ----------------------------------------------------
+# 7. MODULE 1: INTELLIGENT HOSPITAL HUB & MAPS
+# ----------------------------------------------------
 elif current_tab == "Hospital":
     try:
         st.title(t["hosp_title"])
@@ -643,7 +645,9 @@ elif current_tab == "Hospital":
     except Exception as hub_err:
         st.error(f"Error in Hospital Hub: {hub_err}")
 
-# --- 8. MODULE 2: CAREGIVER PORTAL ---
+# ----------------------------------------------------
+# 8. MODULE 2: CAREGIVER PORTAL & OCR
+# ----------------------------------------------------
 elif current_tab == "Caregiver":
     try:
         st.title(t["care_title"])
@@ -681,7 +685,9 @@ elif current_tab == "Caregiver":
     except Exception as care_err:
         st.error(f"Error in Caregiver: {care_err}")
 
-# --- 9. MODULE 3: MEDICAL PASSPORT & SOS ---
+# ----------------------------------------------------
+# 9. MODULE 3: MEDICAL PASSPORT & SOS
+# ----------------------------------------------------
 elif current_tab == "Passport":
     try:
         st.title(t["pass_title"])
@@ -710,10 +716,30 @@ elif current_tab == "Passport":
     except Exception as pass_err:
         st.error(f"Error in Passport: {pass_err}")
 
-# --- 10. MODULE 4: SDG 3 IMPACT ---
+# ----------------------------------------------------
+# 10. MODULE 4: UN SDG 3 IMPACT & 3D GLOBE
+# ----------------------------------------------------
 elif current_tab == "Impact":
     try:
         st.title(t["impact_title"])
+        st.divider()
+
+        st.subheader(t["globe_title"])
+        st.markdown(t["globe_desc"])
+
+        globe_html = """
+        <div style="width: 100%; height: 380px; background: radial-gradient(circle at center, #0f172a 0%, #030712 100%); border-radius: 20px; border: 1px solid rgba(56, 189, 248, 0.3); display: flex; flex-direction: column; align-items: center; justify-content: center; position: relative; overflow: hidden;">
+            <div style="position: absolute; width: 280px; height: 280px; border: 2px dashed rgba(56, 189, 248, 0.25); border-radius: 50%; animation: spin 25s linear infinite;"></div>
+            <div style="z-index: 2; text-align: center; padding: 20px;">
+                <div style="font-size: 54px; margin-bottom: 10px;">🌍</div>
+                <h3 style="color: #38bdf8; font-family: sans-serif; margin: 0 0 8px 0; font-size: 22px;">Global Health Intelligence Node</h3>
+                <p style="color: #94a3b8; font-family: sans-serif; font-size: 14px; max-width: 450px;">Tracking global metabolic and cardiovascular burden across South Asia and international health hubs.</p>
+            </div>
+        </div>
+        <style>@keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }</style>
+        """
+        components.html(globe_html, height=400)
+
         st.divider()
 
         col1, col2 = st.columns(2)
@@ -726,7 +752,9 @@ elif current_tab == "Impact":
     except Exception as imp_err:
         st.error(f"Error in Impact: {imp_err}")
 
-# --- 11. FLOATING DOCK NAV ---
+# ----------------------------------------------------
+# 11. FLOATING NAVIGATION DOCK
+# ----------------------------------------------------
 active_home = "active" if current_tab == "Home" else ""
 active_hosp = "active" if current_tab == "Hospital" else ""
 active_care = "active" if current_tab == "Caregiver" else ""
