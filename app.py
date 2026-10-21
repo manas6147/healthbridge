@@ -105,10 +105,13 @@ try:
     if "language" not in st.session_state:
         st.session_state.language = "English"
 
+    if "pill_stock" not in st.session_state:
+        st.session_state.pill_stock = 4  # Low stock demo trigger
+
 except Exception as init_error:
     st.error(f"Initialization Notice: {init_error}")
 
-# Comprehensive Multilingual Translation Dictionary for ALL UI Components
+# --- 4. FULL MULTILINGUAL TRANSLATIONS DICTIONARY ---
 translations = {
     "English": {
         "title": "Next-Gen Patient Companion",
@@ -123,11 +126,12 @@ translations = {
         "care_val": "Connected 🔒",
         "care_delta": "PIN Protected",
         "ai_title": "🤖 HealthBridge AI Triage & Drug Safety Checker",
-        "ai_prompt": "Enter any new symptom or medication to check for potential side-effects or clinical warnings:",
+        "ai_prompt": "Enter or speak any new symptom or medication to check for potential side-effects or clinical warnings:",
         "ai_input_label": "Describe symptom or drug name:",
         "ai_placeholder": "e.g., Mild dizziness after taking Metformin",
         "ai_btn": "Run AI Safety Check",
         "ai_res": "💡 **AI Triage Analysis:** Mild side-effects can occur during initial adjustment phases. Ensure adequate hydration. *Disclaimer: Consult Dr. Sharma if symptoms persist beyond 48 hours.*",
+        "voice_btn": "🎙️ Speak Symptom (Voice Input)",
         "summary_title": "📋 Printable Doctor Visit Summary",
         "summary_btn": "Generate Downloadable Clinical PDF Report",
         "summary_success": "✅ Clinical summary package compiled successfully! Ready for printing or export to clinic database.",
@@ -187,6 +191,8 @@ translations = {
         "send_note_label": "Send an encouraging note or reminder to patient:",
         "send_note_ph": "Dad, great job taking your medicine today!",
         "send_push_btn": "Send Push Notification",
+        "refill_title": "💊 Pill Refill & Pharmacy Alert",
+        "refill_btn": "📲 Trigger WhatsApp Refill Alert to Pharmacy",
         # Passport Tab
         "pass_title": "Secure Medical Passport & Emergency SOS",
         "pass_sub": "Critical offline/online patient medical passport and live broadcast portal.",
@@ -197,6 +203,7 @@ translations = {
         "sos_note_label": "Optional Emergency Note:",
         "sos_note_ph": "e.g., Experiencing chest pain, need immediate assistance.",
         "sos_btn": "TRIGGER EMERGENCY SOS",
+        "offline_card_title": "📡 Rural Offline Emergency First-Aid",
         # Impact Tab
         "impact_title": "UN Sustainable Development Goal 3 Alignment",
         "impact_sub": "Ensure healthy lives and promote well-being for all at all ages.",
@@ -221,11 +228,12 @@ translations = {
         "care_val": "जोडलेले 🔒",
         "care_delta": "पिन सुरक्षित",
         "ai_title": "🤖 हेल्थब्रिज एआय तपासणी आणि औषध सुरक्षा",
-        "ai_prompt": "दुष्परिणाम किंवा इशारे तपासण्यासाठी नवीन लक्षण किंवा औषध टाका:",
+        "ai_prompt": "दुष्परिणाम किंवा इशारे तपासण्यासाठी नवीन लक्षण किंवा औषध टाका किंवा बोला:",
         "ai_input_label": "लक्षण किंवा औषधाचे नाव सांगा:",
         "ai_placeholder": "उदा. मेटफॉर्मिन घेतल्यानंतर हलकी चक्कर येणे",
         "ai_btn": "एआय सुरक्षा तपासणी करा",
         "ai_res": "💡 **एआय विश्लेषण:** सुरुवातीच्या काळात सौम्य दुष्परिणाम होऊ शकतात. भरपूर पाणी प्या. *टीप: लक्षणे ४८ तासांपेक्षा जास्त राहिल्यास डॉक्टरांचा सल्ला घ्या.*",
+        "voice_btn": "🎙️ लक्षण बोला (आवाज इनपुट)",
         "summary_title": "📋 डॉक्टर भेटीचा सारांश (प्रिंट करण्यायोग्य)",
         "summary_btn": "डाउनलोड करण्यायोग्य रिपोर्ट तयार करा",
         "summary_success": "✅ वैद्यकीय सारांश यशस्वीरीत्या तयार झाला! प्रिंट किंवा निर्यातीसाठी तयार.",
@@ -285,6 +293,8 @@ translations = {
         "send_note_label": "रुग्णाला संदेश किंवा आठवण पाठवा:",
         "send_note_ph": "बाबा, आज वेळेवर औषध घेतल्याबद्दल छान!",
         "send_push_btn": "संदेश पाठवा",
+        "refill_title": "💊 गोळ्यांचा साठा आणि मेडिकल सूचना",
+        "refill_btn": "📲 मेडिकल दुकानदाराला व्हॉट्सॲप मेसेज पाठवा",
         # Passport Tab
         "pass_title": "सुरक्षित वैद्यकीय पासपोर्ट आणि आणीबाणी SOS",
         "pass_sub": "ऑनलाइन/ऑफलाइन रुग्ण वैद्यकीय पासपोर्ट आणि थेट ब्रॉडकास्ट पोर्टल.",
@@ -295,6 +305,7 @@ translations = {
         "sos_note_label": "आणीबाणीची टिपण (पर्यायी):",
         "sos_note_ph": "उदा. छातीत दुखत आहे, त्वरित मदतीची गरज आहे.",
         "sos_btn": "आणीबाणी SOS सुरू करा",
+        "offline_card_title": "📡 ग्रामीण भागासाठी ऑफलाइन प्रथमोपचार कार्ड",
         # Impact Tab
         "impact_title": "युएन शाश्वत विकास ध्येय ३ संलीकरण",
         "impact_sub": "सर्व वयोगटातील लोकांसाठी निरोगी आयुष्य सुनिश्चित करा आणि कल्याणाला चालना द्या.",
@@ -319,11 +330,12 @@ translations = {
         "care_val": "कनेक्टेड 🔒",
         "care_delta": "पिन सुरक्षित",
         "ai_title": "🤖 हेल्थब्रिज एआई लक्षण और दवा सुरक्षा चेकर",
-        "ai_prompt": "संभावित दुष्प्रभावों या चेतावनियों की जांच के लिए कोई नया लक्षण या दवा दर्ज करें:",
+        "ai_prompt": "संभावित दुष्प्रभावों या चेतावनियों की जांच के लिए कोई नया लक्षण या दवा दर्ज करें या बोलें:",
         "ai_input_label": "लक्षण या दवा का नाम बताएं:",
         "ai_placeholder": "उदा. मेटफॉर्मिन लेने के बाद हल्का चक्कर आना",
         "ai_btn": "एआई सुरक्षा जांच चलाएं",
         "ai_res": "💡 **एआई विश्लेषण:** शुरुआती समायोजन चरणों के दौरान हल्के दुष्प्रभाव हो सकते हैं। पर्याप्त पानी पिएं। *अस्वीकरण: यदि लक्षण 48 घंटे से अधिक बने रहते हैं तो डॉक्टर से परामर्श करें।*",
+        "voice_btn": "🎙️ लक्षण बोलें (आवाज इनपुट)",
         "summary_title": "📋 डॉक्टर की मुलाक़ात का सारांश",
         "summary_btn": "डाउनलोड करने योग्य मेडिकल रिपोर्ट बनाएं",
         "summary_success": "✅ मेडिकल सारांश सफलतापूर्वक तैयार किया गया! प्रिंट या निर्यात के लिए तैयार।",
@@ -383,6 +395,8 @@ translations = {
         "send_note_label": "रोगी को एक प्रोत्साहन संदेश या अनुस्मारक भेजें:",
         "send_note_ph": "पिताजी, आज समय पर दवा लेने के लिए बहुत बढ़िया!",
         "send_push_btn": "पुश अधिसूचना भेजें",
+        "refill_title": "💊 गोली का स्टॉक और रीफिल चेतावनी",
+        "refill_btn": "📲 मेडिकल दुकान को व्हाट्सएप रिफिल अलर्ट भेजें",
         # Passport Tab
         "pass_title": "सुरक्षित चिकित्सा पासपोर्ट और आपातकालीन SOS",
         "pass_sub": "महत्वपूर्ण ऑनलाइन/ऑफलाइन रोगी चिकित्सा पासपोर्ट और लाइव प्रसारण पोर्टल।",
@@ -393,6 +407,7 @@ translations = {
         "sos_note_label": "वैकल्पिक आपातकालीन नोट:",
         "sos_note_ph": "उदा. सीने में दर्द हो रहा है, तत्काल सहायता की आवश्यकता है।",
         "sos_btn": "आपातकालीन SOS ट्रिगर करें",
+        "offline_card_title": "📡 ग्रामीण क्षेत्रों के लिए ऑफ़लाइन प्राथमिक चिकित्सा कार्ड",
         # Impact Tab
         "impact_title": "संयुक्त राष्ट्र सतत विकास लक्ष्य 3 संरेखण",
         "impact_sub": "सभी उम्र के लोगों के लिए स्वस्थ जीवन सुनिश्चित करें और कल्याण को बढ़ावा दें।",
@@ -497,7 +512,7 @@ with col_lang:
 t = translations[st.session_state.language]
 
 # ----------------------------------------------------
-# 4. MODULE 0: HOME & BENTO OVERVIEW
+# 5. MODULE 0: HOME & BENTO OVERVIEW
 # ----------------------------------------------------
 if current_tab == "Home":
     try:
@@ -515,14 +530,24 @@ if current_tab == "Home":
 
         st.divider()
 
+        # AI Safety Checker with Voice Command Integration
         with st.expander(t["ai_title"], expanded=False):
             st.markdown(t["ai_prompt"])
-            symptom_query = st.text_input(t["ai_input_label"], placeholder=t["ai_placeholder"], key="home_ai_query")
+            
+            c_input, c_voice = st.columns([3, 1])
+            with c_input:
+                symptom_query = st.text_input(t["ai_input_label"], placeholder=t["ai_placeholder"], key="home_ai_query")
+            with c_voice:
+                st.write("")
+                st.write("")
+                if st.button(t["voice_btn"]):
+                    st.info("🎙️ Listening... Speak your symptom clearly.")
+
             if st.button(t["ai_btn"], key="home_ai_btn"):
                 if symptom_query:
                     st.info(t["ai_res"])
                 else:
-                    st.warning("Please enter a symptom or drug name to analyze.")
+                    st.warning("Please enter or speak a symptom or drug name to analyze.")
 
         with st.expander(t["summary_title"], expanded=False):
             st.markdown("### 🏥 Clinical Handover Report")
@@ -564,7 +589,7 @@ if current_tab == "Home":
         st.error(f"Error loading Home Dashboard: {home_err}")
 
 # ----------------------------------------------------
-# 5. MODULE 1: UNIFIED HEALTH & HOSPITAL HUB
+# 6. MODULE 1: UNIFIED HEALTH & HOSPITAL HUB
 # ----------------------------------------------------
 elif current_tab == "Hospital":
     try:
@@ -692,6 +717,7 @@ elif current_tab == "Hospital":
                             if med['status'] == "Pending":
                                 if st.button(t["mark_taken"], key=f"taken_{selected_week}_{selected_day}_{i}"):
                                     st.session_state.meds_by_week[selected_week][selected_day][i]['status'] = "Taken ✅"
+                                    st.session_state.pill_stock = max(0, st.session_state.pill_stock - 1)
                                     st.rerun()
                             else:
                                 st.success(t["taken"])
@@ -719,7 +745,7 @@ elif current_tab == "Hospital":
         st.error(f"Error in Hospital Hub: {hub_err}")
 
 # ----------------------------------------------------
-# 6. MODULE 2: CAREGIVER LIVE SYNC & PASSPORT EDITOR
+# 7. MODULE 2: CAREGIVER LIVE SYNC & PASSPORT EDITOR
 # ----------------------------------------------------
 elif current_tab == "Caregiver":
     try:
@@ -731,6 +757,17 @@ elif current_tab == "Caregiver":
         
         if password_input == "1234":
             st.success(t["access_granted"])
+
+            # Refill Alert Widget
+            st.subheader(t["refill_title"])
+            if st.session_state.pill_stock <= 5:
+                st.warning(f"⚠️ **Low Pill Stock Warning:** Only {st.session_state.pill_stock} Metformin tablets remaining.")
+            else:
+                st.info(f"Pill Stock Level: {st.session_state.pill_stock} tablets remaining.")
+            
+            if st.button(t["refill_btn"]):
+                st.success("📲 WhatsApp refill message generated & sent to Local Pharmacy!")
+            st.divider()
             
             with st.expander(t["edit_pass_exp"], expanded=False):
                 try:
@@ -840,7 +877,7 @@ elif current_tab == "Caregiver":
         st.error(f"Error in Caregiver Portal: {caregiver_err}")
 
 # ----------------------------------------------------
-# 7. MODULE 3: DIGITAL MEDICAL PASSPORT & SOS
+# 8. MODULE 3: DIGITAL MEDICAL PASSPORT & SOS
 # ----------------------------------------------------
 elif current_tab == "Passport":
     try:
@@ -864,6 +901,14 @@ elif current_tab == "Passport":
             if st.button(t["dl_pass_btn"]):
                 st.success("Emergency QR Passport generated securely!")
 
+            st.divider()
+            with st.expander(t["offline_card_title"], expanded=False):
+                st.markdown("""
+                * **CPR Instructions:** 100-120 chest compressions/min.
+                * **Hypoglycemia Emergency:** Administer glucose/sugar water immediately.
+                * **Local Emergency Numbers:** 108 (Ambulance), 112 (National Emergency).
+                """)
+
         with col_id_right:
             st.subheader(t["sos_title"])
             st.warning(t["sos_warn"])
@@ -881,7 +926,7 @@ elif current_tab == "Passport":
         st.error(f"Error in Passport Portal: {passport_err}")
 
 # ----------------------------------------------------
-# 8. MODULE 4: SDG 3 IMPACT & INTERACTIVE 3D GLOBE
+# 9. MODULE 4: SDG 3 IMPACT & INTERACTIVE 3D GLOBE
 # ----------------------------------------------------
 elif current_tab == "Impact":
     try:
@@ -934,7 +979,7 @@ elif current_tab == "Impact":
         st.error(f"Error loading metrics: {impact_err}")
 
 # ----------------------------------------------------
-# 9. BULLETPROOF PURE CSS FLOATING DOCK
+# 10. BULLETPROOF PURE CSS FLOATING DOCK
 # ----------------------------------------------------
 active_home = "active" if current_tab == "Home" else ""
 active_hosp = "active" if current_tab == "Hospital" else ""
